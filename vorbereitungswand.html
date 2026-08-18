@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Vorbereitungswand</title>
+<style>
+  :root{
+    --filz-1:#16261c;
+    --filz-2:#1e3327;
+    --filz-3:#264030;
+    --gelb:#f3d34a;
+    --gelb-dk:#c9a521;
+    --blau:#5b9bd5;
+    --blau-dk:#3a6f9c;
+    --gruen:#7fd19c;
+    --gruen-dk:#4a9968;
+    --tinte:#20241e;
+    --pin-metall:#d9d9d9;
+    --schrift-hand: 'Segoe Print','Bradley Hand','Comic Sans MS', cursive;
+    --schrift-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0; padding:0; height:100%;}
+  body{
+    font-family:var(--schrift-sans);
+    background:
+      radial-gradient(ellipse at 20% 10%, rgba(255,255,255,0.03), transparent 40%),
+      radial-gradient(ellipse at 80% 90%, rgba(0,0,0,0.25), transparent 50%),
+      repeating-linear-gradient(45deg, var(--filz-1) 0px, var(--filz-2) 2px, var(--filz-1) 4px),
+      var(--filz-2);
+    color:#f4efe2;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+
+  /* ---------- Header / Tabs ---------- */
+  header{
+    position:sticky; top:0; z-index:20;
+    background:linear-gradient(180deg, rgba(15,25,18,0.97), rgba(15,25,18,0.88));
+    backdrop-filter:blur(4px);
+    border-bottom:2px solid rgba(255,255,255,0.08);
+    padding:10px 12px 8px;
+  }
+  h1{
+    font-family:var(--schrift-hand);
+    font-size:1.5rem;
+    margin:2px 4px 8px;
+    letter-spacing:0.5px;
+    color:#fff6dd;
+    text-shadow:0 1px 2px rgba(0,0,0,0.4);
+  }
+  .tabRow{display:flex; gap:6px; overflow-x:auto; padding-bottom:6px; scrollbar-width:thin;}
+  .tab{
+    flex:0 0 auto;
+    padding:8px 14px;
+    border-radius:10px 10px 4px 4px;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.12);
+    color:#e7e2d2;
+    font-size:0.85rem;
+    cursor:pointer;
+    white-space:nowrap;
+    font-family:var(--schrift-sans);
+  }
+  .tab.active{background:var(--gelb); color:#2b2408; border-color:var(--gelb-dk); font-weight:600;}
+  .tab.add{background:transparent; border-style:dashed; color:#bcd9c4;}
+  .tab.tpl{background:transparent; border-style:dashed; color:#a9c8ff; border-color:rgba(120,170,255,0.4);}
+
+  .toolRow{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:8px;}
+  .chip{
+    padding:6px 12px; border-radius:999px; font-size:0.78rem; cursor:pointer;
+    border:1.5px solid; user-select:none; font-family:var(--schrift-sans);
+  }
+  .chip[data-typ="fach"]{border-color:var(--gelb-dk); color:var(--gelb);}
+  .chip[data-typ="ablauf"]{border-color:var(--blau-dk); color:var(--blau);}
+  .chip[data-typ="reflexion"]{border-color:var(--gruen-dk); color:var(--gruen);}
+  .chip.off{opacity:0.35;}
+  .spacer{flex:1;}
+  .modeToggle{display:flex; border-radius:999px; overflow:hidden; border:1px solid rgba(255,255,255,0.2);}
+  .modeToggle button{
+    padding:7px 14px; background:transparent; border:none; color:#cfd6c8; font-size:0.8rem; cursor:pointer;
+  }
+  .modeToggle button.on{background:#fff6dd; color:#20241e; font-weight:700;}
+  .iconBtn{
+    background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#f4efe2;
+    border-radius:8px; padding:7px 11px; font-size:0.8rem; cursor:pointer; font-family:var(--schrift-sans);
+  }
+
+  /* ---------- Board (visual) ---------- */
+  main{padding:18px 14px 90px; max-width:1200px; margin:0 auto;}
+  .board{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(230px,1fr));
+    gap:34px 20px;
+    padding-top:10px;
+  }
+  .karte{
+    position:relative;
+    padding:22px 16px 16px;
+    min-height:140px;
+    box-shadow:0 10px 18px rgba(0,0,0,0.35), 0 2px 0 rgba(255,255,255,0.06) inset;
+    cursor:pointer;
+    transition:transform .15s ease;
+    color:var(--tinte);
+  }
+  .karte:active{transform:scale(0.97) !important;}
+  .karte .pin{
+    position:absolute; top:-9px; left:50%; transform:translateX(-50%);
+    width:16px; height:16px; border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #fff, var(--pin-metall) 55%, #8b8b8b 100%);
+    box-shadow:0 3px 4px rgba(0,0,0,0.5);
+  }
+  .karte h3{
+    font-family:var(--schrift-hand);
+    font-size:1.15rem; margin:0 0 8px; line-height:1.2;
+  }
+  .karte p{
+    font-family:var(--schrift-sans);
+    font-size:0.86rem; line-height:1.4; margin:0; white-space:pre-wrap;
+    display:-webkit-box; -webkit-line-clamp:6; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  .karte .badge{
+    position:absolute; top:10px; right:12px; font-family:var(--schrift-hand);
+    font-size:0.75rem; opacity:0.55;
+  }
+
+  .karte.fach{background:var(--gelb); border-radius:4px; border:1px solid var(--gelb-dk);}
+  .karte.ablauf{
+    background:var(--blau); border-radius:50%/38%;
+    padding:30px 26px 22px; text-align:center; color:#0d2338;
+    border:1px solid var(--blau-dk);
+  }
+  .karte.ablauf .num{
+    position:absolute; top:8px; left:12px; width:26px; height:26px; border-radius:50%;
+    background:#0d2338; color:#bfe0ff; display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:0.85rem; font-family:var(--schrift-sans);
+  }
+  .karte.reflexion{
+    background:var(--gruen); color:#0e3320;
+    border:1px solid var(--gruen-dk);
+    border-radius:255px 15px 225px 15px/15px 225px 15px 255px;
+    box-shadow:0 10px 18px rgba(0,0,0,0.35), 0 2px 0 rgba(255,255,255,0.08) inset;
+  }
+
+  /* ---------- Auditiv-Modus ---------- */
+  .audioList{display:flex; flex-direction:column; gap:10px;}
+  .audioRow{
+    display:flex; align-items:center; gap:12px;
+    background:rgba(255,255,255,0.05); border-left:6px solid; border-radius:8px;
+    padding:12px 14px;
+  }
+  .audioRow.fach{border-color:var(--gelb);}
+  .audioRow.ablauf{border-color:var(--blau);}
+  .audioRow.reflexion{border-color:var(--gruen);}
+  .audioRow .info{flex:1; min-width:0;}
+  .audioRow h4{margin:0 0 3px; font-family:var(--schrift-hand); font-size:1.05rem; color:#fff6dd;}
+  .audioRow .typLbl{font-size:0.7rem; opacity:0.6; text-transform:uppercase; letter-spacing:0.5px;}
+  .audioRow .txtPrev{font-size:0.8rem; color:#cfd6c8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .playBtn{
+    width:42px; height:42px; border-radius:50%; border:none; flex:0 0 auto;
+    background:#fff6dd; color:#20241e; font-size:1.1rem; cursor:pointer;
+  }
+  .playBtn.playing{background:var(--gelb);}
+  .allePlayBar{
+    display:flex; align-items:center; gap:10px; margin-bottom:14px; padding:12px;
+    background:rgba(255,255,255,0.06); border-radius:10px;
+  }
+
+  .leer{text-align:center; padding:60px 20px; color:#a9b3a3; font-family:var(--schrift-hand); font-size:1.2rem;}
+
+  /* ---------- Floating Add Button ---------- */
+  .fab{
+    position:fixed; bottom:22px; right:20px; z-index:25;
+    width:58px; height:58px; border-radius:50%; border:none;
+    background:var(--gelb); color:#2b2408; font-size:1.8rem; box-shadow:0 6px 16px rgba(0,0,0,0.5);
+    cursor:pointer;
+  }
+
+  /* ---------- Modal ---------- */
+  dialog{
+    border:none; border-radius:14px; padding:0; width:min(440px,92vw);
+    background:#fbf6e6; color:#20241e;
+  }
+  dialog::backdrop{background:rgba(0,0,0,0.6);}
+  .modalInner{padding:20px;}
+  .modalInner h2{font-family:var(--schrift-hand); margin:0 0 14px; font-size:1.3rem;}
+  .field{margin-bottom:12px;}
+  .field label{display:block; font-size:0.78rem; font-weight:600; margin-bottom:4px; color:#4a4a3a;}
+  .field input, .field select, .field textarea{
+    width:100%; padding:10px; border-radius:8px; border:1.5px solid #d8cfa8; font-size:0.95rem;
+    font-family:var(--schrift-sans); background:#fffdf5;
+  }
+  .field textarea{min-height:110px; resize:vertical;}
+  .typChoice{display:flex; gap:8px;}
+  .typChoice label{
+    flex:1; text-align:center; padding:10px 4px; border-radius:8px; border:2px solid #d8cfa8;
+    cursor:pointer; font-size:0.8rem; font-weight:600; color:#4a4a3a;
+  }
+  .typChoice input{display:none;}
+  .typChoice input:checked + span{display:block;}
+  .typChoice label:has(input:checked)[data-typ="fach"]{background:var(--gelb); border-color:var(--gelb-dk);}
+  .typChoice label:has(input:checked)[data-typ="ablauf"]{background:var(--blau); border-color:var(--blau-dk); color:#0d2338;}
+  .typChoice label:has(input:checked)[data-typ="reflexion"]{background:var(--gruen); border-color:var(--gruen-dk);}
+  .modal-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:16px;}
+  .modal-actions button{
+    padding:10px 18px; border-radius:8px; border:none; font-size:0.9rem; cursor:pointer; font-family:var(--schrift-sans);
+  }
+  .modal-actions .cancel{background:#e6dfc4; color:#4a4a3a;}
+  .modal-actions .save{background:#2b6b45; color:#fff; font-weight:600;}
+  .modal-actions .danger{background:#b64a3a; color:#fff; font-weight:600;}
+
+  .toast{
+    position:fixed; bottom:90px; left:50%; transform:translateX(-50%);
+    background:#fff6dd; color:#20241e; padding:10px 18px; border-radius:999px;
+    font-size:0.85rem; box-shadow:0 4px 12px rgba(0,0,0,0.4); z-index:60; opacity:0; transition:opacity .3s;
+    pointer-events:none;
+  }
+  .toast.show{opacity:1;}
+
+  @media (max-width:480px){
+    .board{grid-template-columns:1fr 1fr; gap:26px 12px;}
+    h1{font-size:1.3rem;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📌 Vorbereitungswand</h1>
+  <div class="tabRow" id="tabRow"></div>
+  <div class="toolRow">
+    <span class="chip" data-typ="fach" onclick="toggleTyp('fach')">Fachinhalt</span>
+    <span class="chip" data-typ="ablauf" onclick="toggleTyp('ablauf')">Ablauf</span>
+    <span class="chip" data-typ="reflexion" onclick="toggleTyp('reflexion')">Reflexion</span>
+    <span class="spacer"></span>
+    <div class="modeToggle">
+      <button id="btnVisuell" onclick="setModus('visuell')">Visuell</button>
+      <button id="btnAuditiv" onclick="setModus('auditiv')">Auditiv</button>
+    </div>
+  </div>
+  <div class="toolRow">
+    <button class="iconBtn" onclick="exportJSON()">💾 Sichern</button>
+    <button class="iconBtn" onclick="document.getElementById('importInput').click()">📂 Laden</button>
+    <input type="file" id="importInput" accept="application/json" style="display:none" onchange="importJSON(event)">
+  </div>
+</header>
+
+<main>
+  <div id="boardArea"></div>
+</main>
+
+<button class="fab" onclick="openKartenModal()" title="Karte hinzufügen">+</button>
+
+<dialog id="seminarDialog">
+  <div class="modalInner">
+    <h2>Neues Seminar</h2>
+    <div class="field">
+      <label>Titel</label>
+      <input type="text" id="sTitel" placeholder="z. B. Kommunikation im Team">
+    </div>
+    <div class="field">
+      <label>Datum</label>
+      <input type="date" id="sDatum">
+    </div>
+    <div class="modal-actions">
+      <button class="cancel" onclick="document.getElementById('seminarDialog').close()">Abbrechen</button>
+      <button class="save" onclick="saveSeminar()">Anlegen</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="kartenDialog">
+  <div class="modalInner">
+    <h2 id="kDialogTitel">Neue Karte</h2>
+    <div class="field">
+      <label>Kartentyp</label>
+      <div class="typChoice">
+        <label data-typ="fach"><input type="radio" name="kTyp" value="fach" checked><span>Fachinhalt</span></label>
+        <label data-typ="ablauf"><input type="radio" name="kTyp" value="ablauf"><span>Ablauf</span></label>
+        <label data-typ="reflexion"><input type="radio" name="kTyp" value="reflexion"><span>Reflexion</span></label>
+      </div>
+    </div>
+    <div class="field" id="ordField" style="display:none;">
+      <label>Reihenfolge (Ablauf)</label>
+      <input type="number" id="kOrd" min="1" value="1">
+    </div>
+    <div class="field">
+      <label>Titel</label>
+      <input type="text" id="kTitel" placeholder="Kurzer Kartentitel">
+    </div>
+    <div class="field">
+      <label>Text</label>
+      <textarea id="kText" placeholder="Inhalt, Leitfragen, Stichpunkte..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="danger" id="kDeleteBtn" style="display:none;" onclick="deleteKarte()">Löschen</button>
+      <button class="cancel" onclick="document.getElementById('kartenDialog').close()">Abbrechen</button>
+      <button class="save" onclick="saveKarte()">Speichern</button>
+    </div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const TYP_LABEL = { fach:'Fachinhalt', ablauf:'Ablauf', reflexion:'Reflexion' };
+
+let seminare = [];
+let aktuellesSeminarId = null;
+let karten = [];
+let modus = 'visuell';
+let aktiveTypen = new Set(['fach','ablauf','reflexion']);
+let editKarteId = null;
+let speakList = [];
+let speakIdx = 0;
+let storageOk = true;
+
+/* ---------- Storage: localStorage (funktioniert eigenständig in Safari, ohne Claude-Umgebung) ---------- */
+const LS_PREFIX = 'vbwand_';
+async function storeGet(key){
+  try{
+    const raw = window.localStorage.getItem(LS_PREFIX + key);
+    return raw ? JSON.parse(raw) : null;
+  }catch(e){ storageOk = false; return null; }
+}
+async function storeSet(key, value){
+  try{
+    window.localStorage.setItem(LS_PREFIX + key, JSON.stringify(value));
+  }catch(e){ storageOk = false; }
+}
+
+function zeigeToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=> t.classList.remove('show'), 2200);
+}
+
+function hashRotation(id){
+  let h = 0;
+  for(const c of id) h = (h*31 + c.charCodeAt(0)) % 1000;
+  return ((h % 7) - 3) + 'deg';
+}
+
+/* ---------- Init ---------- */
+async function init(){
+  seminare = (await storeGet('seminare')) || [];
+  const last = await storeGet('letztesSeminar');
+  if(seminare.length){
+    aktuellesSeminarId = (last && seminare.find(s=>s.id===last)) ? last : seminare[0].id;
+    karten = (await storeGet('karten_' + aktuellesSeminarId)) || [];
+  }
+  renderSeminarTabs();
+  renderBoard();
+  if(!storageOk){
+    zeigeToast('Automatische Speicherung nicht verfügbar – bitte regelmäßig 💾 Sichern nutzen');
+  }
+}
+
+async function speichereKartenListe(){
+  await storeSet('karten_' + aktuellesSeminarId, karten);
+}
+
+/* ---------- Tabs ---------- */
+function renderSeminarTabs(){
+  const row = document.getElementById('tabRow');
+  row.innerHTML = '';
+  seminare.forEach(s=>{
+    const b = document.createElement('button');
+    b.className = 'tab' + (s.id === aktuellesSeminarId ? ' active' : '');
+    b.textContent = s.titel + (s.datum ? ' · ' + s.datum : '');
+    b.onclick = () => wechsleSeminar(s.id);
+    row.appendChild(b);
+  });
+  const addBtn = document.createElement('button');
+  addBtn.className = 'tab add';
+  addBtn.textContent = '+ Seminar';
+  addBtn.onclick = () => document.getElementById('seminarDialog').showModal();
+  row.appendChild(addBtn);
+
+  const tplBtn = document.createElement('button');
+  tplBtn.className = 'tab tpl';
+  tplBtn.textContent = '⤓ Vorlage „Verhandeln im PM-Alltag"';
+  tplBtn.onclick = () => loadTemplate('verhandeln_pm');
+  row.appendChild(tplBtn);
+}
+
+async function wechsleSeminar(id){
+  aktuellesSeminarId = id;
+  await storeSet('letztesSeminar', id);
+  karten = (await storeGet('karten_' + id)) || [];
+  renderSeminarTabs();
+  renderBoard();
+}
+
+async function saveSeminar(){
+  const titel = document.getElementById('sTitel').value.trim();
+  const datum = document.getElementById('sDatum').value;
+  if(!titel){ zeigeToast('Bitte einen Titel eingeben'); return; }
+  const id = 's_' + Date.now();
+  seminare.push({ id, titel, datum });
+  await storeSet('seminare', seminare);
+  document.getElementById('sTitel').value = '';
+  document.getElementById('sDatum').value = '';
+  document.getElementById('seminarDialog').close();
+  await wechsleSeminar(id);
+}
+
+/* ---------- Filter / Modus ---------- */
+function toggleTyp(typ){
+  if(aktiveTypen.has(typ)) aktiveTypen.delete(typ); else aktiveTypen.add(typ);
+  document.querySelector(`.chip[data-typ="${typ}"]`).classList.toggle('off', !aktiveTypen.has(typ));
+  renderBoard();
+}
+function setModus(m){
+  modus = m;
+  document.getElementById('btnVisuell').classList.toggle('on', m === 'visuell');
+  document.getElementById('btnAuditiv').classList.toggle('on', m === 'auditiv');
+  renderBoard();
+}
+
+/* ---------- Board rendern ---------- */
+function gefilterteKarten(){
+  return karten
+    .filter(k => aktiveTypen.has(k.typ))
+    .sort((a,b)=>{
+      if(a.typ === 'ablauf' && b.typ === 'ablauf') return (a.ord||1) - (b.ord||1);
+      if(a.typ === 'ablauf') return -1;
+      if(b.typ === 'ablauf') return 1;
+      return 0;
+    });
+}
+
+function renderBoard(){
+  const area = document.getElementById('boardArea');
+  area.innerHTML = '';
+  if(!aktuellesSeminarId){
+    area.innerHTML = '<div class="leer">Noch kein Seminar angelegt.<br>Tippe oben auf „+ Seminar" oder lade die Vorlage.</div>';
+    return;
+  }
+  const liste = gefilterteKarten();
+  if(!liste.length){
+    area.innerHTML = '<div class="leer">Keine Karten hier.<br>Mit + unten rechts eine neue Karte anlegen.</div>';
+    return;
+  }
+  if(modus === 'visuell') renderVisuell(area, liste);
+  else renderAuditiv(area, liste);
+}
+
+function renderVisuell(area, liste){
+  const board = document.createElement('div');
+  board.className = 'board';
+  liste.forEach(k=>{
+    const div = document.createElement('div');
+    div.className = 'karte ' + k.typ;
+    div.style.transform = `rotate(${hashRotation(k.id)})`;
+    div.onclick = () => openKartenModal(k.id);
+    const pin = document.createElement('div');
+    pin.className = 'pin';
+    div.appendChild(pin);
+    if(k.typ === 'ablauf'){
+      const num = document.createElement('div');
+      num.className = 'num';
+      num.textContent = k.ord || '·';
+      div.appendChild(num);
+    }
+    const badge = document.createElement('div');
+    badge.className = 'badge';
+    badge.textContent = TYP_LABEL[k.typ];
+    div.appendChild(badge);
+    const h3 = document.createElement('h3');
+    h3.textContent = k.titel;
+    div.appendChild(h3);
+    const p = document.createElement('p');
+    p.textContent = k.text;
+    div.appendChild(p);
+    board.appendChild(div);
+  });
+  area.appendChild(board);
+}
+
+function renderAuditiv(area, liste){
+  const bar = document.createElement('div');
+  bar.className = 'allePlayBar';
+  const alleBtn = document.createElement('button');
+  alleBtn.className = 'iconBtn';
+  alleBtn.textContent = '▶ Alle vorlesen';
+  alleBtn.onclick = () => alleVorlesen(liste);
+  const stopBtn = document.createElement('button');
+  stopBtn.className = 'iconBtn';
+  stopBtn.textContent = '■ Stopp';
+  stopBtn.onclick = stopVorlesen;
+  bar.appendChild(alleBtn);
+  bar.appendChild(stopBtn);
+  area.appendChild(bar);
+
+  const list = document.createElement('div');
+  list.className = 'audioList';
+  liste.forEach(k=>{
+    const row = document.createElement('div');
+    row.className = 'audioRow ' + k.typ;
+    const info = document.createElement('div');
+    info.className = 'info';
+    const h4 = document.createElement('h4');
+    h4.textContent = (k.typ === 'ablauf' && k.ord ? k.ord + '. ' : '') + k.titel;
+    const typLbl = document.createElement('div');
+    typLbl.className = 'typLbl';
+    typLbl.textContent = TYP_LABEL[k.typ];
+    const prev = document.createElement('div');
+    prev.className = 'txtPrev';
+    prev.textContent = k.text.replace(/\n/g,' · ');
+    info.appendChild(h4);
+    info.appendChild(typLbl);
+    info.appendChild(prev);
+    const playBtn = document.createElement('button');
+    playBtn.className = 'playBtn';
+    playBtn.textContent = '▶';
+    playBtn.onclick = () => vorlesenEinzeln(k, playBtn);
+    row.appendChild(info);
+    row.appendChild(playBtn);
+    row.onclick = (e) => { if(e.target !== playBtn) openKartenModal(k.id); };
+    list.appendChild(row);
+  });
+  area.appendChild(list);
+}
+
+/* ---------- Text-to-Speech ---------- */
+function vorlesenEinzeln(k, btn){
+  stopVorlesen();
+  const utter = new SpeechSynthesisUtterance((k.titel + '. ' + k.text).replace(/\n/g,'. '));
+  utter.lang = 'de-DE';
+  if(btn){
+    utter.onstart = () => btn.classList.add('playing');
+    utter.onend = () => btn.classList.remove('playing');
+  }
+  speechSynthesis.speak(utter);
+}
+
+function alleVorlesen(liste){
+  stopVorlesen();
+  speakList = liste;
+  speakIdx = 0;
+  vorleseNaechste();
+}
+function vorleseNaechste(){
+  if(speakIdx >= speakList.length) return;
+  const k = speakList[speakIdx];
+  const utter = new SpeechSynthesisUtterance((k.titel + '. ' + k.text).replace(/\n/g,'. '));
+  utter.lang = 'de-DE';
+  utter.onend = () => { speakIdx++; vorleseNaechste(); };
+  speechSynthesis.speak(utter);
+}
+function stopVorlesen(){
+  speechSynthesis.cancel();
+  speakList = []; speakIdx = 0;
+}
+
+/* ---------- Karten CRUD ---------- */
+function openKartenModal(id){
+  editKarteId = id || null;
+  const dlg = document.getElementById('kartenDialog');
+  const delBtn = document.getElementById('kDeleteBtn');
+  if(id){
+    const k = karten.find(x=>x.id===id);
+    document.getElementById('kDialogTitel').textContent = 'Karte bearbeiten';
+    document.querySelector(`input[name="kTyp"][value="${k.typ}"]`).checked = true;
+    document.getElementById('kTitel').value = k.titel;
+    document.getElementById('kText').value = k.text;
+    document.getElementById('kOrd').value = k.ord || 1;
+    delBtn.style.display = 'inline-block';
+  }else{
+    document.getElementById('kDialogTitel').textContent = 'Neue Karte';
+    document.querySelector('input[name="kTyp"][value="fach"]').checked = true;
+    document.getElementById('kTitel').value = '';
+    document.getElementById('kText').value = '';
+    document.getElementById('kOrd').value = karten.filter(k=>k.typ==='ablauf').length + 1;
+    delBtn.style.display = 'none';
+  }
+  updateOrdFieldVisibility();
+  dlg.showModal();
+}
+document.querySelectorAll('input[name="kTyp"]').forEach(r => r.addEventListener('change', updateOrdFieldVisibility));
+function updateOrdFieldVisibility(){
+  const typ = document.querySelector('input[name="kTyp"]:checked').value;
+  document.getElementById('ordField').style.display = (typ === 'ablauf') ? 'block' : 'none';
+}
+
+async function saveKarte(){
+  if(!aktuellesSeminarId){ zeigeToast('Bitte zuerst ein Seminar anlegen'); return; }
+  const typ = document.querySelector('input[name="kTyp"]:checked').value;
+  const titel = document.getElementById('kTitel').value.trim();
+  const text = document.getElementById('kText').value.trim();
+  const ord = parseInt(document.getElementById('kOrd').value) || 1;
+  if(!titel){ zeigeToast('Bitte einen Titel eingeben'); return; }
+  if(editKarteId){
+    const k = karten.find(x=>x.id===editKarteId);
+    k.typ = typ; k.titel = titel; k.text = text; k.ord = ord;
+  }else{
+    karten.push({ id:'k_'+Date.now(), typ, titel, text, ord });
+  }
+  await speichereKartenListe();
+  document.getElementById('kartenDialog').close();
+  renderBoard();
+}
+
+async function deleteKarte(){
+  if(!editKarteId) return;
+  karten = karten.filter(k=>k.id !== editKarteId);
+  await speichereKartenListe();
+  document.getElementById('kartenDialog').close();
+  renderBoard();
+}
+
+/* ---------- Export / Import ---------- */
+function exportJSON(){
+  const data = { seminare, kartenProSeminar:{} };
+  seminare.forEach(async s=>{});
+  (async ()=>{
+    for(const s of seminare){
+      data.kartenProSeminar[s.id] = (s.id === aktuellesSeminarId) ? karten : (await storeGet('karten_'+s.id)) || [];
+    }
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'vorbereitungswand_backup.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    zeigeToast('Backup heruntergeladen');
+  })();
+}
+
+function importJSON(evt){
+  const file = evt.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    try{
+      const data = JSON.parse(e.target.result);
+      seminare = data.seminare || [];
+      await storeSet('seminare', seminare);
+      for(const sid in (data.kartenProSeminar || {})){
+        await storeSet('karten_' + sid, data.kartenProSeminar[sid]);
+      }
+      if(seminare.length){
+        aktuellesSeminarId = seminare[0].id;
+        karten = data.kartenProSeminar[aktuellesSeminarId] || [];
+        await storeSet('letztesSeminar', aktuellesSeminarId);
+      }
+      renderSeminarTabs();
+      renderBoard();
+      zeigeToast('Backup geladen');
+    }catch(err){
+      zeigeToast('Datei konnte nicht gelesen werden');
+    }
+  };
+  reader.readAsText(file);
+  evt.target.value = '';
+}
+
+/* ---------- Vorlage: Verhandeln im PM-Alltag ---------- */
+const TEMPLATES = {
+  verhandeln_pm: {
+    titel: 'Verhandeln im PM-Alltag',
+    cards: [
+      { typ:'ablauf', ord:1, titel:'Einstieg & Zielklärung (09:00–09:30)', text:'Ankommen, Erwartungen klären.\nKernbotschaft: Du bist nicht machtlos – es gibt Verhandlungsspielräume, die bewusst genutzt werden müssen.' },
+      { typ:'ablauf', ord:2, titel:'Standortbestimmung (09:30–10:15)', text:'Ist-Analyse der eigenen Praxis.\nKernbotschaft: Erst konkrete Situation beschreiben, dann Muster ableiten – nicht umgekehrt.' },
+      { typ:'ablauf', ord:3, titel:'Hebel erkennen (10:30–11:30)', text:'Die 8 Verhandlungshebel.\nKernbotschaft: Verhandeln heißt nicht nur Preis – acht Stellschrauben stehen zur Verfügung.' },
+      { typ:'ablauf', ord:4, titel:'NBB-Potenzial einbringen (11:30–12:15)', text:'Perspektivwechsel.\nKernbotschaft: Nicht nur fordern, sondern den eigenen Nutzen für den Hersteller klar benennen.' },
+      { typ:'ablauf', ord:5, titel:'Gesprächsvorbereitung (13:00–14:00)', text:'Checkliste, BATNA.\nKernbotschaft: Sicherheit entsteht durch Vorbereitung, nicht im Gespräch selbst.' },
+      { typ:'ablauf', ord:6, titel:'Fragetechniken (14:00–14:45)', text:'5 Fragetypen.\nKernbotschaft: Wer besser fragt, muss weniger raten und führt das Gespräch aktiver.' },
+      { typ:'ablauf', ord:7, titel:'Lieferantenaussagen kontern (15:00–16:00)', text:'Reaktionslogik.\nKernbotschaft: Erst verstehen, dann führen – nicht sofort dagegenargumentieren.' },
+      { typ:'ablauf', ord:8, titel:'Praxisfall (16:00–16:40)', text:'Gesamtsimulation.\nKernbotschaft: Wirkung entsteht im Zusammenspiel aller Bausteine, nicht durch einen cleveren Satz.' },
+      { typ:'ablauf', ord:9, titel:'Transfer & Abschluss (16:40–17:00)', text:'Maßnahmenplan.\nKernbotschaft: Wenige konkrete Maßnahmen schlagen viele diffuse Vorsätze.' },
+      { typ:'fach', titel:'Die 8 Verhandlungshebel', text:'Einkaufspreis – unmittelbarer Rabatt/Nettopreis, oft erstes Thema, selten das einzige Instrument.\nWKZ – Herstellerunterstützung für Marketing/Abverkauf, verhandelbar gegen Sichtbarkeit oder Aktionsvolumen.\nMarketingbudget – Geld/Leistungen für Kampagnen, wichtig für Abverkauf und Listung.\nFrachtkosten – Übernahme/Anteil an Transportkosten, oft bei angepassten Lieferbedingungen möglich.\nZahlungsziele – längere Ziele verbessern Liquidität, oft gegen höhere Abnahmemengen verhandelbar.\nAktionen – Bündelaktionen, Promotionsrabatte, Zugaben, wirken direkt auf Absatz.\nExklusivitäten – Platzierung, exklusive Modelle, besondere Sortimentskonditionen.\nAbverkaufsunterstützung – Regalplatz, Displays, Trainings, Retourenregelung.' },
+      { typ:'fach', titel:'NBB-Perspektivwechsel – Leitfragen', text:"Nicht nur fragen 'Was bekomme ich?', sondern klären: 'Warum lohnt sich die Zusammenarbeit mit uns?'\nWas ist unser Nutzen für den Hersteller?\nWelche Zielgruppen oder Reichweiten können wir bieten?\nWelche Absatzchancen eröffnen wir?\nWas macht die Zusammenarbeit mit uns einfach oder attraktiv?\nWelche Erfolge, Daten oder Potenziale können wir anführen?\nWelche Gegenleistung können wir im Gegenzug erwarten?" },
+      { typ:'fach', titel:'Vorbereitungs-Checkliste', text:'Anlass/Thema des Gesprächs\nMein Ziel\nMein Minimum\nMein Wunsch\nMögliche Verhandlungshebel\nErwartbare Einwände\nMeine Antworten/Gegenfragen\nMeine Optionen/Alternativen (BATNA)\nMein erster Gesprächseinstieg\nMein gewünschter nächster Schritt\n\nBATNA: die beste Alternative, falls keine Einigung erzielt wird.' },
+      { typ:'fach', titel:'Fragetechniken – 5 Typen', text:"Offene Fragen – 'Wie ist diese Einschätzung entstanden?'\nKonkretisierend – 'Was genau heißt in dem Fall nicht möglich?'\nHypothetisch – 'Angenommen, wir erhöhen das Volumen – was wäre dann möglich?'\nBedingungsfragen – 'Unter welchen Bedingungen wäre das möglich?'\nÖffnende Gegenfrage – 'Kein Budget – woran hängt das konkret?'\n\nVorsicht bei Warum-Fragen: wirken schnell wie Rechtfertigungsdruck." },
+      { typ:'fach', titel:'Reaktionslogik bei Einwänden', text:'1. Haltung bewahren – ruhig, sachlich, nicht defensiv.\n2. Einwand aufnehmen – zeigen, dass die Aussage gehört wurde.\n3. Klären/konkretisieren – Was genau steckt dahinter?\n4. Öffnen – Bedingungen, Alternativen, Nutzen erkunden.\n5. Abschließen – nächsten Schritt oder Bewegung sichern.' },
+      { typ:'fach', titel:'Vier Standardsituationen', text:"'Da können wir preislich nichts mehr machen.' → Andere Hebel öffnen: 'Welche anderen Themen – WKZ, Fracht, Zahlungsziel – wären denkbar?'\n'Das ist unser bestes Angebot.' → Klären, worauf sich das bezieht: 'Was wäre nötig, damit noch etwas möglich wird?'\n'Andere Händler akzeptieren das auch.' → Nicht rechtfertigen, eigene Situation und beiderseitigen Nutzen zurückholen.\n'WKZ ist dieses Jahr nicht drin.' → Aufnehmen → Klären ('Woran hängt das – Budget, Timing, Format?') → Öffnen → Alternative → Abschluss sichern." },
+      { typ:'reflexion', titel:'Typische Stolperstellen', text:'Zu schnell auf Preis fixieren, andere Hebel übersehen.\nZiele zu ungenau formulieren, Minimum und Wunsch nicht trennen.\nEinwände nicht konkretisieren, sondern als Tatsache hinnehmen.\nZu viele Warum-Fragen, die Rechtfertigungsdruck erzeugen.\nSofort argumentieren statt erst zu fragen und zu öffnen.\nKein echter Plan B vorbereitet.\nGespräch ohne klaren nächsten Schritt beenden.' },
+      { typ:'reflexion', titel:'Transferstruktur', text:'Was will ich künftig bewusster tun?\nWas will ich konkret anders machen?\nWoran merke ich, dass ich es umgesetzt habe?\n\n2–3 konkrete Maßnahmen reichen – wenige, beobachtbare Schritte wirken stärker als viele diffuse Vorsätze.' }
+    ]
+  }
+};
+
+async function loadTemplate(key){
+  const t = TEMPLATES[key];
+  if(!t) return;
+  const id = 's_' + Date.now();
+  seminare.push({ id, titel: t.titel, datum: '' });
+  await storeSet('seminare', seminare);
+  aktuellesSeminarId = id;
+  await storeSet('letztesSeminar', id);
+  karten = t.cards.map((c,i) => ({ id: 'k_' + Date.now() + '_' + i, typ:c.typ, titel:c.titel, text:c.text, ord:c.ord||1 }));
+  await speichereKartenListe();
+  renderSeminarTabs();
+  renderBoard();
+  zeigeToast('Vorlage geladen');
+}
+
+init();
+</script>
+</body>
+</html>
