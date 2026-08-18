@@ -3,19 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-180.png">
 <title>Vorbereitungswand</title>
 <style>
   :root{
-    --filz-1:#16261c;
-    --filz-2:#1e3327;
-    --filz-3:#264030;
-    --gelb:#f3d34a;
-    --gelb-dk:#c9a521;
-    --blau:#5b9bd5;
-    --blau-dk:#3a6f9c;
-    --gruen:#7fd19c;
-    --gruen-dk:#4a9968;
-    --tinte:#20241e;
+    --filz-1:#f7f1e3;
+    --filz-2:#efe4cd;
+    --filz-3:#e6d7b5;
+    --gelb:#ffe7a3;
+    --gelb-dk:#e0b84a;
+    --blau:#bfe0f5;
+    --blau-dk:#6fa8cc;
+    --gruen:#c8ead2;
+    --gruen-dk:#7ec18f;
+    --tinte:#3b332a;
+    --text-main:#3b332a;
+    --text-muted:#6b5f49;
     --pin-metall:#d9d9d9;
     --schrift-hand: 'Segoe Print','Bradley Hand','Comic Sans MS', cursive;
     --schrift-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -26,20 +30,20 @@
   body{
     font-family:var(--schrift-sans);
     background:
-      radial-gradient(ellipse at 20% 10%, rgba(255,255,255,0.03), transparent 40%),
-      radial-gradient(ellipse at 80% 90%, rgba(0,0,0,0.25), transparent 50%),
+      radial-gradient(ellipse at 20% 10%, rgba(255,255,255,0.4), transparent 40%),
+      radial-gradient(ellipse at 80% 90%, rgba(0,0,0,0.05), transparent 50%),
       repeating-linear-gradient(45deg, var(--filz-1) 0px, var(--filz-2) 2px, var(--filz-1) 4px),
       var(--filz-2);
-    color:#f4efe2;
+    color:var(--text-main);
     min-height:100vh;
   }
 
   /* ---------- Header / Tabs ---------- */
   header{
     position:sticky; top:0; z-index:20;
-    background:linear-gradient(180deg, rgba(15,25,18,0.97), rgba(15,25,18,0.88));
+    background:linear-gradient(180deg, rgba(247,241,227,0.98), rgba(247,241,227,0.9));
     backdrop-filter:blur(4px);
-    border-bottom:2px solid rgba(255,255,255,0.08);
+    border-bottom:2px solid rgba(0,0,0,0.06);
     padding:10px 12px 8px;
   }
   h1{
@@ -47,43 +51,30 @@
     font-size:1.5rem;
     margin:2px 4px 8px;
     letter-spacing:0.5px;
-    color:#fff6dd;
-    text-shadow:0 1px 2px rgba(0,0,0,0.4);
+    color:#7a5c2e;
+    text-shadow:0 1px 0 rgba(255,255,255,0.6);
   }
   .tabRow{display:flex; gap:6px; overflow-x:auto; padding-bottom:6px; scrollbar-width:thin;}
   .tab{
     flex:0 0 auto;
     padding:8px 14px;
     border-radius:10px 10px 4px 4px;
-    background:rgba(255,255,255,0.06);
-    border:1px solid rgba(255,255,255,0.12);
-    color:#e7e2d2;
+    background:rgba(0,0,0,0.04);
+    border:1px solid rgba(0,0,0,0.1);
+    color:#5c5240;
     font-size:0.85rem;
     cursor:pointer;
     white-space:nowrap;
     font-family:var(--schrift-sans);
   }
-  .tab.active{background:var(--gelb); color:#2b2408; border-color:var(--gelb-dk); font-weight:600;}
-  .tab.add{background:transparent; border-style:dashed; color:#bcd9c4;}
-  .tab.tpl{background:transparent; border-style:dashed; color:#a9c8ff; border-color:rgba(120,170,255,0.4);}
+  .tab.active{background:var(--gelb); color:#5c4413; border-color:var(--gelb-dk); font-weight:600;}
+  .tab.add{background:transparent; border-style:dashed; color:#3f6f4c;}
+  .tab.tpl{background:transparent; border-style:dashed; color:#2f5c82; border-color:rgba(111,168,204,0.6);}
 
   .toolRow{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:8px;}
-  .chip{
-    padding:6px 12px; border-radius:999px; font-size:0.78rem; cursor:pointer;
-    border:1.5px solid; user-select:none; font-family:var(--schrift-sans);
-  }
-  .chip[data-typ="fach"]{border-color:var(--gelb-dk); color:var(--gelb);}
-  .chip[data-typ="ablauf"]{border-color:var(--blau-dk); color:var(--blau);}
-  .chip[data-typ="reflexion"]{border-color:var(--gruen-dk); color:var(--gruen);}
-  .chip.off{opacity:0.35;}
   .spacer{flex:1;}
-  .modeToggle{display:flex; border-radius:999px; overflow:hidden; border:1px solid rgba(255,255,255,0.2);}
-  .modeToggle button{
-    padding:7px 14px; background:transparent; border:none; color:#cfd6c8; font-size:0.8rem; cursor:pointer;
-  }
-  .modeToggle button.on{background:#fff6dd; color:#20241e; font-weight:700;}
   .iconBtn{
-    background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#f4efe2;
+    background:rgba(0,0,0,0.04); border:1px solid rgba(0,0,0,0.12); color:var(--text-main);
     border-radius:8px; padding:7px 11px; font-size:0.8rem; cursor:pointer; font-family:var(--schrift-sans);
   }
 
@@ -99,7 +90,7 @@
     position:relative;
     padding:22px 16px 16px;
     min-height:140px;
-    box-shadow:0 10px 18px rgba(0,0,0,0.35), 0 2px 0 rgba(255,255,255,0.06) inset;
+    box-shadow:0 6px 14px rgba(90,70,40,0.18), 0 2px 0 rgba(255,255,255,0.5) inset;
     cursor:pointer;
     transition:transform .15s ease;
     color:var(--tinte);
@@ -117,12 +108,12 @@
   }
   .karte p{
     font-family:var(--schrift-sans);
-    font-size:0.82rem; line-height:1.35; margin:0; white-space:pre-wrap; opacity:0.85;
+    font-size:0.82rem; line-height:1.35; margin:0; white-space:pre-wrap; opacity:0.95;
     display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
   }
   .karte .badge{
     position:absolute; top:10px; right:12px; font-family:var(--schrift-hand);
-    font-size:0.75rem; opacity:0.55;
+    font-size:0.75rem; opacity:0.8; font-weight:600;
   }
   .karte .gruppeTag{
     display:inline-block; font-size:0.66rem; font-weight:700; text-transform:uppercase;
@@ -146,37 +137,37 @@
     font-weight:700; font-size:0.85rem; font-family:var(--schrift-sans);
   }
   .karte.reflexion{
-    background:var(--gruen); color:#0e3320;
+    background:var(--gruen); color:#1f4a2e;
     border:1px solid var(--gruen-dk);
     border-radius:255px 15px 225px 15px/15px 225px 15px 255px;
-    box-shadow:0 10px 18px rgba(0,0,0,0.35), 0 2px 0 rgba(255,255,255,0.08) inset;
+    box-shadow:0 6px 14px rgba(90,70,40,0.18), 0 2px 0 rgba(255,255,255,0.5) inset;
   }
 
   /* ---------- Auditiv-Modus ---------- */
   .audioList{display:flex; flex-direction:column; gap:10px;}
   .audioRow{
     display:flex; align-items:center; gap:12px;
-    background:rgba(255,255,255,0.05); border-left:6px solid; border-radius:8px;
+    background:rgba(0,0,0,0.03); border-left:6px solid; border-radius:8px;
     padding:12px 14px;
   }
-  .audioRow.fach{border-color:var(--gelb);}
-  .audioRow.ablauf{border-color:var(--blau);}
-  .audioRow.reflexion{border-color:var(--gruen);}
+  .audioRow.fach{border-color:var(--gelb-dk);}
+  .audioRow.ablauf{border-color:var(--blau-dk);}
+  .audioRow.reflexion{border-color:var(--gruen-dk);}
   .audioRow .info{flex:1; min-width:0;}
-  .audioRow h4{margin:0 0 3px; font-family:var(--schrift-hand); font-size:1.05rem; color:#fff6dd;}
-  .audioRow .typLbl{font-size:0.7rem; opacity:0.6; text-transform:uppercase; letter-spacing:0.5px;}
-  .audioRow .txtPrev{font-size:0.8rem; color:#cfd6c8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .audioRow h4{margin:0 0 3px; font-family:var(--schrift-hand); font-size:1.05rem; color:var(--text-main);}
+  .audioRow .typLbl{font-size:0.7rem; opacity:0.85; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); font-weight:600;}
+  .audioRow .txtPrev{font-size:0.8rem; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
   .playBtn{
     width:42px; height:42px; border-radius:50%; border:none; flex:0 0 auto;
-    background:#fff6dd; color:#20241e; font-size:1.1rem; cursor:pointer;
+    background:#fff; color:#20241e; font-size:1.1rem; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.15);
   }
   .playBtn.playing{background:var(--gelb);}
   .allePlayBar{
     display:flex; align-items:center; gap:10px; margin-bottom:14px; padding:12px;
-    background:rgba(255,255,255,0.06); border-radius:10px;
+    background:rgba(0,0,0,0.03); border-radius:10px;
   }
 
-  .leer{text-align:center; padding:60px 20px; color:#a9b3a3; font-family:var(--schrift-hand); font-size:1.2rem;}
+  .leer{text-align:center; padding:60px 20px; color:var(--text-muted); font-family:var(--schrift-hand); font-size:1.2rem;}
 
   /* ---------- Gruppen-Filter ---------- */
   .gruppeRow{display:flex; gap:6px; overflow-x:auto; padding:8px 0 2px; scrollbar-width:thin;}
@@ -202,7 +193,7 @@
   .detailSection{margin-bottom:14px;}
   .detailLabel{
     font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;
-    color:#8a7a3c; margin-bottom:4px;
+    color:#6b551a; margin-bottom:4px;
   }
   .detailBody{font-size:0.95rem; line-height:1.5; white-space:pre-wrap; color:#20241e;}
   .detailBody.strategie ol{margin:0; padding-left:1.2em;}
@@ -216,32 +207,48 @@
     display:flex; flex-direction:column; padding:16px;
   }
   .uebungTop{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
-  .uebungProgress{flex:1; height:6px; background:rgba(255,255,255,0.15); border-radius:999px; overflow:hidden;}
-  .uebungProgress > div{height:100%; background:var(--gelb); transition:width .25s ease;}
-  .uebungCount{font-size:0.78rem; color:#cfd6c8; white-space:nowrap;}
-  .uebungCloseBtn{background:rgba(255,255,255,0.1); border:none; color:#f4efe2; width:32px; height:32px; border-radius:50%; font-size:1rem; cursor:pointer;}
+  .uebungProgress{flex:1; height:6px; background:rgba(0,0,0,0.1); border-radius:999px; overflow:hidden;}
+  .uebungProgress > div{height:100%; background:var(--gelb-dk); transition:width .25s ease;}
+  .uebungCount{font-size:0.78rem; color:var(--text-muted); white-space:nowrap;}
+  .uebungCloseBtn{background:rgba(0,0,0,0.06); border:none; color:var(--text-main); width:32px; height:32px; border-radius:50%; font-size:1rem; cursor:pointer;}
   .uebungCardWrap{flex:1; display:flex; flex-direction:column; justify-content:center; overflow-y:auto; padding:10px 2px 20px;}
   .uebungKarte{
-    background:#fbf6e6; color:#20241e; border-radius:16px; padding:24px 20px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.4);
+    background:#fffdf8; color:var(--tinte); border-radius:16px; padding:24px 20px;
+    box-shadow:0 10px 24px rgba(90,70,40,0.2);
   }
   .uebungTypBadge{font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:3px 10px; border-radius:999px; color:#20241e; display:inline-block; margin-bottom:10px;}
   .uebungTitel{font-family:var(--schrift-hand); font-size:1.4rem; margin:0 0 6px;}
-  .uebungHinweis{font-size:0.82rem; color:#7a7256; margin-bottom:18px;}
+  .uebungHinweis{font-size:0.82rem; color:#6b5c3f; margin-bottom:18px;}
   .uebungAntwortBtn{
     display:block; width:100%; padding:14px; border-radius:10px; border:none;
-    background:#2b6b45; color:#fff; font-size:1rem; font-weight:600; cursor:pointer; margin-top:10px;
+    background:#3f8a58; color:#fff; font-size:1rem; font-weight:600; cursor:pointer; margin-top:10px;
   }
   .uebungBewertung{display:flex; gap:10px; margin-top:18px;}
   .uebungBewertung button{
     flex:1; padding:14px 8px; border-radius:10px; border:none; font-size:0.92rem; font-weight:700; cursor:pointer;
   }
-  .btnNochmal{background:#f4d9d0; color:#8a3520;}
-  .btnSitzt{background:#d4ecd9; color:#1f5c34;}
+  .btnNochmal{background:#f7ded3; color:#8a3520;}
+  .btnSitzt{background:#d6efdb; color:#1f5c34;}
   .uebungEnde{text-align:center; padding:30px 10px;}
-  .uebungEnde h2{font-family:var(--schrift-hand); font-size:1.6rem; color:#fff6dd; margin-bottom:10px;}
-  .uebungEnde p{color:#cfd6c8; margin-bottom:20px;}
+  .uebungEnde h2{font-family:var(--schrift-hand); font-size:1.6rem; color:#7a5c2e; margin-bottom:10px;}
+  .uebungEnde p{color:var(--text-muted); margin-bottom:20px;}
   .uebungEnde .iconBtn{margin:4px;}
+
+  /* ---------- Quiz ---------- */
+  .quizFrage{font-size:1rem; line-height:1.45; margin:0 0 18px; color:var(--tinte);}
+  .quizOptionen{display:flex; flex-direction:column; gap:10px;}
+  .quizOption{
+    text-align:left; padding:13px 14px; border-radius:10px; border:1.5px solid rgba(0,0,0,0.15);
+    background:#fffdf8; color:var(--text-main); font-size:0.9rem; cursor:pointer; font-family:var(--schrift-sans);
+  }
+  .quizOption.richtig{background:#d6efdb; border-color:#3f8a58; color:#1f5c34; font-weight:600;}
+  .quizOption.falsch{background:#f7ded3; border-color:#c4593a; color:#8a3520; font-weight:600;}
+  .quizOption[disabled]{cursor:default;}
+  .quizWeiterBtn{
+    display:block; width:100%; padding:14px; border-radius:10px; border:none;
+    background:#3f8a58; color:#fff; font-size:1rem; font-weight:600; cursor:pointer; margin-top:18px;
+  }
+  .quizScoreLine{font-size:0.85rem; color:var(--text-muted); margin-bottom:6px;}
 
   /* ---------- Floating Add Button (entfernt zugunsten Bottom-Nav) ---------- */
 
@@ -249,19 +256,18 @@
   .bottomNav{
     position:fixed; left:0; right:0; bottom:0; z-index:70;
     display:flex; justify-content:space-around; align-items:stretch;
-    background:linear-gradient(0deg, rgba(12,20,15,0.98), rgba(15,25,18,0.92));
-    border-top:1px solid rgba(255,255,255,0.1);
+    background:linear-gradient(0deg, rgba(247,241,227,0.98), rgba(247,241,227,0.9));
+    border-top:1px solid rgba(0,0,0,0.08);
     padding:6px 4px calc(6px + env(safe-area-inset-bottom));
     backdrop-filter:blur(6px);
   }
   .navBtn{
     flex:1; display:flex; flex-direction:column; align-items:center; gap:2px;
-    background:transparent; border:none; color:#a9b3a3; font-size:0.66rem;
+    background:transparent; border:none; color:var(--text-muted); font-size:0.66rem;
     padding:6px 2px; cursor:pointer; font-family:var(--schrift-sans); border-radius:10px;
   }
   .navBtn span{font-size:1.25rem; line-height:1;}
-  .navBtn.active{color:#fff6dd;}
-  .navBtn.active span{filter:drop-shadow(0 0 4px rgba(255,246,221,0.5));}
+  .navBtn.active{color:#8a5a1f; background:rgba(224,184,74,0.2);}
 
   /* ---------- Übersicht (Kacheln) ---------- */
   .uebersichtGrid{
@@ -269,35 +275,35 @@
   }
   .kachel{
     border-radius:14px; padding:18px 14px; cursor:pointer; text-align:left;
-    box-shadow:0 6px 14px rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08);
+    box-shadow:0 6px 14px rgba(90,70,40,0.15); border:1px solid rgba(0,0,0,0.06);
     background:var(--gelb); color:var(--tinte);
   }
   .kachel.reflexion{background:var(--gruen);}
   .kachel .kachelTitel{font-family:var(--schrift-hand); font-size:1.1rem; margin:0 0 6px; line-height:1.2;}
-  .kachel .kachelMeta{font-size:0.76rem; opacity:0.75; margin-bottom:8px;}
-  .kachel .kachelBar{height:6px; border-radius:999px; background:rgba(0,0,0,0.15); overflow:hidden;}
-  .kachel .kachelBar > div{height:100%; background:#2b6b45;}
+  .kachel .kachelMeta{font-size:0.76rem; opacity:0.85; margin-bottom:8px; font-weight:500;}
+  .kachel .kachelBar{height:6px; border-radius:999px; background:rgba(0,0,0,0.12); overflow:hidden;}
+  .kachel .kachelBar > div{height:100%; background:#3f8a58;}
   .uebersichtNebenReihe{margin-top:22px;}
-  .uebersichtNebenLabel{font-size:0.72rem; text-transform:uppercase; letter-spacing:0.5px; color:#8a9284; margin-bottom:8px;}
+  .uebersichtNebenLabel{font-size:0.72rem; text-transform:uppercase; letter-spacing:0.5px; color:#7a6f52; margin-bottom:8px; font-weight:600;}
   .kachelKlein{
     display:flex; align-items:center; justify-content:space-between; gap:10px;
     padding:12px 14px; border-radius:10px; cursor:pointer;
-    background:rgba(255,255,255,0.05); border:1px solid var(--blau-dk); color:#cfe3f5;
+    background:#eaf4fb; border:1px solid var(--blau-dk); color:var(--text-main);
     font-size:0.85rem;
   }
-  .kachelKlein .kleinMeta{font-size:0.72rem; opacity:0.7;}
+  .kachelKlein .kleinMeta{font-size:0.72rem; opacity:0.85; color:var(--text-muted);}
 
   /* ---------- Board-Kopfzeile ---------- */
   .boardHeader{display:flex; align-items:center; gap:10px; margin-bottom:6px;}
   .boardHeader .backBtn{
-    background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#f4efe2;
+    background:#fff; border:1px solid rgba(0,0,0,0.12); color:var(--text-main);
     border-radius:8px; padding:7px 12px; font-size:0.85rem; cursor:pointer; font-family:var(--schrift-sans);
   }
   .boardHeader h2{
-    flex:1; font-family:var(--schrift-hand); font-size:1.25rem; margin:0; color:#fff6dd;
+    flex:1; font-family:var(--schrift-hand); font-size:1.25rem; margin:0; color:#7a5c2e;
   }
   .boardHeader .addBtn{
-    background:var(--gelb); color:#2b2408; border:none; border-radius:8px;
+    background:var(--gelb); color:#5c4413; border:none; border-radius:8px;
     width:36px; height:36px; font-size:1.2rem; cursor:pointer;
   }
 
@@ -352,12 +358,12 @@
   /* ---------- Suche ---------- */
   .searchRow{display:flex; align-items:center; gap:8px; margin-top:8px;}
   .searchRow input{
-    flex:1; padding:9px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.2);
-    background:rgba(255,255,255,0.07); color:#f4efe2; font-size:0.88rem; font-family:var(--schrift-sans);
+    flex:1; padding:9px 12px; border-radius:8px; border:1px solid rgba(0,0,0,0.12);
+    background:#fffdf8; color:var(--text-main); font-size:0.88rem; font-family:var(--schrift-sans);
   }
-  .searchRow input::placeholder{color:#9aa398;}
+  .searchRow input::placeholder{color:#a89c80;}
   .searchRow .clearBtn{
-    background:transparent; border:none; color:#cfd6c8; font-size:1.1rem; cursor:pointer; padding:0 4px;
+    background:transparent; border:none; color:var(--text-muted); font-size:1.1rem; cursor:pointer; padding:0 4px;
   }
 
   /* ---------- Fortschritt ---------- */
@@ -390,12 +396,25 @@
 <nav class="bottomNav">
   <button class="navBtn active" id="navUebersicht" onclick="zurueckZurUebersicht()"><span>🏠</span>Übersicht</button>
   <button class="navBtn" id="navVorlesen" onclick="toggleVorlesenModus()"><span>🔊</span>Vorlesen</button>
-  <button class="navBtn" id="navUeben" onclick="starteUebung()"><span>🧠</span>Üben</button>
+  <button class="navBtn" id="navUeben" onclick="document.getElementById('uebenWahlDialog').showModal()"><span>🧠</span>Üben</button>
   <button class="navBtn" id="navFortschritt" onclick="zeigeFortschritt()"><span>📊</span>Fortschritt</button>
   <button class="navBtn" id="navMehr" onclick="document.getElementById('mehrDialog').showModal()"><span>⋯</span>Mehr</button>
 </nav>
 
 <div id="uebungOverlay" class="uebungOverlay" style="display:none;"></div>
+
+<dialog id="uebenWahlDialog">
+  <div class="modalInner">
+    <h2>Wie möchtest du üben?</h2>
+    <div class="mehrList">
+      <button class="mehrItem" onclick="document.getElementById('uebenWahlDialog').close(); starteUebung();">🗂 Karteikarten<br><span style="font-weight:400;font-size:0.8rem;color:var(--text-muted);">Selbst erinnern, dann Antwort aufdecken</span></button>
+      <button class="mehrItem" onclick="document.getElementById('uebenWahlDialog').close(); starteQuiz();">❓ Quiz<br><span style="font-weight:400;font-size:0.8rem;color:var(--text-muted);">Multiple-Choice-Fragen, automatisch erstellt</span></button>
+    </div>
+    <div class="modal-actions">
+      <button class="cancel" onclick="document.getElementById('uebenWahlDialog').close()">Abbrechen</button>
+    </div>
+  </div>
+</dialog>
 
 <dialog id="mehrDialog">
   <div class="modalInner">
@@ -522,7 +541,8 @@ const LABEL_MUSTER = /^Setting|^Ziel für die Führungskraft|^Trainerhinweis|^Ge
 function teaserText(text){
   const bereinigt = text.replace(/^(Setting|Ziel für die Führungskraft|Trainerhinweis \(DISG\)|Gesprächsstrategie|Ziel):\s*/gm, '');
   const erste = bereinigt.split(/\n\n+/).find(p => p.trim().length) || '';
-  return erste.replace(/\n/g, ' ').trim();
+  const einzeiler = erste.replace(/\n/g, ' ').trim();
+  return einzeiler.length > 140 ? einzeiler.slice(0, 140).trim() + '…' : einzeiler;
 }
 
 function parseAbschnitte(text){
@@ -1285,7 +1305,7 @@ function uebungAntwortZeigen(){
     }
     html += '</div>';
   });
-  html += `<button class="uebungAntwortBtn" style="background:#3a6f9c;" onclick="vorlesenEinzeln(uebungListe[${uebungIdx}], null)">🔊 Vorlesen</button>
+  html += `<button class="uebungAntwortBtn" style="background:#6fa8cc;" onclick="vorlesenEinzeln(uebungListe[${uebungIdx}], null)">🔊 Vorlesen</button>
     <div class="uebungBewertung">
       <button class="btnNochmal" onclick="uebungBewerten(false)">🔁 Nochmal üben</button>
       <button class="btnSitzt" onclick="uebungBewerten(true)">✅ Sitzt</button>
@@ -1309,6 +1329,151 @@ function uebungNurOffene(){
   uebungIdx = 0;
   if(!uebungListe.length){ zeigeToast('Alle Karten sitzen 🎉'); beendeUebung(); return; }
   renderUebungKarte();
+}
+
+/* ---------- Quiz (automatisch generierte Multiple-Choice-Fragen) ---------- */
+let quizListe = [];
+let quizIdx = 0;
+let quizRichtig = 0;
+let quizBeantwortet = false;
+
+const DISG_OPTIONEN = ['Dominant (D)', 'Initiativ (I)', 'Stetig (S)', 'Gewissenhaft (G)'];
+
+function mische(arr){
+  const a = [...arr];
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function starteQuiz(){
+  const liste = suchbegriff.trim() ? sucheGefiltert() : (currentView === 'uebersicht' ? karten.filter(k=>k.typ==='fach') : gefilterteKarten());
+  if(liste.length < 2){ zeigeToast('Mindestens 2 Karten nötig für ein Quiz'); return; }
+  quizListe = mische(liste);
+  quizIdx = 0;
+  quizRichtig = 0;
+  document.getElementById('uebungOverlay').style.display = 'flex';
+  renderQuizFrage();
+}
+
+function beendeQuiz(){
+  document.getElementById('uebungOverlay').style.display = 'none';
+  renderBoard();
+}
+
+/* Erzeugt eine Frage zur aktuellen Karte, mit Fallback-Kette je nach verfügbarem Kartenmaterial */
+function baueQuizfrage(k, pool){
+  // Typ 1: Reihenfolge bei Ablauf-Karten
+  if(k.typ === 'ablauf'){
+    const ablaufSortiert = pool.filter(x=>x.typ==='ablauf').sort((a,b)=>(a.ord||1)-(b.ord||1));
+    const idxHier = ablaufSortiert.findIndex(x=>x.id===k.id);
+    if(idxHier > 0 && ablaufSortiert.length >= 3){
+      const vorherige = ablaufSortiert[idxHier-1];
+      const distraktoren = mische(ablaufSortiert.filter(x=>x.id!==k.id && x.id!==vorherige.id)).slice(0,3);
+      const optionen = mische([k, ...distraktoren]);
+      return {
+        frage: `Was kommt nach „${vorherige.titel}"?`,
+        optionen: optionen.map(o=>o.titel),
+        richtig: optionen.findIndex(o=>o.id===k.id),
+        karte: k
+      };
+    }
+  }
+  // Typ 2: DISG-Zuordnung bei Rollenspiel-Karten
+  const disgMatch = k.text.match(/(Dominant|Initiativ|Stetig|Gewissenhaft)\s*\(([DISG])\)/);
+  if(disgMatch){
+    const richtigLabel = disgMatch[1] + ' (' + disgMatch[2] + ')';
+    const setting = parseAbschnitte(k.text).find(a=>a.label && a.label.toLowerCase().includes('setting'));
+    const fragetext = setting ? setting.inhalt : teaserText(k.text);
+    return {
+      frage: `Welcher DISG-Typ passt am ehesten zu dieser Situation?\n\n„${fragetext}"`,
+      optionen: DISG_OPTIONEN,
+      richtig: DISG_OPTIONEN.findIndex(o=>o===richtigLabel),
+      karte: k
+    };
+  }
+  // Typ 3 (Fallback): Titel-Zuordnung anhand der Kartenbeschreibung
+  const gleicherTyp = pool.filter(x=>x.id!==k.id && x.typ===k.typ);
+  const quelle = gleicherTyp.length >= 3 ? gleicherTyp : karten.filter(x=>x.id!==k.id);
+  const distraktoren = mische(quelle).slice(0,3);
+  const optionen = mische([k, ...distraktoren]);
+  return {
+    frage: `Zu welcher Karte passt diese Beschreibung?\n\n„${teaserText(k.text)}"`,
+    optionen: optionen.map(o=>o.titel),
+    richtig: optionen.findIndex(o=>o.id===k.id),
+    karte: k
+  };
+}
+
+function renderQuizFrage(){
+  const ov = document.getElementById('uebungOverlay');
+  if(quizIdx >= quizListe.length){
+    const pct = Math.round((quizRichtig/quizListe.length)*100);
+    ov.innerHTML = `
+      <div class="uebungTop">
+        <button class="uebungCloseBtn" onclick="beendeQuiz()">✕</button>
+      </div>
+      <div class="uebungEnde">
+        <h2>Quiz fertig 🎉</h2>
+        <p>${quizRichtig} von ${quizListe.length} richtig (${pct}%)</p>
+        <button class="iconBtn" onclick="starteQuizWiederholung()">🔁 Nur die falschen wiederholen</button><br>
+        <button class="iconBtn" onclick="starteQuiz()">🔀 Neues Quiz (gemischt)</button><br>
+        <button class="iconBtn" onclick="beendeQuiz()">Zurück zum Board</button>
+      </div>`;
+    return;
+  }
+  quizBeantwortet = false;
+  const k = quizListe[quizIdx];
+  const frage = baueQuizfrage(k, quizListe.length >= 4 ? quizListe : karten);
+  quizListe[quizIdx]._frage = frage;
+  const fortschritt = Math.round((quizIdx / quizListe.length) * 100);
+  ov.innerHTML = `
+    <div class="uebungTop">
+      <button class="uebungCloseBtn" onclick="beendeQuiz()">✕</button>
+      <div class="uebungProgress"><div style="width:${fortschritt}%"></div></div>
+      <div class="uebungCount">${quizIdx+1} / ${quizListe.length}</div>
+    </div>
+    <div class="uebungCardWrap">
+      <div class="uebungKarte">
+        <div class="quizScoreLine">✅ ${quizRichtig} richtig bisher</div>
+        <div class="quizFrage">${escapeHTML(frage.frage)}</div>
+        <div class="quizOptionen" id="quizOptionen">
+          ${frage.optionen.map((opt,i)=>`<button class="quizOption" onclick="quizAntworten(${i})">${escapeHTML(opt)}</button>`).join('')}
+        </div>
+        <div id="quizWeiter"></div>
+      </div>
+    </div>`;
+}
+
+function quizAntworten(i){
+  if(quizBeantwortet) return;
+  quizBeantwortet = true;
+  const frage = quizListe[quizIdx]._frage;
+  const richtig = i === frage.richtig;
+  if(richtig) quizRichtig++;
+  const k = karten.find(x=>x.id===frage.karte.id);
+  if(k){ k.geuebt = richtig; speichereKartenListe(); }
+  document.querySelectorAll('#quizOptionen .quizOption').forEach((btn,idx)=>{
+    btn.disabled = true;
+    if(idx === frage.richtig) btn.classList.add('richtig');
+    else if(idx === i) btn.classList.add('falsch');
+  });
+  document.getElementById('quizWeiter').innerHTML =
+    `<button class="quizWeiterBtn" onclick="quizIdx++; renderQuizFrage();">${quizIdx+1 >= quizListe.length ? 'Ergebnis anzeigen' : 'Weiter →'}</button>`;
+}
+
+function starteQuizWiederholung(){
+  const falsche = quizListe.filter(k=>{
+    const akt = karten.find(x=>x.id===k.id);
+    return akt && !akt.geuebt;
+  });
+  if(!falsche.length){ zeigeToast('Alles richtig beantwortet 🎉'); beendeQuiz(); return; }
+  quizListe = mische(falsche);
+  quizIdx = 0;
+  quizRichtig = 0;
+  renderQuizFrage();
 }
 
 init();
