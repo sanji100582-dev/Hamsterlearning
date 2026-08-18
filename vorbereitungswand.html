@@ -129,6 +129,10 @@
     letter-spacing:0.4px; padding:2px 7px; border-radius:999px; margin-bottom:6px;
     background:rgba(0,0,0,0.12); color:inherit;
   }
+  .karte .geuebtMarke{
+    position:absolute; top:10px; left:12px; width:18px; height:18px; border-radius:50%;
+    background:#2b6b45; color:#fff; font-size:0.7rem; display:flex; align-items:center; justify-content:center;
+  }
 
   .karte.fach{background:var(--gelb); border-radius:4px; border:1px solid var(--gelb-dk);}
   .karte.ablauf{
@@ -206,6 +210,39 @@
   .detail-actions{display:flex; justify-content:space-between; gap:8px; margin-top:18px; padding-top:14px; border-top:1px solid #e6dfc4;}
   .detail-actions .left{display:flex; gap:8px;}
 
+  /* ---------- Übungsmodus ---------- */
+  .uebungOverlay{
+    position:fixed; inset:0; z-index:80; background:var(--filz-2);
+    display:flex; flex-direction:column; padding:16px;
+  }
+  .uebungTop{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
+  .uebungProgress{flex:1; height:6px; background:rgba(255,255,255,0.15); border-radius:999px; overflow:hidden;}
+  .uebungProgress > div{height:100%; background:var(--gelb); transition:width .25s ease;}
+  .uebungCount{font-size:0.78rem; color:#cfd6c8; white-space:nowrap;}
+  .uebungCloseBtn{background:rgba(255,255,255,0.1); border:none; color:#f4efe2; width:32px; height:32px; border-radius:50%; font-size:1rem; cursor:pointer;}
+  .uebungCardWrap{flex:1; display:flex; flex-direction:column; justify-content:center; overflow-y:auto; padding:10px 2px 20px;}
+  .uebungKarte{
+    background:#fbf6e6; color:#20241e; border-radius:16px; padding:24px 20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.4);
+  }
+  .uebungTypBadge{font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:3px 10px; border-radius:999px; color:#20241e; display:inline-block; margin-bottom:10px;}
+  .uebungTitel{font-family:var(--schrift-hand); font-size:1.4rem; margin:0 0 6px;}
+  .uebungHinweis{font-size:0.82rem; color:#7a7256; margin-bottom:18px;}
+  .uebungAntwortBtn{
+    display:block; width:100%; padding:14px; border-radius:10px; border:none;
+    background:#2b6b45; color:#fff; font-size:1rem; font-weight:600; cursor:pointer; margin-top:10px;
+  }
+  .uebungBewertung{display:flex; gap:10px; margin-top:18px;}
+  .uebungBewertung button{
+    flex:1; padding:14px 8px; border-radius:10px; border:none; font-size:0.92rem; font-weight:700; cursor:pointer;
+  }
+  .btnNochmal{background:#f4d9d0; color:#8a3520;}
+  .btnSitzt{background:#d4ecd9; color:#1f5c34;}
+  .uebungEnde{text-align:center; padding:30px 10px;}
+  .uebungEnde h2{font-family:var(--schrift-hand); font-size:1.6rem; color:#fff6dd; margin-bottom:10px;}
+  .uebungEnde p{color:#cfd6c8; margin-bottom:20px;}
+  .uebungEnde .iconBtn{margin:4px;}
+
   /* ---------- Floating Add Button ---------- */
   .fab{
     position:fixed; bottom:22px; right:20px; z-index:25;
@@ -255,6 +292,23 @@
   }
   .toast.show{opacity:1;}
 
+  /* ---------- Suche ---------- */
+  .searchRow{display:flex; align-items:center; gap:8px; margin-top:8px;}
+  .searchRow input{
+    flex:1; padding:9px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.2);
+    background:rgba(255,255,255,0.07); color:#f4efe2; font-size:0.88rem; font-family:var(--schrift-sans);
+  }
+  .searchRow input::placeholder{color:#9aa398;}
+  .searchRow .clearBtn{
+    background:transparent; border:none; color:#cfd6c8; font-size:1.1rem; cursor:pointer; padding:0 4px;
+  }
+
+  /* ---------- Fortschritt ---------- */
+  .fortschrittZeile{margin-bottom:14px;}
+  .fortschrittLabel{display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:5px; color:#4a4a3a;}
+  .fortschrittBar{height:10px; border-radius:999px; background:#e6dfc4; overflow:hidden;}
+  .fortschrittBar > div{height:100%; background:#2b6b45; border-radius:999px; transition:width .3s ease;}
+
   @media (max-width:480px){
     .board{grid-template-columns:1fr 1fr; gap:26px 12px;}
     h1{font-size:1.3rem;}
@@ -268,8 +322,8 @@
   <div class="tabRow" id="tabRow"></div>
   <div class="toolRow">
     <span class="chip" data-typ="fach" onclick="toggleTyp('fach')">Fachinhalt</span>
-    <span class="chip" data-typ="ablauf" onclick="toggleTyp('ablauf')">Ablauf</span>
-    <span class="chip" data-typ="reflexion" onclick="toggleTyp('reflexion')">Reflexion</span>
+    <span class="chip off" data-typ="ablauf" onclick="toggleTyp('ablauf')">Ablauf</span>
+    <span class="chip off" data-typ="reflexion" onclick="toggleTyp('reflexion')">Reflexion</span>
     <span class="spacer"></span>
     <div class="modeToggle">
       <button id="btnVisuell" onclick="setModus('visuell')">Visuell</button>
@@ -277,6 +331,15 @@
     </div>
   </div>
   <div class="gruppeRow" id="gruppeRow"></div>
+  <div class="searchRow">
+    <input type="text" id="suchfeld" placeholder="🔍 Karte suchen..." oninput="onSuche(this.value)">
+    <button class="clearBtn" onclick="suchfeldLeeren()" title="Suche löschen">✕</button>
+  </div>
+  <div class="toolRow">
+    <button class="iconBtn" onclick="starteUebung()">🧠 Übungsmodus</button>
+    <button class="iconBtn" onclick="zufallskarte()">🎲 Zufallskarte</button>
+    <button class="iconBtn" onclick="zeigeFortschritt()">📊 Fortschritt</button>
+  </div>
   <div class="toolRow">
     <button class="iconBtn" onclick="exportJSON()">💾 Sichern</button>
     <button class="iconBtn" onclick="document.getElementById('importInput').click()">📂 Laden</button>
@@ -287,6 +350,18 @@
 <main>
   <div id="boardArea"></div>
 </main>
+
+<div id="uebungOverlay" class="uebungOverlay" style="display:none;"></div>
+
+<dialog id="fortschrittDialog">
+  <div class="modalInner">
+    <h2>Fortschritt</h2>
+    <div id="fortschrittBody"></div>
+    <div class="modal-actions">
+      <button class="cancel" onclick="document.getElementById('fortschrittDialog').close()">Schließen</button>
+    </div>
+  </div>
+</dialog>
 
 <button class="fab" onclick="openKartenModal()" title="Karte hinzufügen">+</button>
 
@@ -371,8 +446,9 @@ let seminare = [];
 let aktuellesSeminarId = null;
 let karten = [];
 let modus = 'visuell';
-let aktiveTypen = new Set(['fach','ablauf','reflexion']);
+let aktiveTypen = new Set(['fach']);
 let aktiveGruppe = 'alle';
+let suchbegriff = '';
 let editKarteId = null;
 let detailKarteId = null;
 let speakList = [];
@@ -537,14 +613,65 @@ function renderGruppeChips(kartenNachTyp){
 function gefilterteKarten(){
   const nachTyp = karten.filter(k => aktiveTypen.has(k.typ));
   renderGruppeChips(nachTyp);
-  return nachTyp
-    .filter(k => aktiveGruppe === 'alle' || k.gruppe === aktiveGruppe)
-    .sort((a,b)=>{
+  let liste = nachTyp.filter(k => aktiveGruppe === 'alle' || k.gruppe === aktiveGruppe);
+  if(suchbegriff.trim()){
+    const q = suchbegriff.trim().toLowerCase();
+    liste = liste.filter(k => (k.titel + ' ' + k.text + ' ' + (k.gruppe||'')).toLowerCase().includes(q));
+  }
+  return liste.sort((a,b)=>{
       if(a.typ === 'ablauf' && b.typ === 'ablauf') return (a.ord||1) - (b.ord||1);
       if(a.typ === 'ablauf') return -1;
       if(b.typ === 'ablauf') return 1;
       return 0;
     });
+}
+
+/* ---------- Suche ---------- */
+function onSuche(val){
+  suchbegriff = val;
+  renderBoard();
+}
+function suchfeldLeeren(){
+  suchbegriff = '';
+  document.getElementById('suchfeld').value = '';
+  renderBoard();
+}
+
+/* ---------- Zufallskarte ---------- */
+function zufallskarte(){
+  const liste = gefilterteKarten();
+  if(!liste.length){ zeigeToast('Keine Karten in der aktuellen Auswahl'); return; }
+  const k = liste[Math.floor(Math.random() * liste.length)];
+  openDetail(k.id);
+}
+
+/* ---------- Fortschritt ---------- */
+function zeigeFortschritt(){
+  if(!aktuellesSeminarId || !karten.length){ zeigeToast('Keine Karten in diesem Seminar'); return; }
+  const body = document.getElementById('fortschrittBody');
+  const gesamt = karten.length;
+  const gesamtSitzt = karten.filter(k=>k.geuebt).length;
+  const gruppen = {};
+  karten.forEach(k=>{
+    const key = k.gruppe || TYP_LABEL[k.typ];
+    if(!gruppen[key]) gruppen[key] = { sitzt:0, gesamt:0 };
+    gruppen[key].gesamt++;
+    if(k.geuebt) gruppen[key].sitzt++;
+  });
+  let html = '';
+  html += fortschrittZeileHTML('Gesamt', gesamtSitzt, gesamt, true);
+  Object.keys(gruppen).sort().forEach(key=>{
+    html += fortschrittZeileHTML(key, gruppen[key].sitzt, gruppen[key].gesamt, false);
+  });
+  body.innerHTML = html;
+  document.getElementById('fortschrittDialog').showModal();
+}
+function fortschrittZeileHTML(label, sitzt, gesamt, hervorgehoben){
+  const pct = gesamt ? Math.round((sitzt/gesamt)*100) : 0;
+  return `<div class="fortschrittZeile">
+    <div class="fortschrittLabel"><strong>${escapeHTML(label)}</strong><span>${sitzt}/${gesamt} · ${pct}%</span></div>
+    <div class="fortschrittBar"><div style="width:${pct}%; ${hervorgehoben?'background:#c9a521;':''}"></div></div>
+  </div>`;
 }
 
 function renderBoard(){
@@ -585,6 +712,13 @@ function renderVisuell(area, liste){
     badge.className = 'badge';
     badge.textContent = TYP_LABEL[k.typ];
     div.appendChild(badge);
+    if(k.geuebt){
+      const marke = document.createElement('div');
+      marke.className = 'geuebtMarke';
+      marke.textContent = '✓';
+      marke.title = 'Sitzt schon';
+      div.appendChild(marke);
+    }
     if(k.gruppe){
       const gTag = document.createElement('div');
       gTag.className = 'gruppeTag';
@@ -886,6 +1020,124 @@ async function loadTemplate(key){
   renderSeminarTabs();
   renderBoard();
   zeigeToast('Vorlage geladen');
+}
+
+/* ---------- Übungsmodus (aktives Abrufen) ---------- */
+let uebungListe = [];
+let uebungIdx = 0;
+let uebungOffen = false;
+
+function starteUebung(){
+  const liste = gefilterteKarten();
+  if(!liste.length){ zeigeToast('Keine Karten in der aktuellen Auswahl'); return; }
+  uebungListe = [...liste];
+  uebungIdx = 0;
+  uebungOffen = true;
+  document.getElementById('uebungOverlay').style.display = 'flex';
+  renderUebungKarte();
+}
+
+function beendeUebung(){
+  uebungOffen = false;
+  document.getElementById('uebungOverlay').style.display = 'none';
+  stopVorlesen();
+  renderBoard();
+}
+
+function mischeUebung(){
+  for(let i = uebungListe.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [uebungListe[i], uebungListe[j]] = [uebungListe[j], uebungListe[i]];
+  }
+  uebungIdx = 0;
+  renderUebungKarte();
+}
+
+function renderUebungKarte(){
+  const ov = document.getElementById('uebungOverlay');
+  if(uebungIdx >= uebungListe.length){
+    const sitzt = uebungListe.filter(k=>k.geuebt).length;
+    ov.innerHTML = `
+      <div class="uebungTop">
+        <button class="uebungCloseBtn" onclick="beendeUebung()">✕</button>
+      </div>
+      <div class="uebungEnde">
+        <h2>Durchlauf fertig 🎉</h2>
+        <p>${sitzt} von ${uebungListe.length} Karten sitzen.</p>
+        <button class="iconBtn" onclick="uebungNurOffene()">🔁 Nur die restlichen wiederholen</button><br>
+        <button class="iconBtn" onclick="mischeUebung()">🔀 Nochmal von vorn (gemischt)</button><br>
+        <button class="iconBtn" onclick="beendeUebung()">Zurück zum Board</button>
+      </div>`;
+    return;
+  }
+  const k = uebungListe[uebungIdx];
+  stopVorlesen();
+  const fortschritt = Math.round((uebungIdx / uebungListe.length) * 100);
+  ov.innerHTML = `
+    <div class="uebungTop">
+      <button class="uebungCloseBtn" onclick="beendeUebung()">✕</button>
+      <div class="uebungProgress"><div style="width:${fortschritt}%"></div></div>
+      <div class="uebungCount">${uebungIdx+1} / ${uebungListe.length}</div>
+    </div>
+    <div class="uebungCardWrap">
+      <div class="uebungKarte">
+        <span class="uebungTypBadge" style="background:${k.typ==='fach'?'var(--gelb)':k.typ==='ablauf'?'var(--blau)':'var(--gruen)'}">${TYP_LABEL[k.typ]}${k.gruppe ? ' · ' + k.gruppe : ''}</span>
+        <h3 class="uebungTitel">${escapeHTML((k.typ==='ablauf' && k.ord ? k.ord+'. ' : '') + k.titel)}</h3>
+        <div class="uebungHinweis">Versuch dich zu erinnern, bevor du die Antwort aufdeckst.</div>
+        <div id="uebungAntwort">
+          <button class="uebungAntwortBtn" onclick="uebungAntwortZeigen()">👁️ Antwort zeigen</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function escapeHTML(s){
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function uebungAntwortZeigen(){
+  const k = uebungListe[uebungIdx];
+  const box = document.getElementById('uebungAntwort');
+  const abschnitte = parseAbschnitte(k.text);
+  let html = '';
+  abschnitte.forEach(a=>{
+    html += '<div class="detailSection">';
+    if(a.label) html += `<div class="detailLabel">${escapeHTML(a.label)}</div>`;
+    const zeilen = a.inhalt.split('\n').filter(z=>z.trim());
+    const istListe = zeilen.length > 1 && zeilen.every(z => /^\d+\.\s/.test(z.trim()));
+    if(istListe){
+      html += '<div class="detailBody strategie"><ol>' + zeilen.map(z=>`<li>${escapeHTML(z.replace(/^\d+\.\s*/,''))}</li>`).join('') + '</ol></div>';
+    }else{
+      html += `<div class="detailBody">${escapeHTML(a.inhalt)}</div>`;
+    }
+    html += '</div>';
+  });
+  html += `<button class="uebungAntwortBtn" style="background:#3a6f9c;" onclick="vorlesenEinzeln(uebungListe[${uebungIdx}], null)">🔊 Vorlesen</button>
+    <div class="uebungBewertung">
+      <button class="btnNochmal" onclick="uebungBewerten(false)">🔁 Nochmal üben</button>
+      <button class="btnSitzt" onclick="uebungBewerten(true)">✅ Sitzt</button>
+    </div>`;
+  box.innerHTML = html;
+  document.querySelector('.uebungAntwortBtn[onclick*="uebungAntwortZeigen"]')?.remove();
+}
+
+function uebungBewerten(gut){
+  const k = karten.find(x => x.id === uebungListe[uebungIdx].id);
+  if(k){ k.geuebt = gut; speichereKartenListe(); }
+  uebungIdx++;
+  renderUebungKarte();
+}
+
+function uebungNurOffene(){
+  uebungListe = uebungListe.filter(k=>{
+    const akt = karten.find(x=>x.id===k.id);
+    return akt && !akt.geuebt;
+  });
+  uebungIdx = 0;
+  if(!uebungListe.length){ zeigeToast('Alle Karten sitzen 🎉'); beendeUebung(); return; }
+  renderUebungKarte();
 }
 
 init();
