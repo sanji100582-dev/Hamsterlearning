@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-180.png">
+<title>Vorbereitungswand</title>
+<style>
+  :root{
+    --filz-1:#f7f1e3;
+    --filz-2:#efe4cd;
+    --filz-3:#e6d7b5;
+    --gelb:#ffe7a3;
+    --gelb-dk:#e0b84a;
+    --blau:#bfe0f5;
+    --blau-dk:#6fa8cc;
+    --gruen:#c8ead2;
+    --gruen-dk:#7ec18f;
+    --tinte:#3b332a;
+    --text-main:#3b332a;
+    --text-muted:#6b5f49;
+    --pin-metall:#d9d9d9;
+    --schrift-hand: 'Segoe Print','Bradley Hand','Comic Sans MS', cursive;
+    --schrift-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html{overflow-x:hidden; width:100%;}
+  html,body{margin:0; padding:0; height:100%;}
+  body{
+    font-family:var(--schrift-sans);
+    background:
+      radial-gradient(ellipse at 20% 10%, rgba(255,255,255,0.4), transparent 40%),
+      radial-gradient(ellipse at 80% 90%, rgba(0,0,0,0.05), transparent 50%),
+      repeating-linear-gradient(45deg, var(--filz-1) 0px, var(--filz-2) 2px, var(--filz-1) 4px),
+      var(--filz-2);
+    color:var(--text-main);
+    min-height:100vh;
+  }
+
+  /* ---------- Header / Tabs ---------- */
+  header{
+    position:sticky; top:0; z-index:20;
+    background:linear-gradient(180deg, rgba(247,241,227,0.98), rgba(247,241,227,0.9));
+    backdrop-filter:blur(4px);
+    border-bottom:2px solid rgba(0,0,0,0.06);
+    padding:10px 12px 8px;
+  }
+  h1{
+    font-family:var(--schrift-hand);
+    font-size:1.5rem;
+    margin:2px 4px 8px;
+    letter-spacing:0.5px;
+    color:#7a5c2e;
+    text-shadow:0 1px 0 rgba(255,255,255,0.6);
+  }
+  .tabRow{display:flex; gap:6px; overflow-x:auto; padding-bottom:6px; scrollbar-width:thin;}
+  .tab{
+    flex:0 0 auto;
+    padding:8px 14px;
+    border-radius:10px 10px 4px 4px;
+    background:rgba(0,0,0,0.04);
+    border:1px solid rgba(0,0,0,0.1);
+    color:#5c5240;
+    font-size:0.85rem;
+    cursor:pointer;
+    white-space:nowrap;
+    font-family:var(--schrift-sans);
+  }
+  .tab.active{background:var(--gelb); color:#5c4413; border-color:var(--gelb-dk); font-weight:600;}
+  .tab.add{background:transparent; border-style:dashed; color:#3f6f4c;}
+  .tab.tpl{background:transparent; border-style:dashed; color:#2f5c82; border-color:rgba(111,168,204,0.6);}
+
+  .toolRow{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:8px;}
+  .spacer{flex:1;}
+  .iconBtn{
+    background:rgba(0,0,0,0.04); border:1px solid rgba(0,0,0,0.12); color:var(--text-main);
+    border-radius:8px; padding:7px 11px; font-size:0.8rem; cursor:pointer; font-family:var(--schrift-sans);
+  }
+
+  /* ---------- Board (visual) ---------- */
+  main{padding:18px 14px 100px; max-width:1200px; margin:0 auto;}
+  .board{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(230px,1fr));
+    gap:34px 20px;
+    padding:10px 6px 0;
+  }
+  .karte{
+    position:relative;
+    padding:22px 16px 16px;
+    min-height:140px;
+    box-shadow:0 6px 14px rgba(90,70,40,0.18), 0 2px 0 rgba(255,255,255,0.5) inset;
+    cursor:pointer;
+    transition:transform .15s ease;
+    color:var(--tinte);
+  }
+  .karte:active{transform:scale(0.97) !important;}
+  .karte .pin{
+    position:absolute; top:-9px; left:50%; transform:translateX(-50%);
+    width:16px; height:16px; border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #fff, var(--pin-metall) 55%, #8b8b8b 100%);
+    box-shadow:0 3px 4px rgba(0,0,0,0.5);
+  }
+  .karte h3{
+    font-family:var(--schrift-hand);
+    font-size:1.15rem; margin:0 0 8px; line-height:1.2;
+  }
+  .karte p{
+    font-family:var(--schrift-sans);
+    font-size:0.82rem; line-height:1.35; margin:0; white-space:pre-wrap; opacity:0.95;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  .karte .badge{
+    position:absolute; top:10px; right:12px; font-family:var(--schrift-hand);
+    font-size:0.75rem; opacity:0.8; font-weight:600;
+  }
+  .karte .gruppeTag{
+    display:inline-block; font-size:0.66rem; font-weight:700; text-transform:uppercase;
+    letter-spacing:0.4px; padding:2px 7px; border-radius:999px; margin-bottom:6px;
+    background:rgba(0,0,0,0.12); color:inherit;
+  }
+  .karte .geuebtMarke{
+    position:absolute; top:10px; left:12px; width:18px; height:18px; border-radius:50%;
+    background:#2b6b45; color:#fff; font-size:0.7rem; display:flex; align-items:center; justify-content:center;
+  }
+
+  .karte.fach{background:var(--gelb); border-radius:4px; border:1px solid var(--gelb-dk);}
+  .karte.ablauf{
+    background:var(--blau); border-radius:50%/38%;
+    padding:30px 26px 22px; text-align:center; color:#0d2338;
+    border:1px solid var(--blau-dk);
+  }
+  .karte.ablauf .num{
+    position:absolute; top:8px; left:12px; width:26px; height:26px; border-radius:50%;
+    background:#0d2338; color:#bfe0ff; display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:0.85rem; font-family:var(--schrift-sans);
+  }
+  .karte.reflexion{
+    background:var(--gruen); color:#1f4a2e;
+    border:1px solid var(--gruen-dk);
+    border-radius:255px 15px 225px 15px/15px 225px 15px 255px;
+    box-shadow:0 6px 14px rgba(90,70,40,0.18), 0 2px 0 rgba(255,255,255,0.5) inset;
+  }
+
+  /* ---------- Auditiv-Modus ---------- */
+  .audioList{display:flex; flex-direction:column; gap:10px;}
+  .audioRow{
+    display:flex; align-items:center; gap:12px;
+    background:rgba(0,0,0,0.03); border-left:6px solid; border-radius:8px;
+    padding:12px 14px;
+  }
+  .audioRow.fach{border-color:var(--gelb-dk);}
+  .audioRow.ablauf{border-color:var(--blau-dk);}
+  .audioRow.reflexion{border-color:var(--gruen-dk);}
+  .audioRow .info{flex:1; min-width:0;}
+  .audioRow h4{margin:0 0 3px; font-family:var(--schrift-hand); font-size:1.05rem; color:var(--text-main);}
+  .audioRow .typLbl{font-size:0.7rem; opacity:0.85; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); font-weight:600;}
+  .audioRow .txtPrev{font-size:0.8rem; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .playBtn{
+    width:42px; height:42px; border-radius:50%; border:none; flex:0 0 auto;
+    background:#fff; color:#20241e; font-size:1.1rem; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.15);
+  }
+  .playBtn.playing{background:var(--gelb);}
+  .allePlayBar{
+    display:flex; align-items:center; gap:10px; margin-bottom:14px; padding:12px;
+    background:rgba(0,0,0,0.03); border-radius:10px;
+  }
+
+  .leer{text-align:center; padding:60px 20px; color:var(--text-muted); font-family:var(--schrift-hand); font-size:1.2rem;}
+
+  /* ---------- Gruppen-Filter ---------- */
+  .gruppeRow{display:flex; gap:6px; overflow-x:auto; padding:8px 0 2px; scrollbar-width:thin;}
+  .gruppeChip{
+    flex:0 0 auto; padding:5px 12px; border-radius:999px; font-size:0.74rem; cursor:pointer;
+    border:1.5px solid rgba(255,255,255,0.25); color:#cfd6c8; white-space:nowrap; font-family:var(--schrift-sans);
+  }
+  .gruppeChip.on{background:#fff6dd; color:#20241e; border-color:#fff6dd; font-weight:700;}
+
+  /* ---------- Detailansicht ---------- */
+  .detailDialog{width:min(560px,94vw); max-height:85vh; overflow-y:auto;}
+  .detailHeader{display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:4px;}
+  .detailHeader h2{font-family:var(--schrift-hand); font-size:1.4rem; margin:0; line-height:1.25;}
+  .detailMeta{display:flex; gap:8px; align-items:center; margin-bottom:14px; flex-wrap:wrap;}
+  .detailBadge{
+    font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.4px;
+    padding:3px 10px; border-radius:999px; color:#20241e;
+  }
+  .detailBadge.fach{background:var(--gelb);}
+  .detailBadge.ablauf{background:var(--blau);}
+  .detailBadge.reflexion{background:var(--gruen);}
+  .detailBadge.gruppe{background:#e6dfc4; color:#4a4a3a;}
+  .detailSection{margin-bottom:14px;}
+  .detailLabel{
+    font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;
+    color:#6b551a; margin-bottom:4px;
+  }
+  .detailBody{font-size:0.95rem; line-height:1.5; white-space:pre-wrap; color:#20241e;}
+  .detailBody.strategie ol{margin:0; padding-left:1.2em;}
+  .detailBody.strategie li{margin-bottom:5px;}
+  .detail-actions{display:flex; justify-content:space-between; gap:8px; margin-top:18px; padding-top:14px; border-top:1px solid #e6dfc4;}
+  .detail-actions .left{display:flex; gap:8px;}
+
+  /* ---------- Übungsmodus ---------- */
+  .uebungOverlay{
+    position:fixed; inset:0; z-index:80; background:var(--filz-2);
+    display:flex; flex-direction:column; padding:16px;
+  }
+  .uebungTop{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
+  .uebungProgress{flex:1; height:6px; background:rgba(0,0,0,0.1); border-radius:999px; overflow:hidden;}
+  .uebungProgress > div{height:100%; background:var(--gelb-dk); transition:width .25s ease;}
+  .uebungCount{font-size:0.78rem; color:var(--text-muted); white-space:nowrap;}
+  .uebungCloseBtn{background:rgba(0,0,0,0.06); border:none; color:var(--text-main); width:32px; height:32px; border-radius:50%; font-size:1rem; cursor:pointer;}
+  .uebungCardWrap{flex:1; display:flex; flex-direction:column; justify-content:center; overflow-y:auto; padding:10px 2px 20px;}
+  .uebungKarte{
+    background:#fffdf8; color:var(--tinte); border-radius:16px; padding:24px 20px;
+    box-shadow:0 10px 24px rgba(90,70,40,0.2);
+  }
+  .uebungTypBadge{font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:3px 10px; border-radius:999px; color:#20241e; display:inline-block; margin-bottom:10px;}
+  .uebungTitel{font-family:var(--schrift-hand); font-size:1.4rem; margin:0 0 6px;}
+  .uebungHinweis{font-size:0.82rem; color:#6b5c3f; margin-bottom:18px;}
+  .uebungAntwortBtn{
+    display:block; width:100%; padding:14px; border-radius:10px; border:none;
+    background:#3f8a58; color:#fff; font-size:1rem; font-weight:600; cursor:pointer; margin-top:10px;
+  }
+  .uebungBewertung{display:flex; gap:10px; margin-top:18px;}
+  .uebungBewertung button{
+    flex:1; padding:14px 8px; border-radius:10px; border:none; font-size:0.92rem; font-weight:700; cursor:pointer;
+  }
+  .btnNochmal{background:#f7ded3; color:#8a3520;}
+  .btnSitzt{background:#d6efdb; color:#1f5c34;}
+  .uebungEnde{text-align:center; padding:30px 10px;}
+  .uebungEnde h2{font-family:var(--schrift-hand); font-size:1.6rem; color:#7a5c2e; margin-bottom:10px;}
+  .uebungEnde p{color:var(--text-muted); margin-bottom:20px;}
+  .uebungEnde .iconBtn{margin:4px;}
+
+  /* ---------- Quiz ---------- */
+  .quizFrage{font-size:1rem; line-height:1.45; margin:0 0 18px; color:var(--tinte);}
+  .quizOptionen{display:flex; flex-direction:column; gap:10px;}
+  .quizOption{
+    text-align:left; padding:13px 14px; border-radius:10px; border:1.5px solid rgba(0,0,0,0.15);
+    background:#fffdf8; color:var(--text-main); font-size:0.9rem; cursor:pointer; font-family:var(--schrift-sans);
+  }
+  .quizOption.richtig{background:#d6efdb; border-color:#3f8a58; color:#1f5c34; font-weight:600;}
+  .quizOption.falsch{background:#f7ded3; border-color:#c4593a; color:#8a3520; font-weight:600;}
+  .quizOption[disabled]{cursor:default;}
+  .quizWeiterBtn{
+    display:block; width:100%; padding:14px; border-radius:10px; border:none;
+    background:#3f8a58; color:#fff; font-size:1rem; font-weight:600; cursor:pointer; margin-top:18px;
+  }
+  .quizScoreLine{font-size:0.85rem; color:var(--text-muted); margin-bottom:6px;}
+
+  /* ---------- Floating Add Button (entfernt zugunsten Bottom-Nav) ---------- */
+
+  /* ---------- Bottom-Navigation ---------- */
+  .bottomNav{
+    position:fixed; left:0; right:0; bottom:0; z-index:70;
+    display:flex; justify-content:space-around; align-items:stretch;
+    background:linear-gradient(0deg, rgba(247,241,227,0.98), rgba(247,241,227,0.9));
+    border-top:1px solid rgba(0,0,0,0.08);
+    padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+    backdrop-filter:blur(6px);
+  }
+  .navBtn{
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:2px;
+    background:transparent; border:none; color:var(--text-muted); font-size:0.66rem;
+    padding:6px 2px; cursor:pointer; font-family:var(--schrift-sans); border-radius:10px;
+  }
+  .navBtn span{font-size:1.25rem; line-height:1;}
+  .navBtn.active{color:#8a5a1f; background:rgba(224,184,74,0.2);}
+
+  /* ---------- Übersicht (Kacheln) ---------- */
+  .uebersichtGrid{
+    display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:6px;
+  }
+  .kachel{
+    border-radius:14px; padding:18px 14px; cursor:pointer; text-align:left;
+    box-shadow:0 6px 14px rgba(90,70,40,0.15); border:1px solid rgba(0,0,0,0.06);
+    background:var(--gelb); color:var(--tinte);
+  }
+  .kachel.reflexion{background:var(--gruen);}
+  .kachel .kachelTitel{font-family:var(--schrift-hand); font-size:1.1rem; margin:0 0 6px; line-height:1.2;}
+  .kachel .kachelMeta{font-size:0.76rem; opacity:0.85; margin-bottom:8px; font-weight:500;}
+  .kachel .kachelBar{height:6px; border-radius:999px; background:rgba(0,0,0,0.12); overflow:hidden;}
+  .kachel .kachelBar > div{height:100%; background:#3f8a58;}
+  .uebersichtNebenReihe{margin-top:22px;}
+  .uebersichtNebenLabel{font-size:0.72rem; text-transform:uppercase; letter-spacing:0.5px; color:#7a6f52; margin-bottom:8px; font-weight:600;}
+  .kachelKlein{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:12px 14px; border-radius:10px; cursor:pointer;
+    background:#eaf4fb; border:1px solid var(--blau-dk); color:var(--text-main);
+    font-size:0.85rem;
+  }
+  .kachelKlein .kleinMeta{font-size:0.72rem; opacity:0.85; color:var(--text-muted);}
+
+  /* ---------- Board-Kopfzeile ---------- */
+  .boardHeader{display:flex; align-items:center; gap:10px; margin-bottom:6px;}
+  .boardHeader .backBtn{
+    background:#fff; border:1px solid rgba(0,0,0,0.12); color:var(--text-main);
+    border-radius:8px; padding:7px 12px; font-size:0.85rem; cursor:pointer; font-family:var(--schrift-sans);
+  }
+  .boardHeader h2{
+    flex:1; font-family:var(--schrift-hand); font-size:1.25rem; margin:0; color:#7a5c2e;
+  }
+  .boardHeader .addBtn{
+    background:var(--gelb); color:#5c4413; border:none; border-radius:8px;
+    width:36px; height:36px; font-size:1.2rem; cursor:pointer;
+  }
+
+  /* ---------- Mehr-Menü ---------- */
+  .mehrList{display:flex; flex-direction:column; gap:8px;}
+  .mehrItem{
+    text-align:left; padding:13px 14px; border-radius:10px; border:1px solid #d8cfa8;
+    background:#fffdf5; color:#20241e; font-size:0.92rem; cursor:pointer; font-family:var(--schrift-sans);
+  }
+
+  /* ---------- Modal ---------- */
+  dialog{
+    border:none; border-radius:14px; padding:0; width:min(440px,92vw);
+    background:#fbf6e6; color:#20241e;
+  }
+  dialog::backdrop{background:rgba(0,0,0,0.6);}
+  .modalInner{padding:20px;}
+  .modalInner h2{font-family:var(--schrift-hand); margin:0 0 14px; font-size:1.3rem;}
+  .field{margin-bottom:12px;}
+  .field label{display:block; font-size:0.78rem; font-weight:600; margin-bottom:4px; color:#4a4a3a;}
+  .field input, .field select, .field textarea{
+    width:100%; padding:10px; border-radius:8px; border:1.5px solid #d8cfa8; font-size:0.95rem;
+    font-family:var(--schrift-sans); background:#fffdf5;
+  }
+  .field textarea{min-height:110px; resize:vertical;}
+  .typChoice{display:flex; gap:8px;}
+  .typChoice label{
+    flex:1; text-align:center; padding:10px 4px; border-radius:8px; border:2px solid #d8cfa8;
+    cursor:pointer; font-size:0.8rem; font-weight:600; color:#4a4a3a;
+  }
+  .typChoice input{display:none;}
+  .typChoice input:checked + span{display:block;}
+  .typChoice label:has(input:checked)[data-typ="fach"]{background:var(--gelb); border-color:var(--gelb-dk);}
+  .typChoice label:has(input:checked)[data-typ="ablauf"]{background:var(--blau); border-color:var(--blau-dk); color:#0d2338;}
+  .typChoice label:has(input:checked)[data-typ="reflexion"]{background:var(--gruen); border-color:var(--gruen-dk);}
+  .modal-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:16px;}
+  .modal-actions button{
+    padding:10px 18px; border-radius:8px; border:none; font-size:0.9rem; cursor:pointer; font-family:var(--schrift-sans);
+  }
+  .modal-actions .cancel{background:#e6dfc4; color:#4a4a3a;}
+  .modal-actions .save{background:#2b6b45; color:#fff; font-weight:600;}
+  .modal-actions .danger{background:#b64a3a; color:#fff; font-weight:600;}
+
+  .toast{
+    position:fixed; bottom:90px; left:50%; transform:translateX(-50%);
+    background:#fff6dd; color:#20241e; padding:10px 18px; border-radius:999px;
+    font-size:0.85rem; box-shadow:0 4px 12px rgba(0,0,0,0.4); z-index:60; opacity:0; transition:opacity .3s;
+    pointer-events:none;
+  }
+  .toast.show{opacity:1;}
+
+  /* ---------- Suche ---------- */
+  .searchRow{display:flex; align-items:center; gap:8px; margin-top:8px;}
+  .searchRow input{
+    flex:1; padding:9px 12px; border-radius:8px; border:1px solid rgba(0,0,0,0.12);
+    background:#fffdf8; color:var(--text-main); font-size:0.88rem; font-family:var(--schrift-sans);
+  }
+  .searchRow input::placeholder{color:#a89c80;}
+  .searchRow .clearBtn{
+    background:transparent; border:none; color:var(--text-muted); font-size:1.1rem; cursor:pointer; padding:0 4px;
+  }
+
+  /* ---------- Fortschritt ---------- */
+  .fortschrittZeile{margin-bottom:14px;}
+  .fortschrittLabel{display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:5px; color:#4a4a3a;}
+  .fortschrittBar{height:10px; border-radius:999px; background:#e6dfc4; overflow:hidden;}
+  .fortschrittBar > div{height:100%; background:#2b6b45; border-radius:999px; transition:width .3s ease;}
+
+  @media (max-width:480px){
+    .board{grid-template-columns:1fr 1fr; gap:26px 12px;}
+    h1{font-size:1.3rem;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📌 Vorbereitungswand</h1>
+  <div class="tabRow" id="tabRow"></div>
+  <div class="searchRow">
+    <input type="text" id="suchfeld" placeholder="🔍 Karte suchen..." oninput="onSuche(this.value)">
+    <button class="clearBtn" onclick="suchfeldLeeren()" title="Suche löschen">✕</button>
+  </div>
+</header>
+
+<main>
+  <div id="boardArea"></div>
+</main>
+
+<nav class="bottomNav">
+  <button class="navBtn active" id="navUebersicht" onclick="zurueckZurUebersicht()"><span>🏠</span>Übersicht</button>
+  <button class="navBtn" id="navVorlesen" onclick="toggleVorlesenModus()"><span>🔊</span>Vorlesen</button>
+  <button class="navBtn" id="navUeben" onclick="document.getElementById('uebenWahlDialog').showModal()"><span>🧠</span>Üben</button>
+  <button class="navBtn" id="navFortschritt" onclick="zeigeFortschritt()"><span>📊</span>Fortschritt</button>
+  <button class="navBtn" id="navMehr" onclick="document.getElementById('mehrDialog').showModal()"><span>⋯</span>Mehr</button>
+</nav>
+
+<div id="uebungOverlay" class="uebungOverlay" style="display:none;"></div>
+
+<dialog id="uebenWahlDialog">
+  <div class="modalInner">
+    <h2>Wie möchtest du üben?</h2>
+    <div class="mehrList">
+      <button class="mehrItem" onclick="document.getElementById('uebenWahlDialog').close(); starteUebung();">🗂 Karteikarten<br><span style="font-weight:400;font-size:0.8rem;color:var(--text-muted);">Selbst erinnern, dann Antwort aufdecken</span></button>
+      <button class="mehrItem" onclick="document.getElementById('uebenWahlDialog').close(); starteQuiz();">❓ Quiz<br><span style="font-weight:400;font-size:0.8rem;color:var(--text-muted);">Multiple-Choice-Fragen, automatisch erstellt</span></button>
+    </div>
+    <div class="modal-actions">
+      <button class="cancel" onclick="document.getElementById('uebenWahlDialog').close()">Abbrechen</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="mehrDialog">
+  <div class="modalInner">
+    <h2>Mehr</h2>
+    <div class="mehrList">
+      <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); openKartenModal();">➕ Neue Karte anlegen</button>
+      <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); document.getElementById('seminarDialog').showModal();">📁 Neues Seminar</button>
+      <button class="mehrItem" onclick="loadTemplate('verhandeln_pm'); document.getElementById('mehrDialog').close();">⤓ Vorlage „Verhandeln im PM-Alltag" laden</button>
+      <button class="mehrItem" onclick="zufallskarte(); document.getElementById('mehrDialog').close();">🎲 Zufallskarte</button>
+      <button class="mehrItem" onclick="exportJSON()">💾 Sichern (Backup exportieren)</button>
+      <button class="mehrItem" onclick="document.getElementById('importInput').click()">📂 Laden (Backup importieren)</button>
+      <input type="file" id="importInput" accept="application/json" style="display:none" onchange="importJSON(event)">
+    </div>
+    <div class="modal-actions">
+      <button class="cancel" onclick="document.getElementById('mehrDialog').close()">Schließen</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="fortschrittDialog">
+  <div class="modalInner">
+    <h2>Fortschritt</h2>
+    <div id="fortschrittBody"></div>
+    <div class="modal-actions">
+      <button class="cancel" onclick="document.getElementById('fortschrittDialog').close()">Schließen</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="seminarDialog">
+  <div class="modalInner">
+    <h2>Neues Seminar</h2>
+    <div class="field">
+      <label>Titel</label>
+      <input type="text" id="sTitel" placeholder="z. B. Kommunikation im Team">
+    </div>
+    <div class="field">
+      <label>Datum</label>
+      <input type="date" id="sDatum">
+    </div>
+    <div class="modal-actions">
+      <button class="cancel" onclick="document.getElementById('seminarDialog').close()">Abbrechen</button>
+      <button class="save" onclick="saveSeminar()">Anlegen</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="kartenDialog">
+  <div class="modalInner">
+    <h2 id="kDialogTitel">Neue Karte</h2>
+    <div class="field">
+      <label>Kartentyp</label>
+      <div class="typChoice">
+        <label data-typ="fach"><input type="radio" name="kTyp" value="fach" checked><span>Fachinhalt</span></label>
+        <label data-typ="ablauf"><input type="radio" name="kTyp" value="ablauf"><span>Ablauf</span></label>
+        <label data-typ="reflexion"><input type="radio" name="kTyp" value="reflexion"><span>Reflexion</span></label>
+      </div>
+    </div>
+    <div class="field" id="ordField" style="display:none;">
+      <label>Reihenfolge (Ablauf)</label>
+      <input type="number" id="kOrd" min="1" value="1">
+    </div>
+    <div class="field">
+      <label>Titel</label>
+      <input type="text" id="kTitel" placeholder="Kurzer Kartentitel">
+    </div>
+    <div class="field">
+      <label>Gruppe (optional)</label>
+      <input type="text" id="kGruppe" placeholder="z. B. Rollenspiele TL, Konzepte">
+    </div>
+    <div class="field">
+      <label>Text</label>
+      <textarea id="kText" placeholder="Inhalt, Leitfragen, Stichpunkte... Tipp: Zeilen wie 'Setting: ...' oder 'Ziel: ...' werden in der Detailansicht automatisch als eigene Abschnitte angezeigt."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="danger" id="kDeleteBtn" style="display:none;" onclick="deleteKarte()">Löschen</button>
+      <button class="cancel" onclick="document.getElementById('kartenDialog').close()">Abbrechen</button>
+      <button class="save" onclick="saveKarte()">Speichern</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="detailDialog" class="detailDialog">
+  <div class="modalInner">
+    <div class="detailHeader">
+      <h2 id="dTitel"></h2>
+      <button class="iconBtn" onclick="document.getElementById('detailDialog').close()" style="background:#e6dfc4;color:#4a4a3a;">✕</button>
+    </div>
+    <div class="detailMeta" id="dMeta"></div>
+    <div id="dBody"></div>
+    <div class="detail-actions">
+      <div class="left">
+        <button class="iconBtn" onclick="vorlesenAusDetail()" style="background:#e6dfc4;color:#4a4a3a;">🔊 Vorlesen</button>
+      </div>
+      <div>
+        <button class="cancel" style="border-radius:8px;padding:9px 16px;background:#e6dfc4;color:#4a4a3a;border:none;cursor:pointer;" onclick="bearbeiteAusDetail()">✏️ Bearbeiten</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const TYP_LABEL = { fach:'Fachinhalt', ablauf:'Ablauf', reflexion:'Reflexion' };
+
+let seminare = [];
+let aktuellesSeminarId = null;
+let karten = [];
+let modus = 'visuell';
+let currentView = 'uebersicht';
+let boardTyp = 'fach';
+let boardGruppe = null;
+let suchbegriff = '';
+let editKarteId = null;
+let detailKarteId = null;
+let speakList = [];
+let speakIdx = 0;
+let storageOk = true;
+
+/* ---------- Teaser & Abschnitte für Detailansicht ---------- */
+const LABEL_MUSTER = /^Setting|^Ziel für die Führungskraft|^Trainerhinweis|^Gesprächsstrategie|^Ziel\b/;
+
+function teaserText(text){
+  const bereinigt = text.replace(/^(Setting|Ziel für die Führungskraft|Trainerhinweis \(DISG\)|Gesprächsstrategie|Ziel):\s*/gm, '');
+  const erste = bereinigt.split(/\n\n+/).find(p => p.trim().length) || '';
+  const einzeiler = erste.replace(/\n/g, ' ').trim();
+  return einzeiler.length > 140 ? einzeiler.slice(0, 140).trim() + '…' : einzeiler;
+}
+
+function parseAbschnitte(text){
+  const absaetze = text.split(/\n\n+/);
+  const abschnitte = [];
+  for(const p of absaetze){
+    const m = p.match(/^([^\n:]{2,45}):\s*([\s\S]*)$/);
+    if(m && LABEL_MUSTER.test(p)){
+      abschnitte.push({ label: m[1].trim(), inhalt: m[2].trim() });
+    }else{
+      abschnitte.push({ label: null, inhalt: p.trim() });
+    }
+  }
+  return abschnitte;
+}
+
+/* ---------- Storage: localStorage (funktioniert eigenständig in Safari, ohne Claude-Umgebung) ---------- */
+const LS_PREFIX = 'vbwand_';
+async function storeGet(key){
+  try{
+    const raw = window.localStorage.getItem(LS_PREFIX + key);
+    return raw ? JSON.parse(raw) : null;
+  }catch(e){ storageOk = false; return null; }
+}
+async function storeSet(key, value){
+  try{
+    window.localStorage.setItem(LS_PREFIX + key, JSON.stringify(value));
+  }catch(e){ storageOk = false; }
+}
+
+function zeigeToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=> t.classList.remove('show'), 2200);
+}
+
+function hashRotation(id){
+  let h = 0;
+  for(const c of id) h = (h*31 + c.charCodeAt(0)) % 1000;
+  return (((h % 7) - 3) * 0.5) + 'deg';
+}
+
+/* ---------- Init ---------- */
+async function init(){
+  seminare = (await storeGet('seminare')) || [];
+  const last = await storeGet('letztesSeminar');
+  if(seminare.length){
+    aktuellesSeminarId = (last && seminare.find(s=>s.id===last)) ? last : seminare[0].id;
+    karten = (await storeGet('karten_' + aktuellesSeminarId)) || [];
+  }
+  renderSeminarTabs();
+  renderBoard();
+  if(!storageOk){
+    zeigeToast('Automatische Speicherung nicht verfügbar – bitte regelmäßig 💾 Sichern nutzen');
+  }
+}
+
+async function speichereKartenListe(){
+  await storeSet('karten_' + aktuellesSeminarId, karten);
+}
+
+/* ---------- Tabs ---------- */
+function renderSeminarTabs(){
+  const row = document.getElementById('tabRow');
+  row.innerHTML = '';
+  seminare.forEach(s=>{
+    const b = document.createElement('button');
+    b.className = 'tab' + (s.id === aktuellesSeminarId ? ' active' : '');
+    b.textContent = s.titel + (s.datum ? ' · ' + s.datum : '');
+    b.onclick = () => wechsleSeminar(s.id);
+    row.appendChild(b);
+  });
+  const addBtn = document.createElement('button');
+  addBtn.className = 'tab add';
+  addBtn.textContent = '+ Seminar';
+  addBtn.onclick = () => document.getElementById('seminarDialog').showModal();
+  row.appendChild(addBtn);
+
+  const tplBtn = document.createElement('button');
+  tplBtn.className = 'tab tpl';
+  tplBtn.textContent = '⤓ Vorlage „Verhandeln im PM-Alltag"';
+  tplBtn.onclick = () => loadTemplate('verhandeln_pm');
+  row.appendChild(tplBtn);
+}
+
+async function wechsleSeminar(id){
+  aktuellesSeminarId = id;
+  currentView = 'uebersicht';
+  boardTyp = 'fach';
+  boardGruppe = null;
+  suchbegriff = '';
+  const sf = document.getElementById('suchfeld');
+  if(sf) sf.value = '';
+  await storeSet('letztesSeminar', id);
+  karten = (await storeGet('karten_' + id)) || [];
+  renderSeminarTabs();
+  renderBoard();
+}
+
+async function saveSeminar(){
+  const titel = document.getElementById('sTitel').value.trim();
+  const datum = document.getElementById('sDatum').value;
+  if(!titel){ zeigeToast('Bitte einen Titel eingeben'); return; }
+  const id = 's_' + Date.now();
+  seminare.push({ id, titel, datum });
+  await storeSet('seminare', seminare);
+  document.getElementById('sTitel').value = '';
+  document.getElementById('sDatum').value = '';
+  document.getElementById('seminarDialog').close();
+  await wechsleSeminar(id);
+}
+
+/* ---------- Navigation Übersicht ↔ Board ---------- */
+function zurueckZurUebersicht(){
+  currentView = 'uebersicht';
+  suchbegriff = '';
+  const sf = document.getElementById('suchfeld');
+  if(sf) sf.value = '';
+  renderBoard();
+}
+function waehleGruppe(typ, gruppe){
+  boardTyp = typ;
+  boardGruppe = gruppe;
+  currentView = 'board';
+  suchbegriff = '';
+  const sf = document.getElementById('suchfeld');
+  if(sf) sf.value = '';
+  renderBoard();
+}
+function toggleVorlesenModus(){
+  modus = (modus === 'auditiv') ? 'visuell' : 'auditiv';
+  if(currentView === 'uebersicht') currentView = 'board';
+  renderBoard();
+}
+function updateNavAktiv(){
+  document.getElementById('navUebersicht').classList.toggle('active', currentView === 'uebersicht');
+  document.getElementById('navVorlesen').classList.toggle('active', modus === 'auditiv');
+}
+
+/* ---------- Kartenpool für die aktuelle Ansicht ---------- */
+function gefilterteKarten(){
+  let liste = karten.filter(k => k.typ === boardTyp);
+  if(boardTyp === 'fach'){
+    liste = liste.filter(k => boardGruppe === null ? !k.gruppe : k.gruppe === boardGruppe);
+  }
+  return liste.sort((a,b)=>{
+    if(a.typ === 'ablauf') return (a.ord||1) - (b.ord||1);
+    return 0;
+  });
+}
+
+function sucheGefiltert(){
+  const q = suchbegriff.trim().toLowerCase();
+  if(!q) return [];
+  return karten.filter(k => (k.titel + ' ' + k.text + ' ' + (k.gruppe||'')).toLowerCase().includes(q));
+}
+
+/* ---------- Suche ---------- */
+function onSuche(val){
+  suchbegriff = val;
+  renderBoard();
+}
+function suchfeldLeeren(){
+  suchbegriff = '';
+  document.getElementById('suchfeld').value = '';
+  renderBoard();
+}
+
+/* ---------- Zufallskarte ---------- */
+function zufallskarte(){
+  const liste = suchbegriff.trim() ? sucheGefiltert() : (currentView === 'uebersicht' ? karten.filter(k=>k.typ==='fach') : gefilterteKarten());
+  if(!liste.length){ zeigeToast('Keine Karten in der aktuellen Auswahl'); return; }
+  const k = liste[Math.floor(Math.random() * liste.length)];
+  openDetail(k.id);
+}
+
+/* ---------- Fortschritt ---------- */
+function zeigeFortschritt(){
+  if(!aktuellesSeminarId || !karten.length){ zeigeToast('Keine Karten in diesem Seminar'); return; }
+  const body = document.getElementById('fortschrittBody');
+  const gesamt = karten.length;
+  const gesamtSitzt = karten.filter(k=>k.geuebt).length;
+  const gruppen = {};
+  karten.forEach(k=>{
+    const key = k.gruppe || TYP_LABEL[k.typ];
+    if(!gruppen[key]) gruppen[key] = { sitzt:0, gesamt:0 };
+    gruppen[key].gesamt++;
+    if(k.geuebt) gruppen[key].sitzt++;
+  });
+  let html = '';
+  html += fortschrittZeileHTML('Gesamt', gesamtSitzt, gesamt, true);
+  Object.keys(gruppen).sort().forEach(key=>{
+    html += fortschrittZeileHTML(key, gruppen[key].sitzt, gruppen[key].gesamt, false);
+  });
+  body.innerHTML = html;
+  document.getElementById('fortschrittDialog').showModal();
+}
+function fortschrittZeileHTML(label, sitzt, gesamt, hervorgehoben){
+  const pct = gesamt ? Math.round((sitzt/gesamt)*100) : 0;
+  return `<div class="fortschrittZeile">
+    <div class="fortschrittLabel"><strong>${escapeHTML(label)}</strong><span>${sitzt}/${gesamt} · ${pct}%</span></div>
+    <div class="fortschrittBar"><div style="width:${pct}%; ${hervorgehoben?'background:#c9a521;':''}"></div></div>
+  </div>`;
+}
+
+/* ---------- Hauptrendering ---------- */
+function renderBoard(){
+  const area = document.getElementById('boardArea');
+  area.innerHTML = '';
+  updateNavAktiv();
+  if(!aktuellesSeminarId){
+    area.innerHTML = '<div class="leer">Noch kein Seminar angelegt.<br>Tippe unten auf „⋯ Mehr" → „Neues Seminar" oder lade die Vorlage.</div>';
+    return;
+  }
+  if(suchbegriff.trim()){
+    renderSucheErgebnisse(area);
+    return;
+  }
+  if(currentView === 'uebersicht'){
+    renderUebersicht(area);
+    return;
+  }
+  const liste = gefilterteKarten();
+  renderBoardHeader(area);
+  if(!liste.length){
+    const leer = document.createElement('div');
+    leer.className = 'leer';
+    leer.innerHTML = 'Keine Karten hier.<br>Über „⋯ Mehr" → „Neue Karte anlegen".';
+    area.appendChild(leer);
+    return;
+  }
+  if(modus === 'visuell') renderVisuell(area, liste);
+  else renderAuditiv(area, liste);
+}
+
+function renderBoardHeader(area){
+  const gruppenLabel = boardTyp === 'fach' ? (boardGruppe || 'Sonstige Fachinhalte') : TYP_LABEL[boardTyp];
+  const header = document.createElement('div');
+  header.className = 'boardHeader';
+  header.innerHTML = `
+    <button class="backBtn" onclick="zurueckZurUebersicht()">← Übersicht</button>
+    <h2>${escapeHTML(gruppenLabel)}</h2>
+    <button class="addBtn" onclick="openKartenModal()" title="Karte hinzufügen">+</button>`;
+  area.appendChild(header);
+}
+
+function renderSucheErgebnisse(area){
+  const liste = sucheGefiltert();
+  const header = document.createElement('div');
+  header.className = 'boardHeader';
+  header.innerHTML = `
+    <button class="backBtn" onclick="suchfeldLeeren()">✕ Suche schließen</button>
+    <h2>${liste.length} Treffer</h2>`;
+  area.appendChild(header);
+  if(!liste.length){
+    const leer = document.createElement('div');
+    leer.className = 'leer';
+    leer.textContent = 'Keine Treffer.';
+    area.appendChild(leer);
+    return;
+  }
+  if(modus === 'visuell') renderVisuell(area, liste);
+  else renderAuditiv(area, liste);
+}
+
+function renderUebersicht(area){
+  const fachKarten = karten.filter(k => k.typ === 'fach');
+  const gruppenMap = {};
+  fachKarten.forEach(k=>{
+    const key = k.gruppe || null;
+    const label = k.gruppe || 'Sonstige Fachinhalte';
+    if(!gruppenMap[label]) gruppenMap[label] = { key, gesamt:0, sitzt:0 };
+    gruppenMap[label].gesamt++;
+    if(k.geuebt) gruppenMap[label].sitzt++;
+  });
+  const reflexionKarten = karten.filter(k=>k.typ==='reflexion');
+  const ablaufKarten = karten.filter(k=>k.typ==='ablauf');
+
+  const grid = document.createElement('div');
+  grid.className = 'uebersichtGrid';
+
+  Object.keys(gruppenMap).sort().forEach(label=>{
+    const g = gruppenMap[label];
+    const pct = g.gesamt ? Math.round((g.sitzt/g.gesamt)*100) : 0;
+    const kachel = document.createElement('div');
+    kachel.className = 'kachel';
+    kachel.onclick = () => waehleGruppe('fach', g.key);
+    kachel.innerHTML = `
+      <div class="kachelTitel">${escapeHTML(label)}</div>
+      <div class="kachelMeta">${g.gesamt} Karte${g.gesamt===1?'':'n'} · ${pct}% sitzen</div>
+      <div class="kachelBar"><div style="width:${pct}%"></div></div>`;
+    grid.appendChild(kachel);
+  });
+
+  if(reflexionKarten.length){
+    const sitzt = reflexionKarten.filter(k=>k.geuebt).length;
+    const pct = Math.round((sitzt/reflexionKarten.length)*100);
+    const kachel = document.createElement('div');
+    kachel.className = 'kachel reflexion';
+    kachel.onclick = () => waehleGruppe('reflexion', null);
+    kachel.innerHTML = `
+      <div class="kachelTitel">Reflexion</div>
+      <div class="kachelMeta">${reflexionKarten.length} Karte${reflexionKarten.length===1?'':'n'} · ${pct}% sitzen</div>
+      <div class="kachelBar"><div style="width:${pct}%"></div></div>`;
+    grid.appendChild(kachel);
+  }
+
+  area.appendChild(grid);
+
+  if(!Object.keys(gruppenMap).length && !reflexionKarten.length && !ablaufKarten.length){
+    const leer = document.createElement('div');
+    leer.className = 'leer';
+    leer.innerHTML = 'Noch keine Karten in diesem Seminar.<br>Über „⋯ Mehr" eine Karte anlegen oder Vorlage laden.';
+    area.appendChild(leer);
+  }
+
+  if(ablaufKarten.length){
+    const sitzt = ablaufKarten.filter(k=>k.geuebt).length;
+    const nebenReihe = document.createElement('div');
+    nebenReihe.className = 'uebersichtNebenReihe';
+    nebenReihe.innerHTML = `<div class="uebersichtNebenLabel">Zeitplan</div>`;
+    const klein = document.createElement('div');
+    klein.className = 'kachelKlein';
+    klein.onclick = () => waehleGruppe('ablauf', null);
+    klein.innerHTML = `<span>🕐 Ablauf</span><span class="kleinMeta">${ablaufKarten.length} Schritte</span>`;
+    nebenReihe.appendChild(klein);
+    area.appendChild(nebenReihe);
+  }
+}
+
+function renderVisuell(area, liste){
+  const board = document.createElement('div');
+  board.className = 'board';
+  liste.forEach(k=>{
+    const div = document.createElement('div');
+    div.className = 'karte ' + k.typ;
+    div.style.transform = `rotate(${hashRotation(k.id)})`;
+    div.onclick = () => openDetail(k.id);
+    const pin = document.createElement('div');
+    pin.className = 'pin';
+    div.appendChild(pin);
+    if(k.typ === 'ablauf'){
+      const num = document.createElement('div');
+      num.className = 'num';
+      num.textContent = k.ord || '·';
+      div.appendChild(num);
+    }
+    const badge = document.createElement('div');
+    badge.className = 'badge';
+    badge.textContent = TYP_LABEL[k.typ];
+    div.appendChild(badge);
+    if(k.geuebt){
+      const marke = document.createElement('div');
+      marke.className = 'geuebtMarke';
+      marke.textContent = '✓';
+      marke.title = 'Sitzt schon';
+      div.appendChild(marke);
+    }
+    if(k.gruppe){
+      const gTag = document.createElement('div');
+      gTag.className = 'gruppeTag';
+      gTag.textContent = k.gruppe;
+      div.appendChild(gTag);
+      div.style.display = 'block';
+    }
+    const h3 = document.createElement('h3');
+    h3.textContent = k.titel;
+    div.appendChild(h3);
+    const p = document.createElement('p');
+    p.textContent = teaserText(k.text);
+    div.appendChild(p);
+    board.appendChild(div);
+  });
+  area.appendChild(board);
+}
+
+/* ---------- Detailansicht ---------- */
+function openDetail(id){
+  const k = karten.find(x=>x.id===id);
+  if(!k) return;
+  detailKarteId = id;
+  document.getElementById('dTitel').textContent = (k.typ === 'ablauf' && k.ord ? k.ord + '. ' : '') + k.titel;
+  const meta = document.getElementById('dMeta');
+  meta.innerHTML = '';
+  const typBadge = document.createElement('span');
+  typBadge.className = 'detailBadge ' + k.typ;
+  typBadge.textContent = TYP_LABEL[k.typ];
+  meta.appendChild(typBadge);
+  if(k.gruppe){
+    const gBadge = document.createElement('span');
+    gBadge.className = 'detailBadge gruppe';
+    gBadge.textContent = k.gruppe;
+    meta.appendChild(gBadge);
+  }
+  const body = document.getElementById('dBody');
+  body.innerHTML = '';
+  const abschnitte = parseAbschnitte(k.text);
+  abschnitte.forEach(a=>{
+    const sec = document.createElement('div');
+    sec.className = 'detailSection';
+    if(a.label){
+      const lab = document.createElement('div');
+      lab.className = 'detailLabel';
+      lab.textContent = a.label;
+      sec.appendChild(lab);
+    }
+    const bod = document.createElement('div');
+    const zeilen = a.inhalt.split('\n').filter(z=>z.trim());
+    const istListe = zeilen.length > 1 && zeilen.every(z => /^\d+\.\s/.test(z.trim()));
+    if(istListe){
+      bod.className = 'detailBody strategie';
+      const ol = document.createElement('ol');
+      zeilen.forEach(z=>{
+        const li = document.createElement('li');
+        li.textContent = z.replace(/^\d+\.\s*/, '');
+        ol.appendChild(li);
+      });
+      bod.appendChild(ol);
+    }else{
+      bod.className = 'detailBody';
+      bod.textContent = a.inhalt;
+    }
+    sec.appendChild(bod);
+    body.appendChild(sec);
+  });
+  document.getElementById('detailDialog').showModal();
+}
+
+function bearbeiteAusDetail(){
+  document.getElementById('detailDialog').close();
+  openKartenModal(detailKarteId);
+}
+
+function vorlesenAusDetail(){
+  const k = karten.find(x=>x.id===detailKarteId);
+  if(k) vorlesenEinzeln(k, null);
+}
+
+function renderAuditiv(area, liste){
+  const bar = document.createElement('div');
+  bar.className = 'allePlayBar';
+  const alleBtn = document.createElement('button');
+  alleBtn.className = 'iconBtn';
+  alleBtn.textContent = '▶ Alle vorlesen';
+  alleBtn.onclick = () => alleVorlesen(liste);
+  const stopBtn = document.createElement('button');
+  stopBtn.className = 'iconBtn';
+  stopBtn.textContent = '■ Stopp';
+  stopBtn.onclick = stopVorlesen;
+  bar.appendChild(alleBtn);
+  bar.appendChild(stopBtn);
+  area.appendChild(bar);
+
+  const list = document.createElement('div');
+  list.className = 'audioList';
+  liste.forEach(k=>{
+    const row = document.createElement('div');
+    row.className = 'audioRow ' + k.typ;
+    const info = document.createElement('div');
+    info.className = 'info';
+    const h4 = document.createElement('h4');
+    h4.textContent = (k.typ === 'ablauf' && k.ord ? k.ord + '. ' : '') + k.titel;
+    const typLbl = document.createElement('div');
+    typLbl.className = 'typLbl';
+    typLbl.textContent = TYP_LABEL[k.typ];
+    const prev = document.createElement('div');
+    prev.className = 'txtPrev';
+    prev.textContent = k.text.replace(/\n/g,' · ');
+    info.appendChild(h4);
+    info.appendChild(typLbl);
+    info.appendChild(prev);
+    const playBtn = document.createElement('button');
+    playBtn.className = 'playBtn';
+    playBtn.textContent = '▶';
+    playBtn.onclick = () => vorlesenEinzeln(k, playBtn);
+    row.appendChild(info);
+    row.appendChild(playBtn);
+    row.onclick = (e) => { if(e.target !== playBtn) openDetail(k.id); };
+    list.appendChild(row);
+  });
+  area.appendChild(list);
+}
+
+/* ---------- Text-to-Speech ---------- */
+function vorlesenEinzeln(k, btn){
+  stopVorlesen();
+  const utter = new SpeechSynthesisUtterance((k.titel + '. ' + k.text).replace(/\n/g,'. '));
+  utter.lang = 'de-DE';
+  if(btn){
+    utter.onstart = () => btn.classList.add('playing');
+    utter.onend = () => btn.classList.remove('playing');
+  }
+  speechSynthesis.speak(utter);
+}
+
+function alleVorlesen(liste){
+  stopVorlesen();
+  speakList = liste;
+  speakIdx = 0;
+  vorleseNaechste();
+}
+function vorleseNaechste(){
+  if(speakIdx >= speakList.length) return;
+  const k = speakList[speakIdx];
+  const utter = new SpeechSynthesisUtterance((k.titel + '. ' + k.text).replace(/\n/g,'. '));
+  utter.lang = 'de-DE';
+  utter.onend = () => { speakIdx++; vorleseNaechste(); };
+  speechSynthesis.speak(utter);
+}
+function stopVorlesen(){
+  speechSynthesis.cancel();
+  speakList = []; speakIdx = 0;
+}
+
+/* ---------- Karten CRUD ---------- */
+function openKartenModal(id){
+  editKarteId = id || null;
+  const dlg = document.getElementById('kartenDialog');
+  const delBtn = document.getElementById('kDeleteBtn');
+  if(id){
+    const k = karten.find(x=>x.id===id);
+    document.getElementById('kDialogTitel').textContent = 'Karte bearbeiten';
+    document.querySelector(`input[name="kTyp"][value="${k.typ}"]`).checked = true;
+    document.getElementById('kTitel').value = k.titel;
+    document.getElementById('kGruppe').value = k.gruppe || '';
+    document.getElementById('kText').value = k.text;
+    document.getElementById('kOrd').value = k.ord || 1;
+    delBtn.style.display = 'inline-block';
+  }else{
+    document.getElementById('kDialogTitel').textContent = 'Neue Karte';
+    const vorTyp = (currentView === 'board') ? boardTyp : 'fach';
+    document.querySelector(`input[name="kTyp"][value="${vorTyp}"]`).checked = true;
+    document.getElementById('kTitel').value = '';
+    document.getElementById('kGruppe').value = (currentView === 'board' && boardTyp === 'fach' && boardGruppe) ? boardGruppe : '';
+    document.getElementById('kText').value = '';
+    document.getElementById('kOrd').value = karten.filter(k=>k.typ==='ablauf').length + 1;
+    delBtn.style.display = 'none';
+  }
+  updateOrdFieldVisibility();
+  dlg.showModal();
+}
+document.querySelectorAll('input[name="kTyp"]').forEach(r => r.addEventListener('change', updateOrdFieldVisibility));
+function updateOrdFieldVisibility(){
+  const typ = document.querySelector('input[name="kTyp"]:checked').value;
+  document.getElementById('ordField').style.display = (typ === 'ablauf') ? 'block' : 'none';
+}
+
+async function saveKarte(){
+  if(!aktuellesSeminarId){ zeigeToast('Bitte zuerst ein Seminar anlegen'); return; }
+  const typ = document.querySelector('input[name="kTyp"]:checked').value;
+  const titel = document.getElementById('kTitel').value.trim();
+  const gruppe = document.getElementById('kGruppe').value.trim();
+  const text = document.getElementById('kText').value.trim();
+  const ord = parseInt(document.getElementById('kOrd').value) || 1;
+  if(!titel){ zeigeToast('Bitte einen Titel eingeben'); return; }
+  if(editKarteId){
+    const k = karten.find(x=>x.id===editKarteId);
+    k.typ = typ; k.titel = titel; k.gruppe = gruppe; k.text = text; k.ord = ord;
+  }else{
+    karten.push({ id:'k_'+Date.now(), typ, titel, gruppe, text, ord });
+  }
+  await speichereKartenListe();
+  document.getElementById('kartenDialog').close();
+  renderBoard();
+}
+
+async function deleteKarte(){
+  if(!editKarteId) return;
+  karten = karten.filter(k=>k.id !== editKarteId);
+  await speichereKartenListe();
+  document.getElementById('kartenDialog').close();
+  renderBoard();
+}
+
+/* ---------- Export / Import ---------- */
+function exportJSON(){
+  const data = { seminare, kartenProSeminar:{} };
+  seminare.forEach(async s=>{});
+  (async ()=>{
+    for(const s of seminare){
+      data.kartenProSeminar[s.id] = (s.id === aktuellesSeminarId) ? karten : (await storeGet('karten_'+s.id)) || [];
+    }
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'vorbereitungswand_backup.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    zeigeToast('Backup heruntergeladen');
+  })();
+}
+
+function importJSON(evt){
+  const file = evt.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    try{
+      const data = JSON.parse(e.target.result);
+      seminare = data.seminare || [];
+      await storeSet('seminare', seminare);
+      for(const sid in (data.kartenProSeminar || {})){
+        await storeSet('karten_' + sid, data.kartenProSeminar[sid]);
+      }
+      if(seminare.length){
+        aktuellesSeminarId = seminare[0].id;
+        karten = data.kartenProSeminar[aktuellesSeminarId] || [];
+        await storeSet('letztesSeminar', aktuellesSeminarId);
+      }
+      currentView = 'uebersicht';
+      suchbegriff = '';
+      const sf = document.getElementById('suchfeld');
+      if(sf) sf.value = '';
+      renderSeminarTabs();
+      renderBoard();
+      zeigeToast('Backup geladen');
+      document.getElementById('mehrDialog').close();
+    }catch(err){
+      zeigeToast('Datei konnte nicht gelesen werden');
+    }
+  };
+  reader.readAsText(file);
+  evt.target.value = '';
+}
+
+/* ---------- Vorlage: Verhandeln im PM-Alltag ---------- */
+const TEMPLATES = {
+  verhandeln_pm: {
+    titel: 'Verhandeln im PM-Alltag',
+    cards: [
+      { typ:'ablauf', ord:1, titel:'Einstieg & Zielklärung (09:00–09:30)', text:'Ankommen, Erwartungen klären.\nKernbotschaft: Du bist nicht machtlos – es gibt Verhandlungsspielräume, die bewusst genutzt werden müssen.' },
+      { typ:'ablauf', ord:2, titel:'Standortbestimmung (09:30–10:15)', text:'Ist-Analyse der eigenen Praxis.\nKernbotschaft: Erst konkrete Situation beschreiben, dann Muster ableiten – nicht umgekehrt.' },
+      { typ:'ablauf', ord:3, titel:'Hebel erkennen (10:30–11:30)', text:'Die 8 Verhandlungshebel.\nKernbotschaft: Verhandeln heißt nicht nur Preis – acht Stellschrauben stehen zur Verfügung.' },
+      { typ:'ablauf', ord:4, titel:'NBB-Potenzial einbringen (11:30–12:15)', text:'Perspektivwechsel.\nKernbotschaft: Nicht nur fordern, sondern den eigenen Nutzen für den Hersteller klar benennen.' },
+      { typ:'ablauf', ord:5, titel:'Gesprächsvorbereitung (13:00–14:00)', text:'Checkliste, BATNA.\nKernbotschaft: Sicherheit entsteht durch Vorbereitung, nicht im Gespräch selbst.' },
+      { typ:'ablauf', ord:6, titel:'Fragetechniken (14:00–14:45)', text:'5 Fragetypen.\nKernbotschaft: Wer besser fragt, muss weniger raten und führt das Gespräch aktiver.' },
+      { typ:'ablauf', ord:7, titel:'Lieferantenaussagen kontern (15:00–16:00)', text:'Reaktionslogik.\nKernbotschaft: Erst verstehen, dann führen – nicht sofort dagegenargumentieren.' },
+      { typ:'ablauf', ord:8, titel:'Praxisfall (16:00–16:40)', text:'Gesamtsimulation.\nKernbotschaft: Wirkung entsteht im Zusammenspiel aller Bausteine, nicht durch einen cleveren Satz.' },
+      { typ:'ablauf', ord:9, titel:'Transfer & Abschluss (16:40–17:00)', text:'Maßnahmenplan.\nKernbotschaft: Wenige konkrete Maßnahmen schlagen viele diffuse Vorsätze.' },
+      { typ:'fach', gruppe:'Grundlagen', titel:'Die 8 Verhandlungshebel', text:'Einkaufspreis – unmittelbarer Rabatt/Nettopreis, oft erstes Thema, selten das einzige Instrument.\nWKZ – Herstellerunterstützung für Marketing/Abverkauf, verhandelbar gegen Sichtbarkeit oder Aktionsvolumen.\nMarketingbudget – Geld/Leistungen für Kampagnen, wichtig für Abverkauf und Listung.\nFrachtkosten – Übernahme/Anteil an Transportkosten, oft bei angepassten Lieferbedingungen möglich.\nZahlungsziele – längere Ziele verbessern Liquidität, oft gegen höhere Abnahmemengen verhandelbar.\nAktionen – Bündelaktionen, Promotionsrabatte, Zugaben, wirken direkt auf Absatz.\nExklusivitäten – Platzierung, exklusive Modelle, besondere Sortimentskonditionen.\nAbverkaufsunterstützung – Regalplatz, Displays, Trainings, Retourenregelung.' },
+      { typ:'fach', gruppe:'Grundlagen', titel:'NBB-Perspektivwechsel – Leitfragen', text:"Nicht nur fragen 'Was bekomme ich?', sondern klären: 'Warum lohnt sich die Zusammenarbeit mit uns?'\nWas ist unser Nutzen für den Hersteller?\nWelche Zielgruppen oder Reichweiten können wir bieten?\nWelche Absatzchancen eröffnen wir?\nWas macht die Zusammenarbeit mit uns einfach oder attraktiv?\nWelche Erfolge, Daten oder Potenziale können wir anführen?\nWelche Gegenleistung können wir im Gegenzug erwarten?" },
+      { typ:'fach', gruppe:'Grundlagen', titel:'Vorbereitungs-Checkliste', text:'Anlass/Thema des Gesprächs\nMein Ziel\nMein Minimum\nMein Wunsch\nMögliche Verhandlungshebel\nErwartbare Einwände\nMeine Antworten/Gegenfragen\nMeine Optionen/Alternativen (BATNA)\nMein erster Gesprächseinstieg\nMein gewünschter nächster Schritt\n\nBATNA: die beste Alternative, falls keine Einigung erzielt wird.' },
+      { typ:'fach', gruppe:'Gesprächstechnik', titel:'Fragetechniken – 5 Typen', text:"Offene Fragen – 'Wie ist diese Einschätzung entstanden?'\nKonkretisierend – 'Was genau heißt in dem Fall nicht möglich?'\nHypothetisch – 'Angenommen, wir erhöhen das Volumen – was wäre dann möglich?'\nBedingungsfragen – 'Unter welchen Bedingungen wäre das möglich?'\nÖffnende Gegenfrage – 'Kein Budget – woran hängt das konkret?'\n\nVorsicht bei Warum-Fragen: wirken schnell wie Rechtfertigungsdruck." },
+      { typ:'fach', gruppe:'Gesprächstechnik', titel:'Reaktionslogik bei Einwänden', text:'1. Haltung bewahren – ruhig, sachlich, nicht defensiv.\n2. Einwand aufnehmen – zeigen, dass die Aussage gehört wurde.\n3. Klären/konkretisieren – Was genau steckt dahinter?\n4. Öffnen – Bedingungen, Alternativen, Nutzen erkunden.\n5. Abschließen – nächsten Schritt oder Bewegung sichern.' },
+      { typ:'fach', gruppe:'Standardsituationen', titel:'Vier Standardsituationen', text:"'Da können wir preislich nichts mehr machen.' → Andere Hebel öffnen: 'Welche anderen Themen – WKZ, Fracht, Zahlungsziel – wären denkbar?'\n'Das ist unser bestes Angebot.' → Klären, worauf sich das bezieht: 'Was wäre nötig, damit noch etwas möglich wird?'\n'Andere Händler akzeptieren das auch.' → Nicht rechtfertigen, eigene Situation und beiderseitigen Nutzen zurückholen.\n'WKZ ist dieses Jahr nicht drin.' → Aufnehmen → Klären ('Woran hängt das – Budget, Timing, Format?') → Öffnen → Alternative → Abschluss sichern." },
+      { typ:'reflexion', titel:'Typische Stolperstellen', text:'Zu schnell auf Preis fixieren, andere Hebel übersehen.\nZiele zu ungenau formulieren, Minimum und Wunsch nicht trennen.\nEinwände nicht konkretisieren, sondern als Tatsache hinnehmen.\nZu viele Warum-Fragen, die Rechtfertigungsdruck erzeugen.\nSofort argumentieren statt erst zu fragen und zu öffnen.\nKein echter Plan B vorbereitet.\nGespräch ohne klaren nächsten Schritt beenden.' },
+      { typ:'reflexion', titel:'Transferstruktur', text:'Was will ich künftig bewusster tun?\nWas will ich konkret anders machen?\nWoran merke ich, dass ich es umgesetzt habe?\n\n2–3 konkrete Maßnahmen reichen – wenige, beobachtbare Schritte wirken stärker als viele diffuse Vorsätze.' }
+    ]
+  }
+};
+
+async function loadTemplate(key){
+  const t = TEMPLATES[key];
+  if(!t) return;
+  const id = 's_' + Date.now();
+  seminare.push({ id, titel: t.titel, datum: '' });
+  await storeSet('seminare', seminare);
+  aktuellesSeminarId = id;
+  await storeSet('letztesSeminar', id);
+  karten = t.cards.map((c,i) => ({ id: 'k_' + Date.now() + '_' + i, typ:c.typ, titel:c.titel, gruppe:c.gruppe||'', text:c.text, ord:c.ord||1 }));
+  await speichereKartenListe();
+  currentView = 'uebersicht';
+  renderSeminarTabs();
+  renderBoard();
+  zeigeToast('Vorlage geladen');
+}
+
+/* ---------- Übungsmodus (aktives Abrufen) ---------- */
+let uebungListe = [];
+let uebungIdx = 0;
+let uebungOffen = false;
+
+function starteUebung(){
+  const liste = suchbegriff.trim() ? sucheGefiltert() : (currentView === 'uebersicht' ? karten.filter(k=>k.typ==='fach') : gefilterteKarten());
+  if(!liste.length){ zeigeToast('Keine Karten in der aktuellen Auswahl'); return; }
+  uebungListe = [...liste];
+  uebungIdx = 0;
+  uebungOffen = true;
+  document.getElementById('uebungOverlay').style.display = 'flex';
+  renderUebungKarte();
+}
+
+function beendeUebung(){
+  uebungOffen = false;
+  document.getElementById('uebungOverlay').style.display = 'none';
+  stopVorlesen();
+  renderBoard();
+}
+
+function mischeUebung(){
+  for(let i = uebungListe.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [uebungListe[i], uebungListe[j]] = [uebungListe[j], uebungListe[i]];
+  }
+  uebungIdx = 0;
+  renderUebungKarte();
+}
+
+function renderUebungKarte(){
+  const ov = document.getElementById('uebungOverlay');
+  if(uebungIdx >= uebungListe.length){
+    const sitzt = uebungListe.filter(k=>k.geuebt).length;
+    ov.innerHTML = `
+      <div class="uebungTop">
+        <button class="uebungCloseBtn" onclick="beendeUebung()">✕</button>
+      </div>
+      <div class="uebungEnde">
+        <h2>Durchlauf fertig 🎉</h2>
+        <p>${sitzt} von ${uebungListe.length} Karten sitzen.</p>
+        <button class="iconBtn" onclick="uebungNurOffene()">🔁 Nur die restlichen wiederholen</button><br>
+        <button class="iconBtn" onclick="mischeUebung()">🔀 Nochmal von vorn (gemischt)</button><br>
+        <button class="iconBtn" onclick="beendeUebung()">Zurück zum Board</button>
+      </div>`;
+    return;
+  }
+  const k = uebungListe[uebungIdx];
+  stopVorlesen();
+  const fortschritt = Math.round((uebungIdx / uebungListe.length) * 100);
+  ov.innerHTML = `
+    <div class="uebungTop">
+      <button class="uebungCloseBtn" onclick="beendeUebung()">✕</button>
+      <div class="uebungProgress"><div style="width:${fortschritt}%"></div></div>
+      <div class="uebungCount">${uebungIdx+1} / ${uebungListe.length}</div>
+    </div>
+    <div class="uebungCardWrap">
+      <div class="uebungKarte">
+        <span class="uebungTypBadge" style="background:${k.typ==='fach'?'var(--gelb)':k.typ==='ablauf'?'var(--blau)':'var(--gruen)'}">${TYP_LABEL[k.typ]}${k.gruppe ? ' · ' + k.gruppe : ''}</span>
+        <h3 class="uebungTitel">${escapeHTML((k.typ==='ablauf' && k.ord ? k.ord+'. ' : '') + k.titel)}</h3>
+        <div class="uebungHinweis">Versuch dich zu erinnern, bevor du die Antwort aufdeckst.</div>
+        <div id="uebungAntwort">
+          <button class="uebungAntwortBtn" onclick="uebungAntwortZeigen()">👁️ Antwort zeigen</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function escapeHTML(s){
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function uebungAntwortZeigen(){
+  const k = uebungListe[uebungIdx];
+  const box = document.getElementById('uebungAntwort');
+  const abschnitte = parseAbschnitte(k.text);
+  let html = '';
+  abschnitte.forEach(a=>{
+    html += '<div class="detailSection">';
+    if(a.label) html += `<div class="detailLabel">${escapeHTML(a.label)}</div>`;
+    const zeilen = a.inhalt.split('\n').filter(z=>z.trim());
+    const istListe = zeilen.length > 1 && zeilen.every(z => /^\d+\.\s/.test(z.trim()));
+    if(istListe){
+      html += '<div class="detailBody strategie"><ol>' + zeilen.map(z=>`<li>${escapeHTML(z.replace(/^\d+\.\s*/,''))}</li>`).join('') + '</ol></div>';
+    }else{
+      html += `<div class="detailBody">${escapeHTML(a.inhalt)}</div>`;
+    }
+    html += '</div>';
+  });
+  html += `<button class="uebungAntwortBtn" style="background:#6fa8cc;" onclick="vorlesenEinzeln(uebungListe[${uebungIdx}], null)">🔊 Vorlesen</button>
+    <div class="uebungBewertung">
+      <button class="btnNochmal" onclick="uebungBewerten(false)">🔁 Nochmal üben</button>
+      <button class="btnSitzt" onclick="uebungBewerten(true)">✅ Sitzt</button>
+    </div>`;
+  box.innerHTML = html;
+  document.querySelector('.uebungAntwortBtn[onclick*="uebungAntwortZeigen"]')?.remove();
+}
+
+function uebungBewerten(gut){
+  const k = karten.find(x => x.id === uebungListe[uebungIdx].id);
+  if(k){ k.geuebt = gut; speichereKartenListe(); }
+  uebungIdx++;
+  renderUebungKarte();
+}
+
+function uebungNurOffene(){
+  uebungListe = uebungListe.filter(k=>{
+    const akt = karten.find(x=>x.id===k.id);
+    return akt && !akt.geuebt;
+  });
+  uebungIdx = 0;
+  if(!uebungListe.length){ zeigeToast('Alle Karten sitzen 🎉'); beendeUebung(); return; }
+  renderUebungKarte();
+}
+
+/* ---------- Quiz (automatisch generierte Multiple-Choice-Fragen) ---------- */
+let quizListe = [];
+let quizIdx = 0;
+let quizRichtig = 0;
+let quizBeantwortet = false;
+
+const DISG_OPTIONEN = ['Dominant (D)', 'Initiativ (I)', 'Stetig (S)', 'Gewissenhaft (G)'];
+
+function mische(arr){
+  const a = [...arr];
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function starteQuiz(){
+  const liste = suchbegriff.trim() ? sucheGefiltert() : (currentView === 'uebersicht' ? karten.filter(k=>k.typ==='fach') : gefilterteKarten());
+  if(liste.length < 2){ zeigeToast('Mindestens 2 Karten nötig für ein Quiz'); return; }
+  quizListe = mische(liste);
+  quizIdx = 0;
+  quizRichtig = 0;
+  document.getElementById('uebungOverlay').style.display = 'flex';
+  renderQuizFrage();
+}
+
+function beendeQuiz(){
+  document.getElementById('uebungOverlay').style.display = 'none';
+  renderBoard();
+}
+
+/* Erzeugt eine Frage zur aktuellen Karte, mit Fallback-Kette je nach verfügbarem Kartenmaterial */
+function baueQuizfrage(k, pool){
+  // Typ 1: Reihenfolge bei Ablauf-Karten
+  if(k.typ === 'ablauf'){
+    const ablaufSortiert = pool.filter(x=>x.typ==='ablauf').sort((a,b)=>(a.ord||1)-(b.ord||1));
+    const idxHier = ablaufSortiert.findIndex(x=>x.id===k.id);
+    if(idxHier > 0 && ablaufSortiert.length >= 3){
+      const vorherige = ablaufSortiert[idxHier-1];
+      const distraktoren = mische(ablaufSortiert.filter(x=>x.id!==k.id && x.id!==vorherige.id)).slice(0,3);
+      const optionen = mische([k, ...distraktoren]);
+      return {
+        frage: `Was kommt nach „${vorherige.titel}"?`,
+        optionen: optionen.map(o=>o.titel),
+        richtig: optionen.findIndex(o=>o.id===k.id),
+        karte: k
+      };
+    }
+  }
+  // Typ 2: DISG-Zuordnung bei Rollenspiel-Karten
+  const disgMatch = k.text.match(/(Dominant|Initiativ|Stetig|Gewissenhaft)\s*\(([DISG])\)/);
+  if(disgMatch){
+    const richtigLabel = disgMatch[1] + ' (' + disgMatch[2] + ')';
+    const setting = parseAbschnitte(k.text).find(a=>a.label && a.label.toLowerCase().includes('setting'));
+    const fragetext = setting ? setting.inhalt : teaserText(k.text);
+    return {
+      frage: `Welcher DISG-Typ passt am ehesten zu dieser Situation?\n\n„${fragetext}"`,
+      optionen: DISG_OPTIONEN,
+      richtig: DISG_OPTIONEN.findIndex(o=>o===richtigLabel),
+      karte: k
+    };
+  }
+  // Typ 3 (Fallback): Titel-Zuordnung anhand der Kartenbeschreibung
+  const gleicherTyp = pool.filter(x=>x.id!==k.id && x.typ===k.typ);
+  const quelle = gleicherTyp.length >= 3 ? gleicherTyp : karten.filter(x=>x.id!==k.id);
+  const distraktoren = mische(quelle).slice(0,3);
+  const optionen = mische([k, ...distraktoren]);
+  return {
+    frage: `Zu welcher Karte passt diese Beschreibung?\n\n„${teaserText(k.text)}"`,
+    optionen: optionen.map(o=>o.titel),
+    richtig: optionen.findIndex(o=>o.id===k.id),
+    karte: k
+  };
+}
+
+function renderQuizFrage(){
+  const ov = document.getElementById('uebungOverlay');
+  if(quizIdx >= quizListe.length){
+    const pct = Math.round((quizRichtig/quizListe.length)*100);
+    ov.innerHTML = `
+      <div class="uebungTop">
+        <button class="uebungCloseBtn" onclick="beendeQuiz()">✕</button>
+      </div>
+      <div class="uebungEnde">
+        <h2>Quiz fertig 🎉</h2>
+        <p>${quizRichtig} von ${quizListe.length} richtig (${pct}%)</p>
+        <button class="iconBtn" onclick="starteQuizWiederholung()">🔁 Nur die falschen wiederholen</button><br>
+        <button class="iconBtn" onclick="starteQuiz()">🔀 Neues Quiz (gemischt)</button><br>
+        <button class="iconBtn" onclick="beendeQuiz()">Zurück zum Board</button>
+      </div>`;
+    return;
+  }
+  quizBeantwortet = false;
+  const k = quizListe[quizIdx];
+  const frage = baueQuizfrage(k, quizListe.length >= 4 ? quizListe : karten);
+  quizListe[quizIdx]._frage = frage;
+  const fortschritt = Math.round((quizIdx / quizListe.length) * 100);
+  ov.innerHTML = `
+    <div class="uebungTop">
+      <button class="uebungCloseBtn" onclick="beendeQuiz()">✕</button>
+      <div class="uebungProgress"><div style="width:${fortschritt}%"></div></div>
+      <div class="uebungCount">${quizIdx+1} / ${quizListe.length}</div>
+    </div>
+    <div class="uebungCardWrap">
+      <div class="uebungKarte">
+        <div class="quizScoreLine">✅ ${quizRichtig} richtig bisher</div>
+        <div class="quizFrage">${escapeHTML(frage.frage)}</div>
+        <div class="quizOptionen" id="quizOptionen">
+          ${frage.optionen.map((opt,i)=>`<button class="quizOption" onclick="quizAntworten(${i})">${escapeHTML(opt)}</button>`).join('')}
+        </div>
+        <div id="quizWeiter"></div>
+      </div>
+    </div>`;
+}
+
+function quizAntworten(i){
+  if(quizBeantwortet) return;
+  quizBeantwortet = true;
+  const frage = quizListe[quizIdx]._frage;
+  const richtig = i === frage.richtig;
+  if(richtig) quizRichtig++;
+  const k = karten.find(x=>x.id===frage.karte.id);
+  if(k){ k.geuebt = richtig; speichereKartenListe(); }
+  document.querySelectorAll('#quizOptionen .quizOption').forEach((btn,idx)=>{
+    btn.disabled = true;
+    if(idx === frage.richtig) btn.classList.add('richtig');
+    else if(idx === i) btn.classList.add('falsch');
+  });
+  document.getElementById('quizWeiter').innerHTML =
+    `<button class="quizWeiterBtn" onclick="quizIdx++; renderQuizFrage();">${quizIdx+1 >= quizListe.length ? 'Ergebnis anzeigen' : 'Weiter →'}</button>`;
+}
+
+function starteQuizWiederholung(){
+  const falsche = quizListe.filter(k=>{
+    const akt = karten.find(x=>x.id===k.id);
+    return akt && !akt.geuebt;
+  });
+  if(!falsche.length){ zeigeToast('Alles richtig beantwortet 🎉'); beendeQuiz(); return; }
+  quizListe = mische(falsche);
+  quizIdx = 0;
+  quizRichtig = 0;
+  renderQuizFrage();
+}
+
+init();
+</script>
+</body>
+</html>
