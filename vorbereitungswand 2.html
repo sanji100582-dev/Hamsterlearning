@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vorbereitungswand</title>
+<style>
+  :root{
+    --board: #24352C;
+    --board-deep: #1B291F;
+    --seam: rgba(255,255,255,0.06);
+    --fach: #F0C846;
+    --fach-ink: #4A3A0A;
+    --ablauf: #79B4C4;
+    --ablauf-ink: #133038;
+    --reflexion: #A9C79A;
+    --reflexion-ink: #223A17;
+    --paper-edge: rgba(0,0,0,0.12);
+    --pin: #C0483C;
+    --pin-shine: #E8867B;
+    --text: #26241E;
+    --muted: #6b7a70;
+    --cream: #FAF6EC;
+    --focus: #E8DFC8;
+  }
+  * { box-sizing: border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: radial-gradient(120% 140% at 15% -10%, #2E4234 0%, var(--board) 45%, var(--board-deep) 100%);
+    min-height:100vh;
+    font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    color: var(--cream);
+    padding: 20px 16px 60px;
+  }
+  .wrap{ max-width: 980px; margin:0 auto; }
+
+  header.top{ margin-bottom: 22px; }
+  h1{
+    font-family:'Segoe Print','Bradley Hand','Comic Sans MS',cursive;
+    font-weight:700;
+    font-size: clamp(28px, 5vw, 40px);
+    margin: 0 0 4px;
+    letter-spacing: 0.2px;
+    color: #fff;
+  }
+  .sub{
+    font-size: 14px;
+    color: #C7D3C9;
+    margin: 0;
+  }
+
+  /* Seminar-Reiter */
+  .seminar-row{
+    display:flex; gap:8px; overflow-x:auto; padding: 18px 2px 6px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tab{
+    font-family:ui-monospace,'SFMono-Regular',Consolas,'Liberation Mono',monospace;
+    font-size: 12.5px;
+    background: rgba(255,255,255,0.06);
+    color: #DDE7DE;
+    border: 1px solid var(--seam);
+    padding: 9px 14px;
+    border-radius: 8px 8px 3px 3px;
+    cursor:pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: transform .15s ease, background .15s ease;
+  }
+  .tab:hover{ background: rgba(255,255,255,0.1); }
+  .tab.active{
+    background: var(--cream);
+    color: var(--text);
+    border-color: var(--cream);
+    transform: translateY(-2px);
+    font-weight: 500;
+  }
+  .tab.add{
+    background: transparent;
+    border: 1px dashed rgba(255,255,255,0.35);
+    color: #C7D3C9;
+  }
+
+  /* Toolbar */
+  .toolbar{
+    display:flex; flex-wrap: wrap; align-items:center; gap: 10px;
+    margin: 14px 0 22px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--seam);
+  }
+  .modus-switch{
+    display:flex; background: rgba(0,0,0,0.2); border-radius: 8px; padding: 3px;
+    border: 1px solid var(--seam);
+  }
+  .modus-switch button{
+    font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size: 13px; font-weight: 500;
+    border:none; background: transparent; color:#C7D3C9;
+    padding: 7px 14px; border-radius: 6px; cursor:pointer;
+  }
+  .modus-switch button.active{ background: var(--cream); color: var(--text); }
+  .chip-row{ display:flex; gap:6px; flex-wrap: wrap; }
+  .chip{
+    font-family:ui-monospace,'SFMono-Regular',Consolas,'Liberation Mono',monospace; font-size: 11.5px;
+    border: 1px solid var(--seam); background: rgba(255,255,255,0.05);
+    color: #C7D3C9; padding: 6px 11px; border-radius: 20px; cursor:pointer;
+  }
+  .chip[data-typ="fach"].active{ background: var(--fach); color: var(--fach-ink); border-color: var(--fach); }
+  .chip[data-typ="ablauf"].active{ background: var(--ablauf); color: var(--ablauf-ink); border-color: var(--ablauf); }
+  .chip[data-typ="reflexion"].active{ background: var(--reflexion); color: var(--reflexion-ink); border-color: var(--reflexion); }
+  .spacer{ flex:1; }
+  .btn-primary{
+    font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-weight:500; font-size: 13.5px;
+    background: var(--pin); color: #fff; border:none; padding: 9px 16px;
+    border-radius: 7px; cursor:pointer;
+  }
+  .btn-primary:hover{ background:#a83c31; }
+  .btn-ghost{
+    font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size: 13px;
+    background: transparent; border: 1px solid var(--seam); color:#C7D3C9;
+    padding: 8px 14px; border-radius: 7px; cursor:pointer;
+  }
+
+  /* Auditiv Kopfzeile */
+  .audio-bar{
+    display:none; align-items:center; gap:12px; margin-bottom:18px;
+    background: rgba(0,0,0,0.22); border: 1px solid var(--seam); border-radius: 10px;
+    padding: 12px 16px;
+  }
+  .audio-bar.show{ display:flex; }
+  .audio-bar .label{ font-size:13px; color:#C7D3C9; font-family:ui-monospace,'SFMono-Regular',Consolas,'Liberation Mono',monospace; }
+
+  /* Board / Grid */
+  #board{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 26px 22px;
+    align-items: start;
+  }
+  #board.audio-mode{ display:flex; flex-direction:column; gap:10px; }
+
+  .empty{
+    grid-column: 1/-1;
+    text-align:center; padding: 60px 20px;
+    color:#9fb0a4;
+  }
+  .empty .em-title{ font-family:'Segoe Print','Bradley Hand','Comic Sans MS',cursive; font-size:22px; color:#fff; margin-bottom:6px; }
+  .empty button{ margin-top:14px; }
+
+  /* Karten - visuell */
+  .karte{
+    position:relative;
+    padding: 22px 16px 16px;
+    box-shadow: 0 10px 18px -8px rgba(0,0,0,0.45), 0 2px 4px var(--paper-edge);
+    font-size: 14px;
+    line-height: 1.45;
+    cursor:default;
+    transition: transform .18s ease;
+  }
+  .karte:hover{ transform: translateY(-3px) rotate(0deg) !important; }
+  .karte .pin{
+    position:absolute; top:-9px; left:50%; transform: translateX(-50%);
+    width:16px; height:16px; border-radius:50%;
+    background: radial-gradient(circle at 35% 30%, var(--pin-shine), var(--pin) 60%);
+    box-shadow: 0 2px 3px rgba(0,0,0,0.4);
+  }
+  .karte .typ-label{
+    font-family:ui-monospace,'SFMono-Regular',Consolas,'Liberation Mono',monospace; font-size:10px; text-transform:uppercase;
+    letter-spacing:0.06em; opacity:0.6; margin-bottom:6px; display:block;
+  }
+  .karte h3{
+    font-family:'Segoe Print','Bradley Hand','Comic Sans MS',cursive; font-size:18px; margin:0 0 8px; line-height:1.25;
+  }
+  .karte p{ margin:0; white-space: pre-wrap; }
+  .karte .ord{
+    position:absolute; top:-10px; left:-8px;
+    width:26px; height:26px; border-radius:50%;
+    background: var(--board-deep); color:#fff;
+    font-family:ui-monospace,'SFMono-Regular',Consolas,'Liberation Mono',monospace; font-size:12px; font-weight:500;
+    display:flex; align-items:center; justify-content:center;
+    border: 2px solid var(--cream);
+  }
+  .karte .actions{
+    position:absolute; top:8px; right:8px; display:flex; gap:6px;
+  }
+  .karte .actions button{
+    width:22px; height:22px; border-radius:50%; border:none;
+    background: rgba(0,0,0,0.15); color: inherit; cursor:pointer; font-size:12px;
+    line-height:1; display:flex; align-items:center; justify-content:center;
+  }
+  .karte .actions button:hover{ background: rgba(0,0,0,0.28); }
+
+  .karte.fach{ background: var(--fach); color: var(--fach-ink); border-radius: 3px 3px 14px 3px; }
+  .karte.fach:after{
+    content:""; position:absolute; bottom:0; right:0; width:0; height:0;
+    border-style:solid; border-width:0 0 16px 16px; border-color: transparent transparent rgba(0,0,0,0.12) transparent;
+  }
+  .karte.ablauf{ background: var(--ablauf); color: var(--ablauf-ink); border-radius: 40px 40px 40px 6px; }
+  .karte.reflexion{ background: var(--reflexion); color: var(--reflexion-ink); border-radius: 60% 40% 55% 45% / 45% 55% 40% 60%; }
+
+  .karte.speaking{ outline: 3px solid #fff; outline-offset: 2px; }
+
+  /* Auditiv-Zeile */
+  .zeile{
+    display:flex; align-items:center; gap:14px;
+    background: rgba(255,255,255,0.05); border:1px solid var(--seam);
+    border-radius: 10px; padding: 14px 16px;
+  }
+  .zeile.speaking{ background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.4); }
+  .zeile .dot{ width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .zeile.fach .dot{ background: var(--fach); }
+  .zeile.ablauf .dot{ background: var(--ablauf); }
+  .zeile.reflexion .dot{ background: var(--reflexion); }
+  .zeile .txt{ flex:1; min-width:0; }
+  .zeile .txt h4{ margin:0 0 3px; font-family:'Segoe Print','Bradley Hand','Comic Sans MS',cursive; font-size:16px; color:#fff; }
+  .zeile .txt p{ margin:0; font-size:13px; color:#C7D3C9; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .zeile .play{
+    flex-shrink:0; width:36px; height:36px; border-radius:50%; border:none;
+    background: var(--cream); color: var(--text); cursor:pointer; font-size:14px;
+  }
+
+  /* Formular */
+  dialog#form-modal{
+    border:none; border-radius: 14px; padding:0; width: min(480px, 92vw);
+    background: var(--cream); color: var(--text);
+  }
+  dialog#form-modal::backdrop{ background: rgba(0,0,0,0.55); }
+  .modal-inner{ padding: 22px; }
+  .modal-inner h2{ font-family:'Segoe Print','Bradley Hand','Comic Sans MS',cursive; margin:0 0 14px; font-size:22px; }
+  .field{ margin-bottom: 12px; }
+  .field label{ display:block; font-size:12.5px; font-family:ui-monospace,'SFMono-Regular',Consolas,'Liberation Mono',monospace; margin-bottom:5px; color:#5b6b5f; }
+  .field input, .field textarea, .field select{
+    width:100%; font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:14px;
+    border:1px solid #cfc9b6; border-radius:7px; padding:9px 10px;
+    background:#fff; color:var(--text);
+  }
+  .field textarea{ min-height: 90px; resize: vertical; }
+  .type-pick{ display:flex; gap:8px; }
+  .type-pick button{
+    flex:1; padding:9px; border-radius:8px; border:1px solid #cfc9b6; background:#fff;
+    cursor:pointer; font-size:12.5px; font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-weight:500;
+  }
+  .type-pick button.sel[data-typ="fach"]{ background: var(--fach); border-color: var(--fach); color: var(--fach-ink); }
+  .type-pick button.sel[data-typ="ablauf"]{ background: var(--ablauf); border-color: var(--ablauf); color: var(--ablauf-ink); }
+  .type-pick button.sel[data-typ="reflexion"]{ background: var(--reflexion); border-color: var(--reflexion); color: var(--reflexion-ink); }
+  .modal-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:16px; }
+  .modal-actions button{ padding: 9px 16px; border-radius:7px; font-size:13.5px; font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; cursor:pointer; }
+  .modal-actions .cancel{ background:transparent; border:1px solid #cfc9b6; color:var(--text); }
+  .modal-actions .save{ background: var(--pin); border:none; color:#fff; font-weight:500; }
+
+  button:focus-visible, .tab:focus-visible, .chip:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible{
+    outline: 3px solid var(--focus); outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .karte, .tab{ transition:none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Vorbereitungswand</h1>
+    <p class="sub">Deine Pinnwand fürs nächste Seminar &mdash; Inhalte, Ablauf und Reflexion, zum Anschauen oder Vorlesen lassen.</p>
+  </header>
+
+  <div class="seminar-row" id="seminarRow"></div>
+
+  <div class="toolbar">
+    <div class="modus-switch">
+      <button id="modeVisuell" class="active">Visuell</button>
+      <button id="modeAudio">Auditiv</button>
+    </div>
+    <div class="chip-row" id="chipRow">
+      <button class="chip active" data-typ="fach">Fachinhalt</button>
+      <button class="chip active" data-typ="ablauf">Ablauf</button>
+      <button class="chip active" data-typ="reflexion">Reflexion</button>
+    </div>
+    <div class="spacer"></div>
+    <button class="btn-ghost" id="btnExport">💾 Sichern</button>
+    <button class="btn-ghost" id="btnImport">📂 Laden</button>
+    <input type="file" id="importFile" accept="application/json" style="display:none">
+    <button class="btn-primary" id="openAdd">+ Karte</button>
+  </div>
+
+  <div class="audio-bar" id="audioBar">
+    <button class="btn-ghost" id="playAll">▶ Alle vorlesen</button>
+    <button class="btn-ghost" id="stopAll">■ Stopp</button>
+    <span class="label" id="audioStatus">Bereit</span>
+  </div>
+
+  <div id="board"></div>
+</div>
+
+<dialog id="form-modal">
+  <div class="modal-inner">
+    <h2 id="modalTitle">Neue Karte</h2>
+    <div class="field">
+      <label>Kartentyp</label>
+      <div class="type-pick" id="typePick">
+        <button type="button" data-typ="fach">Fachinhalt</button>
+        <button type="button" data-typ="ablauf">Ablauf</button>
+        <button type="button" data-typ="reflexion">Reflexion</button>
+      </div>
+    </div>
+    <div class="field" id="ordField" style="display:none">
+      <label>Reihenfolge (Zahl)</label>
+      <input type="number" id="fOrd" min="1" value="1">
+    </div>
+    <div class="field">
+      <label>Titel</label>
+      <input type="text" id="fTitel" placeholder="z.B. Johari-Fenster">
+    </div>
+    <div class="field">
+      <label>Text</label>
+      <textarea id="fText" placeholder="Kerninhalt, Merksatz oder Notiz &mdash; aus einem Chat kopiert oder frei formuliert"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="cancel" id="cancelForm">Abbrechen</button>
+      <button class="save" id="saveForm">Speichern</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="seminar-modal">
+  <div class="modal-inner">
+    <h2>Neues Seminar</h2>
+    <div class="field">
+      <label>Titel</label>
+      <input type="text" id="sTitel" placeholder="z.B. Kommunikation im Team">
+    </div>
+    <div class="field">
+      <label>Datum</label>
+      <input type="date" id="sDatum">
+    </div>
+    <div class="modal-actions">
+      <button class="cancel" id="cancelSeminar">Abbrechen</button>
+      <button class="save" id="saveSeminar">Anlegen</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+const TYP_LABEL = { fach: 'Fachinhalt', ablauf: 'Ablauf', reflexion: 'Reflexion' };
+
+let seminare = [];
+let aktuellesSeminarId = null;
+let karten = [];
+let alleKarten = {};
+let modus = 'visuell';
+let aktiveTypen = new Set(['fach','ablauf','reflexion']);
+let editKarteId = null;
+let confirmDeleteId = null;
+let speakQueueIdx = 0;
+let speakList = [];
+
+const TEMPLATES = {
+  verhandeln_pm: {
+    titel: 'Verhandeln im PM-Alltag',
+    cards: [
+      { typ:'ablauf', ord:1, titel:'Einstieg & Zielklärung (09:00–09:30)', text:'Ankommen, Erwartungen klären.\nKernbotschaft: Du bist nicht machtlos – es gibt Verhandlungsspielräume, die bewusst genutzt werden müssen.' },
+      { typ:'ablauf', ord:2, titel:'Standortbestimmung (09:30–10:15)', text:'Ist-Analyse der eigenen Praxis.\nKernbotschaft: Erst konkrete Situation beschreiben, dann Muster ableiten – nicht umgekehrt.' },
+      { typ:'ablauf', ord:3, titel:'Hebel erkennen (10:30–11:30)', text:'Die 8 Verhandlungshebel.\nKernbotschaft: Verhandeln heißt nicht nur Preis – acht Stellschrauben stehen zur Verfügung.' },
+      { typ:'ablauf', ord:4, titel:'NBB-Potenzial einbringen (11:30–12:15)', text:'Perspektivwechsel.\nKernbotschaft: Nicht nur fordern, sondern den eigenen Nutzen für den Hersteller klar benennen.' },
+      { typ:'ablauf', ord:5, titel:'Gesprächsvorbereitung (13:00–14:00)', text:'Checkliste, BATNA.\nKernbotschaft: Sicherheit entsteht durch Vorbereitung, nicht im Gespräch selbst.' },
+      { typ:'ablauf', ord:6, titel:'Fragetechniken (14:00–14:45)', text:'5 Fragetypen.\nKernbotschaft: Wer besser fragt, muss weniger raten und führt das Gespräch aktiver.' },
+      { typ:'ablauf', ord:7, titel:'Lieferantenaussagen kontern (15:00–16:00)', text:'Reaktionslogik.\nKernbotschaft: Erst verstehen, dann führen – nicht sofort dagegenargumentieren.' },
+      { typ:'ablauf', ord:8, titel:'Praxisfall (16:00–16:40)', text:'Gesamtsimulation.\nKernbotschaft: Wirkung entsteht im Zusammenspiel aller Bausteine, nicht durch einen cleveren Satz.' },
+      { typ:'ablauf', ord:9, titel:'Transfer & Abschluss (16:40–17:00)', text:'Maßnahmenplan.\nKernbotschaft: Wenige konkrete Maßnahmen schlagen viele diffuse Vorsätze.' },
+      { typ:'fach', titel:'Die 8 Verhandlungshebel', text:'Einkaufspreis – unmittelbarer Rabatt/Nettopreis, oft erstes Thema, selten das einzige Instrument.\nWKZ – Herstellerunterstützung für Marketing/Abverkauf, verhandelbar gegen Sichtbarkeit oder Aktionsvolumen.\nMarketingbudget – Geld/Leistungen für Kampagnen, wichtig für Abverkauf und Listung.\nFrachtkosten – Übernahme/Anteil an Transportkosten, oft bei angepassten Lieferbedingungen möglich.\nZahlungsziele – längere Ziele verbessern Liquidität, oft gegen höhere Abnahmemengen verhandelbar.\nAktionen – Bündelaktionen, Promotionsrabatte, Zugaben, wirken direkt auf Absatz.\nExklusivitäten – Platzierung, exklusive Modelle, besondere Sortimentskonditionen.\nAbverkaufsunterstützung – Regalplatz, Displays, Trainings, Retourenregelung.' },
+      { typ:'fach', titel:'NBB-Perspektivwechsel – Leitfragen', text:"Nicht nur fragen 'Was bekomme ich?', sondern klären: 'Warum lohnt sich die Zusammenarbeit mit uns?'\nWas ist unser Nutzen für den Hersteller?\nWelche Zielgruppen oder Reichweiten können wir bieten?\nWelche Absatzchancen eröffnen wir?\nWas macht die Zusammenarbeit mit uns einfach oder attraktiv?\nWelche Erfolge, Daten oder Potenziale können wir anführen?\nWelche Gegenleistung können wir im Gegenzug erwarten?" },
+      { typ:'fach', titel:'Vorbereitungs-Checkliste', text:'Anlass/Thema des Gesprächs\nMein Ziel\nMein Minimum\nMein Wunsch\nMögliche Verhandlungshebel\nErwartbare Einwände\nMeine Antworten/Gegenfragen\nMeine Optionen/Alternativen (BATNA)\nMein erster Gesprächseinstieg\nMein gewünschter nächster Schritt\n\nBATNA: die beste Alternative, falls keine Einigung erzielt wird.' },
+      { typ:'fach', titel:'Fragetechniken – 5 Typen', text:"Offene Fragen – 'Wie ist diese Einschätzung entstanden?'\nKonkretisierend – 'Was genau heißt in dem Fall nicht möglich?'\nHypothetisch – 'Angenommen, wir erhöhen das Volumen – was wäre dann möglich?'\nBedingungsfragen – 'Unter welchen Bedingungen wäre das möglich?'\nÖffnende Gegenfrage – 'Kein Budget – woran hängt das konkret?'\n\nVorsicht bei Warum-Fragen: wirken schnell wie Rechtfertigungsdruck." },
+      { typ:'fach', titel:'Reaktionslogik bei Einwänden', text:'1. Haltung bewahren – ruhig, sachlich, nicht defensiv.\n2. Einwand aufnehmen – zeigen, dass die Aussage gehört wurde.\n3. Klären/konkretisieren – Was genau steckt dahinter?\n4. Öffnen – Bedingungen, Alternativen, Nutzen erkunden.\n5. Abschließen – nächsten Schritt oder Bewegung sichern.' },
+      { typ:'fach', titel:'Vier Standardsituationen', text:"'Da können wir preislich nichts mehr machen.' → Andere Hebel öffnen: 'Welche anderen Themen – WKZ, Fracht, Zahlungsziel – wären denkbar?'\n'Das ist unser bestes Angebot.' → Klären, worauf sich das bezieht: 'Was wäre nötig, damit noch etwas möglich wird?'\n'Andere Händler akzeptieren das auch.' → Nicht rechtfertigen, eigene Situation und beiderseitigen Nutzen zurückholen.\n'WKZ ist dieses Jahr nicht drin.' → Aufnehmen → Klären ('Woran hängt das – Budget, Timing, Format?') → Öffnen → Alternative → Abschluss sichern." },
+      { typ:'reflexion', titel:'Typische Stolperstellen', text:'Zu schnell auf Preis fixieren, andere Hebel übersehen.\nZiele zu ungenau formulieren, Minimum und Wunsch nicht trennen.\nEinwände nicht konkretisieren, sondern als Tatsache hinnehmen.\nZu viele Warum-Fragen, die Rechtfertigungsdruck erzeugen.\nSofort argumentieren statt erst zu fragen und zu öffnen.\nKein echter Plan B vorbereitet.\nGespräch ohne klaren nächsten Schritt beenden.' },
+      { typ:'reflexion', titel:'Transferstruktur', text:'Was will ich künftig bewusster tun?\nWas will ich konkret anders machen?\nWoran merke ich, dass ich es umgesetzt habe?\n\n2–3 konkrete Maßnahmen reichen – wenige, beobachtbare Schritte wirken stärker als viele diffuse Vorsätze.' }
+    ]
+  }
+};
+
+async function loadTemplate(key){
+  const t = TEMPLATES[key];
+  if(!t) return;
+  const id = 's_' + Date.now();
+  seminare.push({ id, titel: t.titel, datum: '' });
+  await storeSet('seminare', seminare);
+  aktuellesSeminarId = id;
+  await storeSet('letztesSeminar', id);
+  karten = t.cards.map((c,i) => ({ id: 'k_' + Date.now() + '_' + i, typ:c.typ, titel:c.titel, text:c.text, ord:c.ord||1 }));
+  alleKarten[id] = karten;
+  await speichereKartenListe();
+  renderSeminarTabs();
+  renderBoard();
+}
+
+async function storeGet(key){
+  try{ const r = await window.storage.get(key, false); return r ? JSON.parse(r.value) : null; }
+  catch(e){ return null; }
+}
+async function storeSet(key, value){
+  try{
+    const r = await window.storage.set(key, JSON.stringify(value), false);
+    if(!r) console.error('Speichern fehlgeschlagen: leere Antwort', key);
+  }
+  catch(e){ console.error('Speichern fehlgeschlagen', key, e); }
+}
+
+function hashRotation(id){
+  let h = 0;
+  for(const c of id) h = (h*31 + c.charCodeAt(0)) % 1000;
+  return ((h % 7) - 3) + 'deg';
+}
+
+async function init(){
+  seminare = (await storeGet('seminare')) || [];
+  const last = await storeGet('letztesSeminar');
+  if(seminare.length){
+    aktuellesSeminarId = (last && seminare.find(s=>s.id===last)) ? last : seminare[0].id;
+    await ladeKarten();
+    alleKarten[aktuellesSeminarId] = karten;
+  }
+  renderSeminarTabs();
+  renderBoard();
+
+  document.getElementById('modeVisuell').onclick = () => setModus('visuell');
+  document.getElementById('modeAudio').onclick = () => setModus('audio');
+  document.querySelectorAll('.chip').forEach(c => c.onclick = () => toggleChip(c));
+  document.getElementById('openAdd').onclick = () => openForm();
+  document.getElementById('cancelForm').onclick = () => document.getElementById('form-modal').close();
+  document.getElementById('saveForm').onclick = speichereKarte;
+  document.getElementById('typePick').querySelectorAll('button').forEach(b => b.onclick = () => waehleTyp(b.dataset.typ));
+  document.getElementById('cancelSeminar').onclick = () => document.getElementById('seminar-modal').close();
+  document.getElementById('saveSeminar').onclick = speichereSeminar;
+  document.getElementById('playAll').onclick = spieleAlle;
+  document.getElementById('stopAll').onclick = stoppeAudio;
+  document.getElementById('btnExport').onclick = exportAlles;
+  document.getElementById('btnImport').onclick = () => document.getElementById('importFile').click();
+  document.getElementById('importFile').onchange = (e) => { if(e.target.files[0]) importDatei(e.target.files[0]); };
+}
+
+function setModus(m){
+  modus = m;
+  document.getElementById('modeVisuell').classList.toggle('active', m==='visuell');
+  document.getElementById('modeAudio').classList.toggle('active', m==='audio');
+  document.getElementById('audioBar').classList.toggle('show', m==='audio');
+  stoppeAudio();
+  renderBoard();
+}
+
+function toggleChip(el){
+  const t = el.dataset.typ;
+  if(aktiveTypen.has(t)) aktiveTypen.delete(t); else aktiveTypen.add(t);
+  el.classList.toggle('active');
+  renderBoard();
+}
+
+function renderSeminarTabs(){
+  const row = document.getElementById('seminarRow');
+  row.innerHTML = '';
+  seminare.forEach(s => {
+    const b = document.createElement('button');
+    b.className = 'tab' + (s.id === aktuellesSeminarId ? ' active' : '');
+    b.textContent = s.titel + (s.datum ? '  ·  ' + formatDatum(s.datum) : '');
+    b.onclick = async () => {
+      if(aktuellesSeminarId) alleKarten[aktuellesSeminarId] = karten;
+      aktuellesSeminarId = s.id;
+      storeSet('letztesSeminar', s.id);
+      await ladeKarten();
+      renderSeminarTabs();
+      renderBoard();
+    };
+    row.appendChild(b);
+  });
+  const addBtn = document.createElement('button');
+  addBtn.className = 'tab add';
+  addBtn.textContent = '+ Neues Seminar';
+  addBtn.onclick = () => {
+    document.getElementById('sTitel').value = '';
+    document.getElementById('sDatum').value = '';
+    document.getElementById('seminar-modal').showModal();
+  };
+  row.appendChild(addBtn);
+
+  const tplBtn = document.createElement('button');
+  tplBtn.className = 'tab add';
+  tplBtn.textContent = '⤓ Vorlage „Verhandeln im PM-Alltag" laden';
+  tplBtn.onclick = () => loadTemplate('verhandeln_pm');
+  row.appendChild(tplBtn);
+}
+
+function formatDatum(d){
+  const dt = new Date(d + 'T00:00:00');
+  if(isNaN(dt)) return '';
+  return dt.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit', year:'numeric' });
+}
+
+async function speichereSeminar(){
+  const titel = document.getElementById('sTitel').value.trim();
+  if(!titel) return;
+  const datum = document.getElementById('sDatum').value;
+  const id = 's_' + Date.now();
+  seminare.push({ id, titel, datum });
+  await storeSet('seminare', seminare);
+  aktuellesSeminarId = id;
+  await storeSet('letztesSeminar', id);
+  karten = [];
+  document.getElementById('seminar-modal').close();
+  renderSeminarTabs();
+  renderBoard();
+}
+
+async function ladeKarten(){
+  if(alleKarten[aktuellesSeminarId]){
+    karten = alleKarten[aktuellesSeminarId];
+    return;
+  }
+  karten = (await storeGet('karten:' + aktuellesSeminarId)) || [];
+  alleKarten[aktuellesSeminarId] = karten;
+}
+async function speichereKartenListe(){
+  alleKarten[aktuellesSeminarId] = karten;
+  await storeSet('karten:' + aktuellesSeminarId, karten);
+}
+
+function exportAlles(){
+  if(aktuellesSeminarId) alleKarten[aktuellesSeminarId] = karten;
+  const data = { seminare, karten: alleKarten, exportiertAm: new Date().toISOString() };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'vorbereitungswand-sicherung.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function importDatei(file){
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    try{
+      const data = JSON.parse(e.target.result);
+      seminare = data.seminare || [];
+      alleKarten = data.karten || {};
+      aktuellesSeminarId = seminare.length ? seminare[0].id : null;
+      karten = aktuellesSeminarId ? (alleKarten[aktuellesSeminarId] || []) : [];
+      renderSeminarTabs();
+      renderBoard();
+      await storeSet('seminare', seminare);
+      for(const id in alleKarten){ await storeSet('karten:' + id, alleKarten[id]); }
+    } catch(err){
+      alert('Datei konnte nicht gelesen werden. Ist es eine Sicherungsdatei dieser App?');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function openForm(karte){
+  if(!aktuellesSeminarId){
+    document.getElementById('seminar-modal').showModal();
+    return;
+  }
+  editKarteId = karte ? karte.id : null;
+  document.getElementById('modalTitle').textContent = karte ? 'Karte bearbeiten' : 'Neue Karte';
+  document.getElementById('fTitel').value = karte ? karte.titel : '';
+  document.getElementById('fText').value = karte ? karte.text : '';
+  document.getElementById('fOrd').value = karte ? (karte.ord || 1) : (karten.filter(k=>k.typ==='ablauf').length + 1);
+  waehleTyp(karte ? karte.typ : 'fach');
+  document.getElementById('form-modal').showModal();
+}
+
+function waehleTyp(t){
+  document.querySelectorAll('#typePick button').forEach(b => b.classList.toggle('sel', b.dataset.typ === t));
+  document.getElementById('typePick').dataset.current = t;
+  document.getElementById('ordField').style.display = t === 'ablauf' ? 'block' : 'none';
+}
+
+async function speichereKarte(){
+  const titel = document.getElementById('fTitel').value.trim();
+  const text = document.getElementById('fText').value.trim();
+  const typ = document.getElementById('typePick').dataset.current || 'fach';
+  if(!titel && !text) { document.getElementById('form-modal').close(); return; }
+  const ord = parseInt(document.getElementById('fOrd').value) || 1;
+
+  if(editKarteId){
+    const k = karten.find(k => k.id === editKarteId);
+    if(k){ k.titel = titel; k.text = text; k.typ = typ; k.ord = ord; }
+  } else {
+    karten.push({ id: 'k_' + Date.now(), typ, titel, text, ord });
+  }
+  await speichereKartenListe();
+  document.getElementById('form-modal').close();
+  renderBoard();
+}
+
+function askDelete(id, btn){
+  if(confirmDeleteId === id){
+    karten = karten.filter(k => k.id !== id);
+    speichereKartenListe();
+    confirmDeleteId = null;
+    renderBoard();
+  } else {
+    confirmDeleteId = id;
+    btn.textContent = '✓';
+    btn.title = 'Nochmal klicken zum Löschen';
+    setTimeout(() => { if(confirmDeleteId === id){ confirmDeleteId = null; renderBoard(); } }, 3000);
+  }
+}
+
+function gefilterteKarten(){
+  let list = karten.filter(k => aktiveTypen.has(k.typ));
+  list.sort((a,b) => {
+    if(a.typ === 'ablauf' && b.typ === 'ablauf') return (a.ord||0) - (b.ord||0);
+    return 0;
+  });
+  return list;
+}
+
+function renderBoard(){
+  const board = document.getElementById('board');
+  board.className = modus === 'audio' ? 'audio-mode' : '';
+  board.innerHTML = '';
+
+  if(!aktuellesSeminarId){
+    board.innerHTML = '<div class="empty"><div class="em-title">Noch kein Seminar angelegt</div>Leg dein erstes Seminar an, dann kannst du Karten anheften.</div>';
+    return;
+  }
+
+  const list = gefilterteKarten();
+  if(!list.length){
+    board.innerHTML = '<div class="empty"><div class="em-title">Diese Wand ist noch leer</div>Häng deine erste Karte an &mdash; Kerninhalt, Ablaufschritt oder Frage zur Reflexion.<br><button class="btn-primary" onclick="openForm()">+ Karte hinzufügen</button></div>';
+    return;
+  }
+
+  list.forEach(k => {
+    if(modus === 'visuell'){
+      board.appendChild(bauKarteVisuell(k));
+    } else {
+      board.appendChild(bauKarteAudio(k));
+    }
+  });
+}
+
+function esc(s){
+  const d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
+
+function bauKarteVisuell(k){
+  const div = document.createElement('div');
+  div.className = 'karte ' + k.typ;
+  div.dataset.id = k.id;
+  div.style.transform = 'rotate(' + hashRotation(k.id) + ')';
+  div.innerHTML = `
+    <div class="pin"></div>
+    ${k.typ === 'ablauf' ? '<div class="ord">' + (k.ord||1) + '</div>' : ''}
+    <div class="actions">
+      <button class="edit" title="Bearbeiten">✎</button>
+      <button class="del" title="Löschen">×</button>
+    </div>
+    <span class="typ-label">${TYP_LABEL[k.typ]}</span>
+    <h3>${esc(k.titel) || '(ohne Titel)'}</h3>
+    <p>${esc(k.text)}</p>
+  `;
+  div.querySelector('.edit').onclick = () => openForm(k);
+  div.querySelector('.del').onclick = (e) => askDelete(k.id, e.target);
+  return div;
+}
+
+function bauKarteAudio(k){
+  const div = document.createElement('div');
+  div.className = 'zeile ' + k.typ;
+  div.dataset.id = k.id;
+  div.innerHTML = `
+    <div class="dot"></div>
+    <div class="txt">
+      <h4>${esc(k.titel) || TYP_LABEL[k.typ]}</h4>
+      <p>${esc(k.text)}</p>
+    </div>
+    <button class="play">▶</button>
+  `;
+  div.querySelector('.play').onclick = () => spieleEinzeln(k, div);
+  return div;
+}
+
+function textFuerKarte(k){
+  return (k.titel ? k.titel + '. ' : '') + k.text;
+}
+
+function spieleEinzeln(karte, el){
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(textFuerKarte(karte));
+  u.lang = 'de-DE';
+  u.onstart = () => { document.querySelectorAll('.zeile,.karte').forEach(e=>e.classList.remove('speaking')); if(el) el.classList.add('speaking'); };
+  u.onend = () => { if(el) el.classList.remove('speaking'); };
+  window.speechSynthesis.speak(u);
+}
+
+function spieleAlle(){
+  window.speechSynthesis.cancel();
+  const list = gefilterteKarten();
+  if(!list.length) return;
+  document.getElementById('audioStatus').textContent = 'Liest vor …';
+  list.forEach(k => {
+    const u = new SpeechSynthesisUtterance(textFuerKarte(k));
+    u.lang = 'de-DE';
+    u.onstart = () => {
+      document.querySelectorAll('.zeile,.karte').forEach(e=>e.classList.remove('speaking'));
+      const el = document.querySelector('[data-id="' + k.id + '"]');
+      if(el) el.classList.add('speaking');
+      document.getElementById('audioStatus').textContent = k.titel || TYP_LABEL[k.typ];
+    };
+    window.speechSynthesis.speak(u);
+  });
+  const check = setInterval(() => {
+    if(!window.speechSynthesis.speaking){
+      document.getElementById('audioStatus').textContent = 'Fertig';
+      document.querySelectorAll('.zeile,.karte').forEach(e=>e.classList.remove('speaking'));
+      clearInterval(check);
+    }
+  }, 400);
+}
+
+function stoppeAudio(){
+  window.speechSynthesis.cancel();
+  document.getElementById('audioStatus').textContent = 'Bereit';
+  document.querySelectorAll('.zeile,.karte').forEach(e=>e.classList.remove('speaking'));
+}
+
+init();
+</script>
+</body>
+</html>
