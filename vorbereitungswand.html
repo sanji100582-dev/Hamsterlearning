@@ -117,12 +117,17 @@
   }
   .karte p{
     font-family:var(--schrift-sans);
-    font-size:0.86rem; line-height:1.4; margin:0; white-space:pre-wrap;
-    display:-webkit-box; -webkit-line-clamp:6; -webkit-box-orient:vertical; overflow:hidden;
+    font-size:0.82rem; line-height:1.35; margin:0; white-space:pre-wrap; opacity:0.85;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
   }
   .karte .badge{
     position:absolute; top:10px; right:12px; font-family:var(--schrift-hand);
     font-size:0.75rem; opacity:0.55;
+  }
+  .karte .gruppeTag{
+    display:inline-block; font-size:0.66rem; font-weight:700; text-transform:uppercase;
+    letter-spacing:0.4px; padding:2px 7px; border-radius:999px; margin-bottom:6px;
+    background:rgba(0,0,0,0.12); color:inherit;
   }
 
   .karte.fach{background:var(--gelb); border-radius:4px; border:1px solid var(--gelb-dk);}
@@ -168,6 +173,38 @@
   }
 
   .leer{text-align:center; padding:60px 20px; color:#a9b3a3; font-family:var(--schrift-hand); font-size:1.2rem;}
+
+  /* ---------- Gruppen-Filter ---------- */
+  .gruppeRow{display:flex; gap:6px; overflow-x:auto; padding:8px 0 2px; scrollbar-width:thin;}
+  .gruppeChip{
+    flex:0 0 auto; padding:5px 12px; border-radius:999px; font-size:0.74rem; cursor:pointer;
+    border:1.5px solid rgba(255,255,255,0.25); color:#cfd6c8; white-space:nowrap; font-family:var(--schrift-sans);
+  }
+  .gruppeChip.on{background:#fff6dd; color:#20241e; border-color:#fff6dd; font-weight:700;}
+
+  /* ---------- Detailansicht ---------- */
+  .detailDialog{width:min(560px,94vw); max-height:85vh; overflow-y:auto;}
+  .detailHeader{display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:4px;}
+  .detailHeader h2{font-family:var(--schrift-hand); font-size:1.4rem; margin:0; line-height:1.25;}
+  .detailMeta{display:flex; gap:8px; align-items:center; margin-bottom:14px; flex-wrap:wrap;}
+  .detailBadge{
+    font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.4px;
+    padding:3px 10px; border-radius:999px; color:#20241e;
+  }
+  .detailBadge.fach{background:var(--gelb);}
+  .detailBadge.ablauf{background:var(--blau);}
+  .detailBadge.reflexion{background:var(--gruen);}
+  .detailBadge.gruppe{background:#e6dfc4; color:#4a4a3a;}
+  .detailSection{margin-bottom:14px;}
+  .detailLabel{
+    font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;
+    color:#8a7a3c; margin-bottom:4px;
+  }
+  .detailBody{font-size:0.95rem; line-height:1.5; white-space:pre-wrap; color:#20241e;}
+  .detailBody.strategie ol{margin:0; padding-left:1.2em;}
+  .detailBody.strategie li{margin-bottom:5px;}
+  .detail-actions{display:flex; justify-content:space-between; gap:8px; margin-top:18px; padding-top:14px; border-top:1px solid #e6dfc4;}
+  .detail-actions .left{display:flex; gap:8px;}
 
   /* ---------- Floating Add Button ---------- */
   .fab{
@@ -239,6 +276,7 @@
       <button id="btnAuditiv" onclick="setModus('auditiv')">Auditiv</button>
     </div>
   </div>
+  <div class="gruppeRow" id="gruppeRow"></div>
   <div class="toolRow">
     <button class="iconBtn" onclick="exportJSON()">💾 Sichern</button>
     <button class="iconBtn" onclick="document.getElementById('importInput').click()">📂 Laden</button>
@@ -290,13 +328,36 @@
       <input type="text" id="kTitel" placeholder="Kurzer Kartentitel">
     </div>
     <div class="field">
+      <label>Gruppe (optional)</label>
+      <input type="text" id="kGruppe" placeholder="z. B. Rollenspiele TL, Konzepte">
+    </div>
+    <div class="field">
       <label>Text</label>
-      <textarea id="kText" placeholder="Inhalt, Leitfragen, Stichpunkte..."></textarea>
+      <textarea id="kText" placeholder="Inhalt, Leitfragen, Stichpunkte... Tipp: Zeilen wie 'Setting: ...' oder 'Ziel: ...' werden in der Detailansicht automatisch als eigene Abschnitte angezeigt."></textarea>
     </div>
     <div class="modal-actions">
       <button class="danger" id="kDeleteBtn" style="display:none;" onclick="deleteKarte()">Löschen</button>
       <button class="cancel" onclick="document.getElementById('kartenDialog').close()">Abbrechen</button>
       <button class="save" onclick="saveKarte()">Speichern</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="detailDialog" class="detailDialog">
+  <div class="modalInner">
+    <div class="detailHeader">
+      <h2 id="dTitel"></h2>
+      <button class="iconBtn" onclick="document.getElementById('detailDialog').close()" style="background:#e6dfc4;color:#4a4a3a;">✕</button>
+    </div>
+    <div class="detailMeta" id="dMeta"></div>
+    <div id="dBody"></div>
+    <div class="detail-actions">
+      <div class="left">
+        <button class="iconBtn" onclick="vorlesenAusDetail()" style="background:#e6dfc4;color:#4a4a3a;">🔊 Vorlesen</button>
+      </div>
+      <div>
+        <button class="cancel" style="border-radius:8px;padding:9px 16px;background:#e6dfc4;color:#4a4a3a;border:none;cursor:pointer;" onclick="bearbeiteAusDetail()">✏️ Bearbeiten</button>
+      </div>
     </div>
   </div>
 </dialog>
@@ -311,10 +372,35 @@ let aktuellesSeminarId = null;
 let karten = [];
 let modus = 'visuell';
 let aktiveTypen = new Set(['fach','ablauf','reflexion']);
+let aktiveGruppe = 'alle';
 let editKarteId = null;
+let detailKarteId = null;
 let speakList = [];
 let speakIdx = 0;
 let storageOk = true;
+
+/* ---------- Teaser & Abschnitte für Detailansicht ---------- */
+const LABEL_MUSTER = /^Setting|^Ziel für die Führungskraft|^Trainerhinweis|^Gesprächsstrategie|^Ziel\b/;
+
+function teaserText(text){
+  const bereinigt = text.replace(/^(Setting|Ziel für die Führungskraft|Trainerhinweis \(DISG\)|Gesprächsstrategie|Ziel):\s*/gm, '');
+  const erste = bereinigt.split(/\n\n+/).find(p => p.trim().length) || '';
+  return erste.replace(/\n/g, ' ').trim();
+}
+
+function parseAbschnitte(text){
+  const absaetze = text.split(/\n\n+/);
+  const abschnitte = [];
+  for(const p of absaetze){
+    const m = p.match(/^([^\n:]{2,45}):\s*([\s\S]*)$/);
+    if(m && LABEL_MUSTER.test(p)){
+      abschnitte.push({ label: m[1].trim(), inhalt: m[2].trim() });
+    }else{
+      abschnitte.push({ label: null, inhalt: p.trim() });
+    }
+  }
+  return abschnitte;
+}
 
 /* ---------- Storage: localStorage (funktioniert eigenständig in Safari, ohne Claude-Umgebung) ---------- */
 const LS_PREFIX = 'vbwand_';
@@ -389,6 +475,7 @@ function renderSeminarTabs(){
 
 async function wechsleSeminar(id){
   aktuellesSeminarId = id;
+  aktiveGruppe = 'alle';
   await storeSet('letztesSeminar', id);
   karten = (await storeGet('karten_' + id)) || [];
   renderSeminarTabs();
@@ -412,6 +499,7 @@ async function saveSeminar(){
 function toggleTyp(typ){
   if(aktiveTypen.has(typ)) aktiveTypen.delete(typ); else aktiveTypen.add(typ);
   document.querySelector(`.chip[data-typ="${typ}"]`).classList.toggle('off', !aktiveTypen.has(typ));
+  aktiveGruppe = 'alle';
   renderBoard();
 }
 function setModus(m){
@@ -421,10 +509,36 @@ function setModus(m){
   renderBoard();
 }
 
+/* ---------- Gruppen-Filter ---------- */
+function renderGruppeChips(kartenNachTyp){
+  const row = document.getElementById('gruppeRow');
+  const gruppen = [...new Set(kartenNachTyp.map(k => k.gruppe).filter(Boolean))].sort();
+  if(gruppen.length < 2){
+    row.innerHTML = '';
+    aktiveGruppe = 'alle';
+    return;
+  }
+  row.innerHTML = '';
+  const alleChip = document.createElement('span');
+  alleChip.className = 'gruppeChip' + (aktiveGruppe === 'alle' ? ' on' : '');
+  alleChip.textContent = 'Alle';
+  alleChip.onclick = () => { aktiveGruppe = 'alle'; renderBoard(); };
+  row.appendChild(alleChip);
+  gruppen.forEach(g=>{
+    const chip = document.createElement('span');
+    chip.className = 'gruppeChip' + (aktiveGruppe === g ? ' on' : '');
+    chip.textContent = g;
+    chip.onclick = () => { aktiveGruppe = g; renderBoard(); };
+    row.appendChild(chip);
+  });
+}
+
 /* ---------- Board rendern ---------- */
 function gefilterteKarten(){
-  return karten
-    .filter(k => aktiveTypen.has(k.typ))
+  const nachTyp = karten.filter(k => aktiveTypen.has(k.typ));
+  renderGruppeChips(nachTyp);
+  return nachTyp
+    .filter(k => aktiveGruppe === 'alle' || k.gruppe === aktiveGruppe)
     .sort((a,b)=>{
       if(a.typ === 'ablauf' && b.typ === 'ablauf') return (a.ord||1) - (b.ord||1);
       if(a.typ === 'ablauf') return -1;
@@ -438,6 +552,7 @@ function renderBoard(){
   area.innerHTML = '';
   if(!aktuellesSeminarId){
     area.innerHTML = '<div class="leer">Noch kein Seminar angelegt.<br>Tippe oben auf „+ Seminar" oder lade die Vorlage.</div>';
+    document.getElementById('gruppeRow').innerHTML = '';
     return;
   }
   const liste = gefilterteKarten();
@@ -456,7 +571,7 @@ function renderVisuell(area, liste){
     const div = document.createElement('div');
     div.className = 'karte ' + k.typ;
     div.style.transform = `rotate(${hashRotation(k.id)})`;
-    div.onclick = () => openKartenModal(k.id);
+    div.onclick = () => openDetail(k.id);
     const pin = document.createElement('div');
     pin.className = 'pin';
     div.appendChild(pin);
@@ -470,15 +585,84 @@ function renderVisuell(area, liste){
     badge.className = 'badge';
     badge.textContent = TYP_LABEL[k.typ];
     div.appendChild(badge);
+    if(k.gruppe){
+      const gTag = document.createElement('div');
+      gTag.className = 'gruppeTag';
+      gTag.textContent = k.gruppe;
+      div.appendChild(gTag);
+      div.style.display = 'block';
+    }
     const h3 = document.createElement('h3');
     h3.textContent = k.titel;
     div.appendChild(h3);
     const p = document.createElement('p');
-    p.textContent = k.text;
+    p.textContent = teaserText(k.text);
     div.appendChild(p);
     board.appendChild(div);
   });
   area.appendChild(board);
+}
+
+/* ---------- Detailansicht ---------- */
+function openDetail(id){
+  const k = karten.find(x=>x.id===id);
+  if(!k) return;
+  detailKarteId = id;
+  document.getElementById('dTitel').textContent = (k.typ === 'ablauf' && k.ord ? k.ord + '. ' : '') + k.titel;
+  const meta = document.getElementById('dMeta');
+  meta.innerHTML = '';
+  const typBadge = document.createElement('span');
+  typBadge.className = 'detailBadge ' + k.typ;
+  typBadge.textContent = TYP_LABEL[k.typ];
+  meta.appendChild(typBadge);
+  if(k.gruppe){
+    const gBadge = document.createElement('span');
+    gBadge.className = 'detailBadge gruppe';
+    gBadge.textContent = k.gruppe;
+    meta.appendChild(gBadge);
+  }
+  const body = document.getElementById('dBody');
+  body.innerHTML = '';
+  const abschnitte = parseAbschnitte(k.text);
+  abschnitte.forEach(a=>{
+    const sec = document.createElement('div');
+    sec.className = 'detailSection';
+    if(a.label){
+      const lab = document.createElement('div');
+      lab.className = 'detailLabel';
+      lab.textContent = a.label;
+      sec.appendChild(lab);
+    }
+    const bod = document.createElement('div');
+    const zeilen = a.inhalt.split('\n').filter(z=>z.trim());
+    const istListe = zeilen.length > 1 && zeilen.every(z => /^\d+\.\s/.test(z.trim()));
+    if(istListe){
+      bod.className = 'detailBody strategie';
+      const ol = document.createElement('ol');
+      zeilen.forEach(z=>{
+        const li = document.createElement('li');
+        li.textContent = z.replace(/^\d+\.\s*/, '');
+        ol.appendChild(li);
+      });
+      bod.appendChild(ol);
+    }else{
+      bod.className = 'detailBody';
+      bod.textContent = a.inhalt;
+    }
+    sec.appendChild(bod);
+    body.appendChild(sec);
+  });
+  document.getElementById('detailDialog').showModal();
+}
+
+function bearbeiteAusDetail(){
+  document.getElementById('detailDialog').close();
+  openKartenModal(detailKarteId);
+}
+
+function vorlesenAusDetail(){
+  const k = karten.find(x=>x.id===detailKarteId);
+  if(k) vorlesenEinzeln(k, null);
 }
 
 function renderAuditiv(area, liste){
@@ -520,7 +704,7 @@ function renderAuditiv(area, liste){
     playBtn.onclick = () => vorlesenEinzeln(k, playBtn);
     row.appendChild(info);
     row.appendChild(playBtn);
-    row.onclick = (e) => { if(e.target !== playBtn) openKartenModal(k.id); };
+    row.onclick = (e) => { if(e.target !== playBtn) openDetail(k.id); };
     list.appendChild(row);
   });
   area.appendChild(list);
@@ -567,6 +751,7 @@ function openKartenModal(id){
     document.getElementById('kDialogTitel').textContent = 'Karte bearbeiten';
     document.querySelector(`input[name="kTyp"][value="${k.typ}"]`).checked = true;
     document.getElementById('kTitel').value = k.titel;
+    document.getElementById('kGruppe').value = k.gruppe || '';
     document.getElementById('kText').value = k.text;
     document.getElementById('kOrd').value = k.ord || 1;
     delBtn.style.display = 'inline-block';
@@ -574,6 +759,7 @@ function openKartenModal(id){
     document.getElementById('kDialogTitel').textContent = 'Neue Karte';
     document.querySelector('input[name="kTyp"][value="fach"]').checked = true;
     document.getElementById('kTitel').value = '';
+    document.getElementById('kGruppe').value = '';
     document.getElementById('kText').value = '';
     document.getElementById('kOrd').value = karten.filter(k=>k.typ==='ablauf').length + 1;
     delBtn.style.display = 'none';
@@ -591,14 +777,15 @@ async function saveKarte(){
   if(!aktuellesSeminarId){ zeigeToast('Bitte zuerst ein Seminar anlegen'); return; }
   const typ = document.querySelector('input[name="kTyp"]:checked').value;
   const titel = document.getElementById('kTitel').value.trim();
+  const gruppe = document.getElementById('kGruppe').value.trim();
   const text = document.getElementById('kText').value.trim();
   const ord = parseInt(document.getElementById('kOrd').value) || 1;
   if(!titel){ zeigeToast('Bitte einen Titel eingeben'); return; }
   if(editKarteId){
     const k = karten.find(x=>x.id===editKarteId);
-    k.typ = typ; k.titel = titel; k.text = text; k.ord = ord;
+    k.typ = typ; k.titel = titel; k.gruppe = gruppe; k.text = text; k.ord = ord;
   }else{
-    karten.push({ id:'k_'+Date.now(), typ, titel, text, ord });
+    karten.push({ id:'k_'+Date.now(), typ, titel, gruppe, text, ord });
   }
   await speichereKartenListe();
   document.getElementById('kartenDialog').close();
@@ -674,12 +861,12 @@ const TEMPLATES = {
       { typ:'ablauf', ord:7, titel:'Lieferantenaussagen kontern (15:00–16:00)', text:'Reaktionslogik.\nKernbotschaft: Erst verstehen, dann führen – nicht sofort dagegenargumentieren.' },
       { typ:'ablauf', ord:8, titel:'Praxisfall (16:00–16:40)', text:'Gesamtsimulation.\nKernbotschaft: Wirkung entsteht im Zusammenspiel aller Bausteine, nicht durch einen cleveren Satz.' },
       { typ:'ablauf', ord:9, titel:'Transfer & Abschluss (16:40–17:00)', text:'Maßnahmenplan.\nKernbotschaft: Wenige konkrete Maßnahmen schlagen viele diffuse Vorsätze.' },
-      { typ:'fach', titel:'Die 8 Verhandlungshebel', text:'Einkaufspreis – unmittelbarer Rabatt/Nettopreis, oft erstes Thema, selten das einzige Instrument.\nWKZ – Herstellerunterstützung für Marketing/Abverkauf, verhandelbar gegen Sichtbarkeit oder Aktionsvolumen.\nMarketingbudget – Geld/Leistungen für Kampagnen, wichtig für Abverkauf und Listung.\nFrachtkosten – Übernahme/Anteil an Transportkosten, oft bei angepassten Lieferbedingungen möglich.\nZahlungsziele – längere Ziele verbessern Liquidität, oft gegen höhere Abnahmemengen verhandelbar.\nAktionen – Bündelaktionen, Promotionsrabatte, Zugaben, wirken direkt auf Absatz.\nExklusivitäten – Platzierung, exklusive Modelle, besondere Sortimentskonditionen.\nAbverkaufsunterstützung – Regalplatz, Displays, Trainings, Retourenregelung.' },
-      { typ:'fach', titel:'NBB-Perspektivwechsel – Leitfragen', text:"Nicht nur fragen 'Was bekomme ich?', sondern klären: 'Warum lohnt sich die Zusammenarbeit mit uns?'\nWas ist unser Nutzen für den Hersteller?\nWelche Zielgruppen oder Reichweiten können wir bieten?\nWelche Absatzchancen eröffnen wir?\nWas macht die Zusammenarbeit mit uns einfach oder attraktiv?\nWelche Erfolge, Daten oder Potenziale können wir anführen?\nWelche Gegenleistung können wir im Gegenzug erwarten?" },
-      { typ:'fach', titel:'Vorbereitungs-Checkliste', text:'Anlass/Thema des Gesprächs\nMein Ziel\nMein Minimum\nMein Wunsch\nMögliche Verhandlungshebel\nErwartbare Einwände\nMeine Antworten/Gegenfragen\nMeine Optionen/Alternativen (BATNA)\nMein erster Gesprächseinstieg\nMein gewünschter nächster Schritt\n\nBATNA: die beste Alternative, falls keine Einigung erzielt wird.' },
-      { typ:'fach', titel:'Fragetechniken – 5 Typen', text:"Offene Fragen – 'Wie ist diese Einschätzung entstanden?'\nKonkretisierend – 'Was genau heißt in dem Fall nicht möglich?'\nHypothetisch – 'Angenommen, wir erhöhen das Volumen – was wäre dann möglich?'\nBedingungsfragen – 'Unter welchen Bedingungen wäre das möglich?'\nÖffnende Gegenfrage – 'Kein Budget – woran hängt das konkret?'\n\nVorsicht bei Warum-Fragen: wirken schnell wie Rechtfertigungsdruck." },
-      { typ:'fach', titel:'Reaktionslogik bei Einwänden', text:'1. Haltung bewahren – ruhig, sachlich, nicht defensiv.\n2. Einwand aufnehmen – zeigen, dass die Aussage gehört wurde.\n3. Klären/konkretisieren – Was genau steckt dahinter?\n4. Öffnen – Bedingungen, Alternativen, Nutzen erkunden.\n5. Abschließen – nächsten Schritt oder Bewegung sichern.' },
-      { typ:'fach', titel:'Vier Standardsituationen', text:"'Da können wir preislich nichts mehr machen.' → Andere Hebel öffnen: 'Welche anderen Themen – WKZ, Fracht, Zahlungsziel – wären denkbar?'\n'Das ist unser bestes Angebot.' → Klären, worauf sich das bezieht: 'Was wäre nötig, damit noch etwas möglich wird?'\n'Andere Händler akzeptieren das auch.' → Nicht rechtfertigen, eigene Situation und beiderseitigen Nutzen zurückholen.\n'WKZ ist dieses Jahr nicht drin.' → Aufnehmen → Klären ('Woran hängt das – Budget, Timing, Format?') → Öffnen → Alternative → Abschluss sichern." },
+      { typ:'fach', gruppe:'Grundlagen', titel:'Die 8 Verhandlungshebel', text:'Einkaufspreis – unmittelbarer Rabatt/Nettopreis, oft erstes Thema, selten das einzige Instrument.\nWKZ – Herstellerunterstützung für Marketing/Abverkauf, verhandelbar gegen Sichtbarkeit oder Aktionsvolumen.\nMarketingbudget – Geld/Leistungen für Kampagnen, wichtig für Abverkauf und Listung.\nFrachtkosten – Übernahme/Anteil an Transportkosten, oft bei angepassten Lieferbedingungen möglich.\nZahlungsziele – längere Ziele verbessern Liquidität, oft gegen höhere Abnahmemengen verhandelbar.\nAktionen – Bündelaktionen, Promotionsrabatte, Zugaben, wirken direkt auf Absatz.\nExklusivitäten – Platzierung, exklusive Modelle, besondere Sortimentskonditionen.\nAbverkaufsunterstützung – Regalplatz, Displays, Trainings, Retourenregelung.' },
+      { typ:'fach', gruppe:'Grundlagen', titel:'NBB-Perspektivwechsel – Leitfragen', text:"Nicht nur fragen 'Was bekomme ich?', sondern klären: 'Warum lohnt sich die Zusammenarbeit mit uns?'\nWas ist unser Nutzen für den Hersteller?\nWelche Zielgruppen oder Reichweiten können wir bieten?\nWelche Absatzchancen eröffnen wir?\nWas macht die Zusammenarbeit mit uns einfach oder attraktiv?\nWelche Erfolge, Daten oder Potenziale können wir anführen?\nWelche Gegenleistung können wir im Gegenzug erwarten?" },
+      { typ:'fach', gruppe:'Grundlagen', titel:'Vorbereitungs-Checkliste', text:'Anlass/Thema des Gesprächs\nMein Ziel\nMein Minimum\nMein Wunsch\nMögliche Verhandlungshebel\nErwartbare Einwände\nMeine Antworten/Gegenfragen\nMeine Optionen/Alternativen (BATNA)\nMein erster Gesprächseinstieg\nMein gewünschter nächster Schritt\n\nBATNA: die beste Alternative, falls keine Einigung erzielt wird.' },
+      { typ:'fach', gruppe:'Gesprächstechnik', titel:'Fragetechniken – 5 Typen', text:"Offene Fragen – 'Wie ist diese Einschätzung entstanden?'\nKonkretisierend – 'Was genau heißt in dem Fall nicht möglich?'\nHypothetisch – 'Angenommen, wir erhöhen das Volumen – was wäre dann möglich?'\nBedingungsfragen – 'Unter welchen Bedingungen wäre das möglich?'\nÖffnende Gegenfrage – 'Kein Budget – woran hängt das konkret?'\n\nVorsicht bei Warum-Fragen: wirken schnell wie Rechtfertigungsdruck." },
+      { typ:'fach', gruppe:'Gesprächstechnik', titel:'Reaktionslogik bei Einwänden', text:'1. Haltung bewahren – ruhig, sachlich, nicht defensiv.\n2. Einwand aufnehmen – zeigen, dass die Aussage gehört wurde.\n3. Klären/konkretisieren – Was genau steckt dahinter?\n4. Öffnen – Bedingungen, Alternativen, Nutzen erkunden.\n5. Abschließen – nächsten Schritt oder Bewegung sichern.' },
+      { typ:'fach', gruppe:'Standardsituationen', titel:'Vier Standardsituationen', text:"'Da können wir preislich nichts mehr machen.' → Andere Hebel öffnen: 'Welche anderen Themen – WKZ, Fracht, Zahlungsziel – wären denkbar?'\n'Das ist unser bestes Angebot.' → Klären, worauf sich das bezieht: 'Was wäre nötig, damit noch etwas möglich wird?'\n'Andere Händler akzeptieren das auch.' → Nicht rechtfertigen, eigene Situation und beiderseitigen Nutzen zurückholen.\n'WKZ ist dieses Jahr nicht drin.' → Aufnehmen → Klären ('Woran hängt das – Budget, Timing, Format?') → Öffnen → Alternative → Abschluss sichern." },
       { typ:'reflexion', titel:'Typische Stolperstellen', text:'Zu schnell auf Preis fixieren, andere Hebel übersehen.\nZiele zu ungenau formulieren, Minimum und Wunsch nicht trennen.\nEinwände nicht konkretisieren, sondern als Tatsache hinnehmen.\nZu viele Warum-Fragen, die Rechtfertigungsdruck erzeugen.\nSofort argumentieren statt erst zu fragen und zu öffnen.\nKein echter Plan B vorbereitet.\nGespräch ohne klaren nächsten Schritt beenden.' },
       { typ:'reflexion', titel:'Transferstruktur', text:'Was will ich künftig bewusster tun?\nWas will ich konkret anders machen?\nWoran merke ich, dass ich es umgesetzt habe?\n\n2–3 konkrete Maßnahmen reichen – wenige, beobachtbare Schritte wirken stärker als viele diffuse Vorsätze.' }
     ]
@@ -694,7 +881,7 @@ async function loadTemplate(key){
   await storeSet('seminare', seminare);
   aktuellesSeminarId = id;
   await storeSet('letztesSeminar', id);
-  karten = t.cards.map((c,i) => ({ id: 'k_' + Date.now() + '_' + i, typ:c.typ, titel:c.titel, text:c.text, ord:c.ord||1 }));
+  karten = t.cards.map((c,i) => ({ id: 'k_' + Date.now() + '_' + i, typ:c.typ, titel:c.titel, gruppe:c.gruppe||'', text:c.text, ord:c.ord||1 }));
   await speichereKartenListe();
   renderSeminarTabs();
   renderBoard();
