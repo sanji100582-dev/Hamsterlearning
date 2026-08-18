@@ -32,9 +32,6 @@
       var(--filz-2);
     color:#f4efe2;
     min-height:100vh;
-    overflow-x:hidden;
-    width:100%;
-    position:relative;
   }
 
   /* ---------- Header / Tabs ---------- */
@@ -91,12 +88,12 @@
   }
 
   /* ---------- Board (visual) ---------- */
-  main{padding:18px 14px 90px; max-width:1200px; margin:0 auto; overflow-x:hidden;}
+  main{padding:18px 14px 100px; max-width:1200px; margin:0 auto;}
   .board{
     display:grid;
     grid-template-columns:repeat(auto-fill, minmax(230px,1fr));
     gap:34px 20px;
-    padding-top:10px;
+    padding:10px 6px 0;
   }
   .karte{
     position:relative;
@@ -246,12 +243,69 @@
   .uebungEnde p{color:#cfd6c8; margin-bottom:20px;}
   .uebungEnde .iconBtn{margin:4px;}
 
-  /* ---------- Floating Add Button ---------- */
-  .fab{
-    position:fixed; bottom:22px; right:20px; z-index:25;
-    width:58px; height:58px; border-radius:50%; border:none;
-    background:var(--gelb); color:#2b2408; font-size:1.8rem; box-shadow:0 6px 16px rgba(0,0,0,0.5);
-    cursor:pointer;
+  /* ---------- Floating Add Button (entfernt zugunsten Bottom-Nav) ---------- */
+
+  /* ---------- Bottom-Navigation ---------- */
+  .bottomNav{
+    position:fixed; left:0; right:0; bottom:0; z-index:70;
+    display:flex; justify-content:space-around; align-items:stretch;
+    background:linear-gradient(0deg, rgba(12,20,15,0.98), rgba(15,25,18,0.92));
+    border-top:1px solid rgba(255,255,255,0.1);
+    padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+    backdrop-filter:blur(6px);
+  }
+  .navBtn{
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:2px;
+    background:transparent; border:none; color:#a9b3a3; font-size:0.66rem;
+    padding:6px 2px; cursor:pointer; font-family:var(--schrift-sans); border-radius:10px;
+  }
+  .navBtn span{font-size:1.25rem; line-height:1;}
+  .navBtn.active{color:#fff6dd;}
+  .navBtn.active span{filter:drop-shadow(0 0 4px rgba(255,246,221,0.5));}
+
+  /* ---------- Übersicht (Kacheln) ---------- */
+  .uebersichtGrid{
+    display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:6px;
+  }
+  .kachel{
+    border-radius:14px; padding:18px 14px; cursor:pointer; text-align:left;
+    box-shadow:0 6px 14px rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08);
+    background:var(--gelb); color:var(--tinte);
+  }
+  .kachel.reflexion{background:var(--gruen);}
+  .kachel .kachelTitel{font-family:var(--schrift-hand); font-size:1.1rem; margin:0 0 6px; line-height:1.2;}
+  .kachel .kachelMeta{font-size:0.76rem; opacity:0.75; margin-bottom:8px;}
+  .kachel .kachelBar{height:6px; border-radius:999px; background:rgba(0,0,0,0.15); overflow:hidden;}
+  .kachel .kachelBar > div{height:100%; background:#2b6b45;}
+  .uebersichtNebenReihe{margin-top:22px;}
+  .uebersichtNebenLabel{font-size:0.72rem; text-transform:uppercase; letter-spacing:0.5px; color:#8a9284; margin-bottom:8px;}
+  .kachelKlein{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:12px 14px; border-radius:10px; cursor:pointer;
+    background:rgba(255,255,255,0.05); border:1px solid var(--blau-dk); color:#cfe3f5;
+    font-size:0.85rem;
+  }
+  .kachelKlein .kleinMeta{font-size:0.72rem; opacity:0.7;}
+
+  /* ---------- Board-Kopfzeile ---------- */
+  .boardHeader{display:flex; align-items:center; gap:10px; margin-bottom:6px;}
+  .boardHeader .backBtn{
+    background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#f4efe2;
+    border-radius:8px; padding:7px 12px; font-size:0.85rem; cursor:pointer; font-family:var(--schrift-sans);
+  }
+  .boardHeader h2{
+    flex:1; font-family:var(--schrift-hand); font-size:1.25rem; margin:0; color:#fff6dd;
+  }
+  .boardHeader .addBtn{
+    background:var(--gelb); color:#2b2408; border:none; border-radius:8px;
+    width:36px; height:36px; font-size:1.2rem; cursor:pointer;
+  }
+
+  /* ---------- Mehr-Menü ---------- */
+  .mehrList{display:flex; flex-direction:column; gap:8px;}
+  .mehrItem{
+    text-align:left; padding:13px 14px; border-radius:10px; border:1px solid #d8cfa8;
+    background:#fffdf5; color:#20241e; font-size:0.92rem; cursor:pointer; font-family:var(--schrift-sans);
   }
 
   /* ---------- Modal ---------- */
@@ -323,30 +377,9 @@
 <header>
   <h1>📌 Vorbereitungswand</h1>
   <div class="tabRow" id="tabRow"></div>
-  <div class="toolRow">
-    <span class="chip" data-typ="fach" onclick="toggleTyp('fach')">Fachinhalt</span>
-    <span class="chip off" data-typ="ablauf" onclick="toggleTyp('ablauf')">Ablauf</span>
-    <span class="chip off" data-typ="reflexion" onclick="toggleTyp('reflexion')">Reflexion</span>
-    <span class="spacer"></span>
-    <div class="modeToggle">
-      <button id="btnVisuell" onclick="setModus('visuell')">Visuell</button>
-      <button id="btnAuditiv" onclick="setModus('auditiv')">Auditiv</button>
-    </div>
-  </div>
-  <div class="gruppeRow" id="gruppeRow"></div>
   <div class="searchRow">
     <input type="text" id="suchfeld" placeholder="🔍 Karte suchen..." oninput="onSuche(this.value)">
     <button class="clearBtn" onclick="suchfeldLeeren()" title="Suche löschen">✕</button>
-  </div>
-  <div class="toolRow">
-    <button class="iconBtn" onclick="starteUebung()">🧠 Übungsmodus</button>
-    <button class="iconBtn" onclick="zufallskarte()">🎲 Zufallskarte</button>
-    <button class="iconBtn" onclick="zeigeFortschritt()">📊 Fortschritt</button>
-  </div>
-  <div class="toolRow">
-    <button class="iconBtn" onclick="exportJSON()">💾 Sichern</button>
-    <button class="iconBtn" onclick="document.getElementById('importInput').click()">📂 Laden</button>
-    <input type="file" id="importInput" accept="application/json" style="display:none" onchange="importJSON(event)">
   </div>
 </header>
 
@@ -354,7 +387,33 @@
   <div id="boardArea"></div>
 </main>
 
+<nav class="bottomNav">
+  <button class="navBtn active" id="navUebersicht" onclick="zurueckZurUebersicht()"><span>🏠</span>Übersicht</button>
+  <button class="navBtn" id="navVorlesen" onclick="toggleVorlesenModus()"><span>🔊</span>Vorlesen</button>
+  <button class="navBtn" id="navUeben" onclick="starteUebung()"><span>🧠</span>Üben</button>
+  <button class="navBtn" id="navFortschritt" onclick="zeigeFortschritt()"><span>📊</span>Fortschritt</button>
+  <button class="navBtn" id="navMehr" onclick="document.getElementById('mehrDialog').showModal()"><span>⋯</span>Mehr</button>
+</nav>
+
 <div id="uebungOverlay" class="uebungOverlay" style="display:none;"></div>
+
+<dialog id="mehrDialog">
+  <div class="modalInner">
+    <h2>Mehr</h2>
+    <div class="mehrList">
+      <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); openKartenModal();">➕ Neue Karte anlegen</button>
+      <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); document.getElementById('seminarDialog').showModal();">📁 Neues Seminar</button>
+      <button class="mehrItem" onclick="loadTemplate('verhandeln_pm'); document.getElementById('mehrDialog').close();">⤓ Vorlage „Verhandeln im PM-Alltag" laden</button>
+      <button class="mehrItem" onclick="zufallskarte(); document.getElementById('mehrDialog').close();">🎲 Zufallskarte</button>
+      <button class="mehrItem" onclick="exportJSON()">💾 Sichern (Backup exportieren)</button>
+      <button class="mehrItem" onclick="document.getElementById('importInput').click()">📂 Laden (Backup importieren)</button>
+      <input type="file" id="importInput" accept="application/json" style="display:none" onchange="importJSON(event)">
+    </div>
+    <div class="modal-actions">
+      <button class="cancel" onclick="document.getElementById('mehrDialog').close()">Schließen</button>
+    </div>
+  </div>
+</dialog>
 
 <dialog id="fortschrittDialog">
   <div class="modalInner">
@@ -365,8 +424,6 @@
     </div>
   </div>
 </dialog>
-
-<button class="fab" onclick="openKartenModal()" title="Karte hinzufügen">+</button>
 
 <dialog id="seminarDialog">
   <div class="modalInner">
@@ -449,8 +506,9 @@ let seminare = [];
 let aktuellesSeminarId = null;
 let karten = [];
 let modus = 'visuell';
-let aktiveTypen = new Set(['fach']);
-let aktiveGruppe = 'alle';
+let currentView = 'uebersicht';
+let boardTyp = 'fach';
+let boardGruppe = null;
 let suchbegriff = '';
 let editKarteId = null;
 let detailKarteId = null;
@@ -506,7 +564,7 @@ function zeigeToast(msg){
 function hashRotation(id){
   let h = 0;
   for(const c of id) h = (h*31 + c.charCodeAt(0)) % 1000;
-  return ((h % 7) - 3) + 'deg';
+  return (((h % 7) - 3) * 0.5) + 'deg';
 }
 
 /* ---------- Init ---------- */
@@ -554,7 +612,12 @@ function renderSeminarTabs(){
 
 async function wechsleSeminar(id){
   aktuellesSeminarId = id;
-  aktiveGruppe = 'alle';
+  currentView = 'uebersicht';
+  boardTyp = 'fach';
+  boardGruppe = null;
+  suchbegriff = '';
+  const sf = document.getElementById('suchfeld');
+  if(sf) sf.value = '';
   await storeSet('letztesSeminar', id);
   karten = (await storeGet('karten_' + id)) || [];
   renderSeminarTabs();
@@ -574,59 +637,49 @@ async function saveSeminar(){
   await wechsleSeminar(id);
 }
 
-/* ---------- Filter / Modus ---------- */
-function toggleTyp(typ){
-  if(aktiveTypen.has(typ)) aktiveTypen.delete(typ); else aktiveTypen.add(typ);
-  document.querySelector(`.chip[data-typ="${typ}"]`).classList.toggle('off', !aktiveTypen.has(typ));
-  aktiveGruppe = 'alle';
+/* ---------- Navigation Übersicht ↔ Board ---------- */
+function zurueckZurUebersicht(){
+  currentView = 'uebersicht';
+  suchbegriff = '';
+  const sf = document.getElementById('suchfeld');
+  if(sf) sf.value = '';
   renderBoard();
 }
-function setModus(m){
-  modus = m;
-  document.getElementById('btnVisuell').classList.toggle('on', m === 'visuell');
-  document.getElementById('btnAuditiv').classList.toggle('on', m === 'auditiv');
+function waehleGruppe(typ, gruppe){
+  boardTyp = typ;
+  boardGruppe = gruppe;
+  currentView = 'board';
+  suchbegriff = '';
+  const sf = document.getElementById('suchfeld');
+  if(sf) sf.value = '';
   renderBoard();
+}
+function toggleVorlesenModus(){
+  modus = (modus === 'auditiv') ? 'visuell' : 'auditiv';
+  if(currentView === 'uebersicht') currentView = 'board';
+  renderBoard();
+}
+function updateNavAktiv(){
+  document.getElementById('navUebersicht').classList.toggle('active', currentView === 'uebersicht');
+  document.getElementById('navVorlesen').classList.toggle('active', modus === 'auditiv');
 }
 
-/* ---------- Gruppen-Filter ---------- */
-function renderGruppeChips(kartenNachTyp){
-  const row = document.getElementById('gruppeRow');
-  const gruppen = [...new Set(kartenNachTyp.map(k => k.gruppe).filter(Boolean))].sort();
-  if(gruppen.length < 2){
-    row.innerHTML = '';
-    aktiveGruppe = 'alle';
-    return;
+/* ---------- Kartenpool für die aktuelle Ansicht ---------- */
+function gefilterteKarten(){
+  let liste = karten.filter(k => k.typ === boardTyp);
+  if(boardTyp === 'fach'){
+    liste = liste.filter(k => boardGruppe === null ? !k.gruppe : k.gruppe === boardGruppe);
   }
-  row.innerHTML = '';
-  const alleChip = document.createElement('span');
-  alleChip.className = 'gruppeChip' + (aktiveGruppe === 'alle' ? ' on' : '');
-  alleChip.textContent = 'Alle';
-  alleChip.onclick = () => { aktiveGruppe = 'alle'; renderBoard(); };
-  row.appendChild(alleChip);
-  gruppen.forEach(g=>{
-    const chip = document.createElement('span');
-    chip.className = 'gruppeChip' + (aktiveGruppe === g ? ' on' : '');
-    chip.textContent = g;
-    chip.onclick = () => { aktiveGruppe = g; renderBoard(); };
-    row.appendChild(chip);
+  return liste.sort((a,b)=>{
+    if(a.typ === 'ablauf') return (a.ord||1) - (b.ord||1);
+    return 0;
   });
 }
 
-/* ---------- Board rendern ---------- */
-function gefilterteKarten(){
-  const nachTyp = karten.filter(k => aktiveTypen.has(k.typ));
-  renderGruppeChips(nachTyp);
-  let liste = nachTyp.filter(k => aktiveGruppe === 'alle' || k.gruppe === aktiveGruppe);
-  if(suchbegriff.trim()){
-    const q = suchbegriff.trim().toLowerCase();
-    liste = liste.filter(k => (k.titel + ' ' + k.text + ' ' + (k.gruppe||'')).toLowerCase().includes(q));
-  }
-  return liste.sort((a,b)=>{
-      if(a.typ === 'ablauf' && b.typ === 'ablauf') return (a.ord||1) - (b.ord||1);
-      if(a.typ === 'ablauf') return -1;
-      if(b.typ === 'ablauf') return 1;
-      return 0;
-    });
+function sucheGefiltert(){
+  const q = suchbegriff.trim().toLowerCase();
+  if(!q) return [];
+  return karten.filter(k => (k.titel + ' ' + k.text + ' ' + (k.gruppe||'')).toLowerCase().includes(q));
 }
 
 /* ---------- Suche ---------- */
@@ -642,7 +695,7 @@ function suchfeldLeeren(){
 
 /* ---------- Zufallskarte ---------- */
 function zufallskarte(){
-  const liste = gefilterteKarten();
+  const liste = suchbegriff.trim() ? sucheGefiltert() : (currentView === 'uebersicht' ? karten.filter(k=>k.typ==='fach') : gefilterteKarten());
   if(!liste.length){ zeigeToast('Keine Karten in der aktuellen Auswahl'); return; }
   const k = liste[Math.floor(Math.random() * liste.length)];
   openDetail(k.id);
@@ -677,21 +730,129 @@ function fortschrittZeileHTML(label, sitzt, gesamt, hervorgehoben){
   </div>`;
 }
 
+/* ---------- Hauptrendering ---------- */
 function renderBoard(){
   const area = document.getElementById('boardArea');
   area.innerHTML = '';
+  updateNavAktiv();
   if(!aktuellesSeminarId){
-    area.innerHTML = '<div class="leer">Noch kein Seminar angelegt.<br>Tippe oben auf „+ Seminar" oder lade die Vorlage.</div>';
-    document.getElementById('gruppeRow').innerHTML = '';
+    area.innerHTML = '<div class="leer">Noch kein Seminar angelegt.<br>Tippe unten auf „⋯ Mehr" → „Neues Seminar" oder lade die Vorlage.</div>';
+    return;
+  }
+  if(suchbegriff.trim()){
+    renderSucheErgebnisse(area);
+    return;
+  }
+  if(currentView === 'uebersicht'){
+    renderUebersicht(area);
     return;
   }
   const liste = gefilterteKarten();
+  renderBoardHeader(area);
   if(!liste.length){
-    area.innerHTML = '<div class="leer">Keine Karten hier.<br>Mit + unten rechts eine neue Karte anlegen.</div>';
+    const leer = document.createElement('div');
+    leer.className = 'leer';
+    leer.innerHTML = 'Keine Karten hier.<br>Über „⋯ Mehr" → „Neue Karte anlegen".';
+    area.appendChild(leer);
     return;
   }
   if(modus === 'visuell') renderVisuell(area, liste);
   else renderAuditiv(area, liste);
+}
+
+function renderBoardHeader(area){
+  const gruppenLabel = boardTyp === 'fach' ? (boardGruppe || 'Sonstige Fachinhalte') : TYP_LABEL[boardTyp];
+  const header = document.createElement('div');
+  header.className = 'boardHeader';
+  header.innerHTML = `
+    <button class="backBtn" onclick="zurueckZurUebersicht()">← Übersicht</button>
+    <h2>${escapeHTML(gruppenLabel)}</h2>
+    <button class="addBtn" onclick="openKartenModal()" title="Karte hinzufügen">+</button>`;
+  area.appendChild(header);
+}
+
+function renderSucheErgebnisse(area){
+  const liste = sucheGefiltert();
+  const header = document.createElement('div');
+  header.className = 'boardHeader';
+  header.innerHTML = `
+    <button class="backBtn" onclick="suchfeldLeeren()">✕ Suche schließen</button>
+    <h2>${liste.length} Treffer</h2>`;
+  area.appendChild(header);
+  if(!liste.length){
+    const leer = document.createElement('div');
+    leer.className = 'leer';
+    leer.textContent = 'Keine Treffer.';
+    area.appendChild(leer);
+    return;
+  }
+  if(modus === 'visuell') renderVisuell(area, liste);
+  else renderAuditiv(area, liste);
+}
+
+function renderUebersicht(area){
+  const fachKarten = karten.filter(k => k.typ === 'fach');
+  const gruppenMap = {};
+  fachKarten.forEach(k=>{
+    const key = k.gruppe || null;
+    const label = k.gruppe || 'Sonstige Fachinhalte';
+    if(!gruppenMap[label]) gruppenMap[label] = { key, gesamt:0, sitzt:0 };
+    gruppenMap[label].gesamt++;
+    if(k.geuebt) gruppenMap[label].sitzt++;
+  });
+  const reflexionKarten = karten.filter(k=>k.typ==='reflexion');
+  const ablaufKarten = karten.filter(k=>k.typ==='ablauf');
+
+  const grid = document.createElement('div');
+  grid.className = 'uebersichtGrid';
+
+  Object.keys(gruppenMap).sort().forEach(label=>{
+    const g = gruppenMap[label];
+    const pct = g.gesamt ? Math.round((g.sitzt/g.gesamt)*100) : 0;
+    const kachel = document.createElement('div');
+    kachel.className = 'kachel';
+    kachel.onclick = () => waehleGruppe('fach', g.key);
+    kachel.innerHTML = `
+      <div class="kachelTitel">${escapeHTML(label)}</div>
+      <div class="kachelMeta">${g.gesamt} Karte${g.gesamt===1?'':'n'} · ${pct}% sitzen</div>
+      <div class="kachelBar"><div style="width:${pct}%"></div></div>`;
+    grid.appendChild(kachel);
+  });
+
+  if(reflexionKarten.length){
+    const sitzt = reflexionKarten.filter(k=>k.geuebt).length;
+    const pct = Math.round((sitzt/reflexionKarten.length)*100);
+    const kachel = document.createElement('div');
+    kachel.className = 'kachel reflexion';
+    kachel.onclick = () => waehleGruppe('reflexion', null);
+    kachel.innerHTML = `
+      <div class="kachelTitel">Reflexion</div>
+      <div class="kachelMeta">${reflexionKarten.length} Karte${reflexionKarten.length===1?'':'n'} · ${pct}% sitzen</div>
+      <div class="kachelBar"><div style="width:${pct}%"></div></div>`;
+    grid.appendChild(kachel);
+  }
+
+  area.appendChild(grid);
+
+  if(!Object.keys(gruppenMap).length && !reflexionKarten.length && !ablaufKarten.length){
+    const leer = document.createElement('div');
+    leer.className = 'leer';
+    leer.innerHTML = 'Noch keine Karten in diesem Seminar.<br>Über „⋯ Mehr" eine Karte anlegen oder Vorlage laden.';
+    area.appendChild(leer);
+  }
+
+  if(ablaufKarten.length){
+    const sitzt = ablaufKarten.filter(k=>k.geuebt).length;
+    const nebenReihe = document.createElement('div');
+    nebenReihe.className = 'uebersichtNebenReihe';
+    nebenReihe.innerHTML = `<div class="uebersichtNebenLabel">Zeitplan</div>`;
+    const klein = document.createElement('div');
+    klein.className = 'kachelKlein';
+    klein.onclick = () => waehleGruppe('ablauf', null);
+    klein.innerHTML = `<span>🕐 Ablauf</span><span class="kleinMeta">${ablaufKarten.length} Schritte</span>`;
+    nebenReihe.appendChild(klein);
+    area.appendChild(nebenReihe);
+  }
 }
 
 function renderVisuell(area, liste){
@@ -894,9 +1055,10 @@ function openKartenModal(id){
     delBtn.style.display = 'inline-block';
   }else{
     document.getElementById('kDialogTitel').textContent = 'Neue Karte';
-    document.querySelector('input[name="kTyp"][value="fach"]').checked = true;
+    const vorTyp = (currentView === 'board') ? boardTyp : 'fach';
+    document.querySelector(`input[name="kTyp"][value="${vorTyp}"]`).checked = true;
     document.getElementById('kTitel').value = '';
-    document.getElementById('kGruppe').value = '';
+    document.getElementById('kGruppe').value = (currentView === 'board' && boardTyp === 'fach' && boardGruppe) ? boardGruppe : '';
     document.getElementById('kText').value = '';
     document.getElementById('kOrd').value = karten.filter(k=>k.typ==='ablauf').length + 1;
     delBtn.style.display = 'none';
@@ -973,9 +1135,14 @@ function importJSON(evt){
         karten = data.kartenProSeminar[aktuellesSeminarId] || [];
         await storeSet('letztesSeminar', aktuellesSeminarId);
       }
+      currentView = 'uebersicht';
+      suchbegriff = '';
+      const sf = document.getElementById('suchfeld');
+      if(sf) sf.value = '';
       renderSeminarTabs();
       renderBoard();
       zeigeToast('Backup geladen');
+      document.getElementById('mehrDialog').close();
     }catch(err){
       zeigeToast('Datei konnte nicht gelesen werden');
     }
@@ -1020,6 +1187,7 @@ async function loadTemplate(key){
   await storeSet('letztesSeminar', id);
   karten = t.cards.map((c,i) => ({ id: 'k_' + Date.now() + '_' + i, typ:c.typ, titel:c.titel, gruppe:c.gruppe||'', text:c.text, ord:c.ord||1 }));
   await speichereKartenListe();
+  currentView = 'uebersicht';
   renderSeminarTabs();
   renderBoard();
   zeigeToast('Vorlage geladen');
@@ -1031,7 +1199,7 @@ let uebungIdx = 0;
 let uebungOffen = false;
 
 function starteUebung(){
-  const liste = gefilterteKarten();
+  const liste = suchbegriff.trim() ? sucheGefiltert() : (currentView === 'uebersicht' ? karten.filter(k=>k.typ==='fach') : gefilterteKarten());
   if(!liste.length){ zeigeToast('Keine Karten in der aktuellen Auswahl'); return; }
   uebungListe = [...liste];
   uebungIdx = 0;
