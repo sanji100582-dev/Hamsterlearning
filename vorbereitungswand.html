@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" href="icon-180.png">
-<title>Vorbereitungswand</title>
+<title>Hamster dein Wissen</title>
 <style>
   :root{
     --filz-1:#f7f1e3;
@@ -53,6 +53,12 @@
     letter-spacing:0.5px;
     color:#7a5c2e;
     text-shadow:0 1px 0 rgba(255,255,255,0.6);
+    display:flex; align-items:center; gap:8px;
+  }
+  .h1Icon{
+    width:32px; height:32px; border-radius:9px; object-fit:cover;
+    box-shadow:0 2px 5px rgba(0,0,0,0.15);
+  }
   }
   .tabRow{display:flex; gap:6px; overflow-x:auto; padding-bottom:6px; scrollbar-width:thin;}
   .tab{
@@ -381,7 +387,7 @@
 <body>
 
 <header>
-  <h1>📌 Vorbereitungswand</h1>
+  <h1><img src="icon-180.png" alt="" class="h1Icon">Hamster dein Wissen</h1>
   <div class="tabRow" id="tabRow"></div>
   <div class="searchRow">
     <input type="text" id="suchfeld" placeholder="🔍 Karte suchen..." oninput="onSuche(this.value)">
