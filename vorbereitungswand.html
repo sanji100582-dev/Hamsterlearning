@@ -1641,14 +1641,47 @@ function scanFotoAusgewaehlt(evt){
   evt.target.value = '';
 }
 
+async function bildFuerOcrAufbereiten(file){
+  const bitmap = await createImageBitmap(file);
+  let w = bitmap.width, h = bitmap.height;
+  const maxW = 1800;
+  const minW = 1000;
+  if(w > maxW){ h = Math.round(h * maxW / w); w = maxW; }
+  else if(w < minW){ h = Math.round(h * minW / w); w = minW; }
+  const canvas = document.createElement('canvas');
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(bitmap, 0, 0, w, h);
+  const imgData = ctx.getImageData(0, 0, w, h);
+  const d = imgData.data;
+  const gray = new Float32Array(w*h);
+  let summe = 0;
+  for(let i=0, p=0; i<d.length; i+=4, p++){
+    const g = 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
+    gray[p] = g;
+    summe += g;
+  }
+  const mittel = summe / gray.length;
+  const schwelle = mittel * 0.9;
+  for(let i=0, p=0; i<d.length; i+=4, p++){
+    const v = gray[p] > schwelle ? 255 : 0;
+    d[i] = d[i+1] = d[i+2] = v;
+  }
+  ctx.putImageData(imgData, 0, 0);
+  return canvas;
+}
+
 async function scanTextErkennen(){
   if(!scanAktuelleDatei) return;
   const btn = document.getElementById('scanErkennenBtn');
   const status = document.getElementById('scanOcrStatus');
   btn.disabled = true;
-  btn.textContent = 'Erkenne Text...';
+  btn.textContent = 'Bereite Bild vor...';
   try{
-    const result = await Tesseract.recognize(scanAktuelleDatei, 'deu', {
+    const canvas = await bildFuerOcrAufbereiten(scanAktuelleDatei);
+    document.getElementById('scanBild').src = canvas.toDataURL('image/png');
+    btn.textContent = 'Erkenne Text...';
+    const worker = await Tesseract.createWorker('deu', 1, {
       logger: m => {
         if(m.status === 'recognizing text'){
           status.textContent = `Texterkennung läuft... ${Math.round(m.progress*100)}%`;
@@ -1657,8 +1690,11 @@ async function scanTextErkennen(){
         }
       }
     });
+    await worker.setParameters({ tessedit_pageseg_mode: '3' });
+    const result = await worker.recognize(canvas);
+    await worker.terminate();
     document.getElementById('scanText').value = result.data.text.trim();
-    status.textContent = 'Text erkannt – bitte prüfen und korrigieren.';
+    status.textContent = 'Text erkannt – bitte prüfen und korrigieren. Bild oben zeigt, was Tesseract „gesehen" hat.';
   }catch(e){
     console.error(e);
     status.textContent = 'Texterkennung fehlgeschlagen. Du kannst den Text auch von Hand eintippen.';
