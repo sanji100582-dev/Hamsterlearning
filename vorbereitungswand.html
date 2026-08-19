@@ -60,6 +60,35 @@
     width:32px; height:32px; border-radius:9px; object-fit:cover;
     box-shadow:0 2px 5px rgba(0,0,0,0.15);
   }
+
+  /* ---------- Splash Screen ---------- */
+  .splash{
+    position:fixed; inset:0; z-index:999;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.5), transparent 45%),
+      repeating-linear-gradient(45deg, var(--filz-1) 0px, var(--filz-2) 2px, var(--filz-1) 4px),
+      var(--filz-2);
+    transition:opacity 1.2s ease;
+  }
+  .splash.ausblenden{opacity:0; pointer-events:none;}
+  .splashIcon{
+    width:120px; height:120px; border-radius:28px; object-fit:cover;
+    box-shadow:0 10px 26px rgba(90,70,40,0.25);
+    margin-bottom:20px;
+    animation:splashPop .5s ease;
+  }
+  .splashTitel{
+    font-family:var(--schrift-hand); font-size:1.8rem; color:#7a5c2e; margin:0 0 8px;
+    text-shadow:0 1px 0 rgba(255,255,255,0.6);
+  }
+  .splashSlogan{
+    font-size:0.95rem; color:var(--text-muted); margin:0;
+  }
+  @keyframes splashPop{
+    from{ transform:scale(0.7); opacity:0; }
+    to{ transform:scale(1); opacity:1; }
+  }
   }
   .tabRow{display:flex; gap:6px; overflow-x:auto; padding-bottom:6px; scrollbar-width:thin;}
   .tab{
@@ -387,6 +416,12 @@
 </head>
 <body>
 
+<div id="splash" class="splash" onclick="splashAusblenden()">
+  <img src="icon-180.png" alt="Hamster" class="splashIcon">
+  <h1 class="splashTitel">Hamster dein Wissen</h1>
+  <p class="splashSlogan">Dein Wissen, gut gehamstert.</p>
+</div>
+
 <header>
   <h1><img src="icon-180.png" alt="" class="h1Icon">Hamster dein Wissen</h1>
   <div class="tabRow" id="tabRow"></div>
@@ -702,6 +737,7 @@ function hashRotation(id){
 
 /* ---------- Init ---------- */
 async function init(){
+  const splashStart = Date.now();
   seminare = (await storeGet('seminare')) || [];
   const last = await storeGet('letztesSeminar');
   if(seminare.length){
@@ -713,6 +749,16 @@ async function init(){
   if(!storageOk){
     zeigeToast('Automatische Speicherung nicht verfügbar – bitte regelmäßig 💾 Sichern nutzen');
   }
+  const vergangen = Date.now() - splashStart;
+  const restwartezeit = Math.max(0, 5000 - vergangen);
+  setTimeout(splashAusblenden, restwartezeit);
+}
+
+function splashAusblenden(){
+  const splash = document.getElementById('splash');
+  if(!splash) return;
+  splash.classList.add('ausblenden');
+  setTimeout(()=> splash.remove(), 1250);
 }
 
 async function speichereKartenListe(){
