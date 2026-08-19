@@ -60,6 +60,10 @@
     width:32px; height:32px; border-radius:9px; object-fit:cover;
     box-shadow:0 2px 5px rgba(0,0,0,0.15);
   }
+  .infoBtn{
+    margin-left:auto; width:30px; height:30px; border-radius:50%; border:1px solid rgba(0,0,0,0.15);
+    background:#fffdf8; color:#7a5c2e; font-size:0.85rem; cursor:pointer; flex:0 0 auto;
+  }
 
   /* ---------- Splash Screen ---------- */
   .splash{
@@ -423,7 +427,7 @@
 </div>
 
 <header>
-  <h1><img src="icon-180.png" alt="" class="h1Icon">Hamster dein Wissen</h1>
+  <h1><img src="icon-180.png" alt="" class="h1Icon"><span>Hamster dein Wissen</span><button class="infoBtn" onclick="document.getElementById('infoDialog').showModal()" title="Wie funktioniert die App?">❓</button></h1>
   <div class="tabRow" id="tabRow"></div>
   <div class="searchRow">
     <input type="text" id="suchfeld" placeholder="🔍 Karte suchen..." oninput="onSuche(this.value)">
@@ -511,6 +515,46 @@
     <div class="modal-actions">
       <button class="cancel" onclick="scanAbbrechen()">Abbrechen</button>
       <button class="save" onclick="scanAlsKarteSpeichern()">Als Karte speichern</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="infoDialog" class="detailDialog">
+  <div class="modalInner">
+    <div class="detailHeader">
+      <h2>🐹 Wie funktioniert's?</h2>
+      <button class="iconBtn" onclick="document.getElementById('infoDialog').close()" style="background:#e6dfc4;color:#4a4a3a;">✕</button>
+    </div>
+    <div class="detailSection">
+      <div class="detailLabel">Worum geht's</div>
+      <div class="detailBody">Diese App ist deine persönliche Seminarvorbereitung – wie eine digitale Pinnwand mit Metaplankarten, aber mit Übungsfunktionen, die dir beim Einprägen der Inhalte helfen.</div>
+    </div>
+    <div class="detailSection">
+      <div class="detailLabel">Übersicht & Board</div>
+      <div class="detailBody">Jedes Seminar hat eine Übersicht mit Kacheln (z. B. „Konzepte", „Rollenspiele"). Antippen öffnet das Board mit den einzelnen Karten dieser Gruppe. Eine Karte antippen zeigt den vollen Inhalt strukturiert an.</div>
+    </div>
+    <div class="detailSection">
+      <div class="detailLabel">🧠 Üben</div>
+      <div class="detailBody">Zwei Modi: Karteikarten (selbst erinnern, dann Antwort aufdecken) oder Quiz (automatisch erstellte Multiple-Choice-Fragen aus deinen Karten). Beides merkt sich, was schon „sitzt".</div>
+    </div>
+    <div class="detailSection">
+      <div class="detailLabel">🔊 Vorlesen</div>
+      <div class="detailBody">Liest dir die Karten laut vor – praktisch, wenn du dich lieber hörend vorbereitest, z. B. unterwegs.</div>
+    </div>
+    <div class="detailSection">
+      <div class="detailLabel">📊 Fortschritt</div>
+      <div class="detailBody">Zeigt, wie viel Prozent der Karten in jeder Gruppe schon „sitzen" – so siehst du auf einen Blick, wo noch Übung nötig ist.</div>
+    </div>
+    <div class="detailSection">
+      <div class="detailLabel">⋯ Mehr</div>
+      <div class="detailBody">Hier legst du neue Karten und Seminare an, scannst Dokumente/Flipcharts (mit automatischer Texterkennung), sicherst oder lädst ein Backup, und kannst ein Seminar samt Fotos wieder löschen.</div>
+    </div>
+    <div class="detailSection">
+      <div class="detailLabel">💾 Backup nicht vergessen</div>
+      <div class="detailBody">Deine Karten liegen nur auf diesem Gerät/Browser. Sichere regelmäßig über ⋯ Mehr → 💾 Sichern, damit nichts verloren geht.</div>
+    </div>
+    <div class="modal-actions">
+      <button class="save" onclick="document.getElementById('infoDialog').close()">Verstanden</button>
     </div>
   </div>
 </dialog>
