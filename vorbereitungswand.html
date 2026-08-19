@@ -6,6 +6,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" href="icon-180.png">
 <title>Hamster dein Wissen</title>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <style>
   :root{
     --filz-1:#f7f1e3;
@@ -427,7 +428,10 @@
     <h2>Mehr</h2>
     <div class="mehrList">
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); openKartenModal();">➕ Neue Karte anlegen</button>
+      <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); document.getElementById('scanInput').click();">📷 Dokument/Flipchart scannen</button>
+      <input type="file" id="scanInput" accept="image/*" capture="environment" style="display:none" onchange="scanFotoAusgewaehlt(event)">
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); document.getElementById('seminarDialog').showModal();">📁 Neues Seminar</button>
+      <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); loescheAktuellesSeminar();">🗑 Aktuelles Seminar löschen</button>
       <button class="mehrItem" onclick="loadTemplate('verhandeln_pm'); document.getElementById('mehrDialog').close();">⤓ Vorlage „Verhandeln im PM-Alltag" laden</button>
       <button class="mehrItem" onclick="zufallskarte(); document.getElementById('mehrDialog').close();">🎲 Zufallskarte</button>
       <button class="mehrItem" onclick="exportJSON()">💾 Sichern (Backup exportieren)</button>
@@ -436,6 +440,42 @@
     </div>
     <div class="modal-actions">
       <button class="cancel" onclick="document.getElementById('mehrDialog').close()">Schließen</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="scanDialog" class="detailDialog">
+  <div class="modalInner">
+    <div class="detailHeader">
+      <h2>Dokument scannen</h2>
+      <button class="iconBtn" onclick="scanAbbrechen()" style="background:#e6dfc4;color:#4a4a3a;">✕</button>
+    </div>
+    <img id="scanBild" style="width:100%; border-radius:10px; margin-bottom:12px; max-height:220px; object-fit:contain; background:#eee;">
+    <div id="scanOcrStatus" style="font-size:0.85rem; color:var(--text-muted); margin-bottom:10px;"></div>
+    <button class="mehrItem" id="scanErkennenBtn" onclick="scanTextErkennen()">🔎 Text erkennen</button>
+    <div class="field" style="margin-top:14px;">
+      <label>Kartentyp</label>
+      <div class="typChoice">
+        <label data-typ="fach"><input type="radio" name="scanTyp" value="fach" checked><span>Fachinhalt</span></label>
+        <label data-typ="ablauf"><input type="radio" name="scanTyp" value="ablauf"><span>Ablauf</span></label>
+        <label data-typ="reflexion"><input type="radio" name="scanTyp" value="reflexion"><span>Reflexion</span></label>
+      </div>
+    </div>
+    <div class="field">
+      <label>Titel</label>
+      <input type="text" id="scanTitel" placeholder="Kurzer Kartentitel">
+    </div>
+    <div class="field">
+      <label>Gruppe (optional)</label>
+      <input type="text" id="scanGruppe" placeholder="z. B. Konzepte">
+    </div>
+    <div class="field">
+      <label>Erkannter Text (bitte prüfen und korrigieren)</label>
+      <textarea id="scanText" placeholder="Erscheint nach „Text erkennen" – oder direkt von Hand eintippen"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="cancel" onclick="scanAbbrechen()">Abbrechen</button>
+      <button class="save" onclick="scanAlsKarteSpeichern()">Als Karte speichern</button>
     </div>
   </div>
 </dialog>
@@ -579,6 +619,73 @@ async function storeSet(key, value){
   }catch(e){ storageOk = false; }
 }
 
+/* ---------- Fotospeicher (IndexedDB) – für gescannte Dokumente/Flipcharts ---------- */
+const FOTO_DB_NAME = 'vbwand_fotos';
+const FOTO_STORE = 'fotos';
+function openFotoDB(){
+  return new Promise((resolve, reject)=>{
+    const req = indexedDB.open(FOTO_DB_NAME, 1);
+    req.onupgradeneeded = (e)=>{
+      const db = e.target.result;
+      if(!db.objectStoreNames.contains(FOTO_STORE)) db.createObjectStore(FOTO_STORE, {keyPath:'id'});
+    };
+    req.onsuccess = ()=>resolve(req.result);
+    req.onerror = ()=>reject(req.error);
+  });
+}
+async function fotoSpeichern(id, seminarId, blob){
+  try{
+    const db = await openFotoDB();
+    return new Promise((resolve,reject)=>{
+      const tx = db.transaction(FOTO_STORE, 'readwrite');
+      tx.objectStore(FOTO_STORE).put({id, seminarId, blob});
+      tx.oncomplete = ()=>resolve(true);
+      tx.onerror = ()=>reject(tx.error);
+    });
+  }catch(e){ console.error('Foto speichern fehlgeschlagen', e); return false; }
+}
+async function fotoLaden(id){
+  try{
+    const db = await openFotoDB();
+    return new Promise((resolve,reject)=>{
+      const tx = db.transaction(FOTO_STORE, 'readonly');
+      const req = tx.objectStore(FOTO_STORE).get(id);
+      req.onsuccess = ()=>resolve(req.result ? req.result.blob : null);
+      req.onerror = ()=>reject(req.error);
+    });
+  }catch(e){ return null; }
+}
+async function fotoLoeschen(id){
+  try{
+    const db = await openFotoDB();
+    return new Promise((resolve,reject)=>{
+      const tx = db.transaction(FOTO_STORE, 'readwrite');
+      tx.objectStore(FOTO_STORE).delete(id);
+      tx.oncomplete = ()=>resolve();
+      tx.onerror = ()=>reject(tx.error);
+    });
+  }catch(e){ /* egal */ }
+}
+async function fotosFuerSeminarLoeschen(seminarId){
+  try{
+    const db = await openFotoDB();
+    return new Promise((resolve,reject)=>{
+      const tx = db.transaction(FOTO_STORE, 'readwrite');
+      const store = tx.objectStore(FOTO_STORE);
+      const req = store.openCursor();
+      req.onsuccess = (e)=>{
+        const cursor = e.target.result;
+        if(cursor){
+          if(cursor.value.seminarId === seminarId) cursor.delete();
+          cursor.continue();
+        }
+      };
+      tx.oncomplete = ()=>resolve();
+      tx.onerror = ()=>reject(tx.error);
+    });
+  }catch(e){ /* egal */ }
+}
+
 function zeigeToast(msg){
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -661,6 +768,26 @@ async function saveSeminar(){
   document.getElementById('sDatum').value = '';
   document.getElementById('seminarDialog').close();
   await wechsleSeminar(id);
+}
+
+async function loescheAktuellesSeminar(){
+  if(!aktuellesSeminarId){ zeigeToast('Kein Seminar ausgewählt'); return; }
+  const sem = seminare.find(s=>s.id===aktuellesSeminarId);
+  const name = sem ? sem.titel : 'dieses Seminar';
+  const sicher = confirm(`„${name}" wirklich löschen?\n\nAlle Karten und gescannten Fotos dieses Seminars werden unwiderruflich entfernt.`);
+  if(!sicher) return;
+  const zuLoeschenId = aktuellesSeminarId;
+  seminare = seminare.filter(s=>s.id!==zuLoeschenId);
+  await storeSet('seminare', seminare);
+  window.localStorage.removeItem(LS_PREFIX + 'karten_' + zuLoeschenId);
+  await fotosFuerSeminarLoeschen(zuLoeschenId);
+  aktuellesSeminarId = seminare.length ? seminare[0].id : null;
+  karten = aktuellesSeminarId ? ((await storeGet('karten_' + aktuellesSeminarId)) || []) : [];
+  await storeSet('letztesSeminar', aktuellesSeminarId);
+  currentView = 'uebersicht';
+  renderSeminarTabs();
+  renderBoard();
+  zeigeToast('Seminar gelöscht');
 }
 
 /* ---------- Navigation Übersicht ↔ Board ---------- */
@@ -947,6 +1074,15 @@ function openDetail(id){
   }
   const body = document.getElementById('dBody');
   body.innerHTML = '';
+  if(k.bildId){
+    const img = document.createElement('img');
+    img.style.cssText = 'width:100%; border-radius:10px; margin-bottom:14px; max-height:280px; object-fit:contain; background:#eee;';
+    body.appendChild(img);
+    fotoLaden(k.bildId).then(blob=>{
+      if(blob) img.src = URL.createObjectURL(blob);
+      else img.style.display = 'none';
+    });
+  }
   const abschnitte = parseAbschnitte(k.text);
   abschnitte.forEach(a=>{
     const sec = document.createElement('div');
@@ -1119,6 +1255,8 @@ async function saveKarte(){
 
 async function deleteKarte(){
   if(!editKarteId) return;
+  const k = karten.find(x=>x.id===editKarteId);
+  if(k && k.bildId) await fotoLoeschen(k.bildId);
   karten = karten.filter(k=>k.id !== editKarteId);
   await speichereKartenListe();
   document.getElementById('kartenDialog').close();
@@ -1480,6 +1618,76 @@ function starteQuizWiederholung(){
   quizIdx = 0;
   quizRichtig = 0;
   renderQuizFrage();
+}
+
+/* ---------- Dokument/Flipchart scannen (Foto + OCR) ---------- */
+let scanAktuelleDatei = null;
+let scanErkannteBildId = null;
+
+function scanFotoAusgewaehlt(evt){
+  const file = evt.target.files[0];
+  if(!file) return;
+  if(!aktuellesSeminarId){ zeigeToast('Bitte zuerst ein Seminar anlegen oder auswählen'); evt.target.value=''; return; }
+  scanAktuelleDatei = file;
+  document.getElementById('scanBild').src = URL.createObjectURL(file);
+  document.getElementById('scanOcrStatus').textContent = '';
+  document.getElementById('scanErkennenBtn').disabled = false;
+  document.getElementById('scanErkennenBtn').textContent = '🔎 Text erkennen';
+  document.getElementById('scanTitel').value = '';
+  document.getElementById('scanGruppe').value = (currentView === 'board' && boardTyp === 'fach' && boardGruppe) ? boardGruppe : '';
+  document.getElementById('scanText').value = '';
+  document.querySelector('input[name="scanTyp"][value="fach"]').checked = true;
+  document.getElementById('scanDialog').showModal();
+  evt.target.value = '';
+}
+
+async function scanTextErkennen(){
+  if(!scanAktuelleDatei) return;
+  const btn = document.getElementById('scanErkennenBtn');
+  const status = document.getElementById('scanOcrStatus');
+  btn.disabled = true;
+  btn.textContent = 'Erkenne Text...';
+  try{
+    const result = await Tesseract.recognize(scanAktuelleDatei, 'deu', {
+      logger: m => {
+        if(m.status === 'recognizing text'){
+          status.textContent = `Texterkennung läuft... ${Math.round(m.progress*100)}%`;
+        } else if(m.status){
+          status.textContent = m.status + '...';
+        }
+      }
+    });
+    document.getElementById('scanText').value = result.data.text.trim();
+    status.textContent = 'Text erkannt – bitte prüfen und korrigieren.';
+  }catch(e){
+    console.error(e);
+    status.textContent = 'Texterkennung fehlgeschlagen. Du kannst den Text auch von Hand eintippen.';
+  }
+  btn.disabled = false;
+  btn.textContent = '🔎 Nochmal erkennen';
+}
+
+async function scanAlsKarteSpeichern(){
+  if(!aktuellesSeminarId || !scanAktuelleDatei){ zeigeToast('Kein Foto ausgewählt'); return; }
+  const titel = document.getElementById('scanTitel').value.trim();
+  if(!titel){ zeigeToast('Bitte einen Titel eingeben'); return; }
+  const typ = document.querySelector('input[name="scanTyp"]:checked').value;
+  const gruppe = document.getElementById('scanGruppe').value.trim();
+  const text = document.getElementById('scanText').value.trim() || '(Foto ohne erkannten Text)';
+  const bildId = 'foto_' + Date.now();
+  const ok = await fotoSpeichern(bildId, aktuellesSeminarId, scanAktuelleDatei);
+  const ord = karten.filter(k=>k.typ==='ablauf').length + 1;
+  karten.push({ id:'k_'+Date.now(), typ, titel, gruppe, text, ord, bildId: ok ? bildId : null });
+  await speichereKartenListe();
+  scanAktuelleDatei = null;
+  document.getElementById('scanDialog').close();
+  renderBoard();
+  zeigeToast('Karte mit Foto gespeichert');
+}
+
+function scanAbbrechen(){
+  scanAktuelleDatei = null;
+  document.getElementById('scanDialog').close();
 }
 
 init();
