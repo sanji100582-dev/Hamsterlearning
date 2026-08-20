@@ -2279,21 +2279,21 @@ function progRenderAll(){
       <div class="progTitel">${escapeHTML(l.title)}</div>
       <div class="progCard">
         ${l.erklaerung.map(p=>`<p>${escapeHTML(p)}</p>`).join('')}
-        <button class="progRunBtn" style="margin-top:4px;" onclick="progSprich(${JSON.stringify(l.erklaerung.join(' '))})">🔊 Erklärung vorlesen</button>
+        <button class="progRunBtn" style="margin-top:4px;" onclick="progVorleseErklaerung()">🔊 Erklärung vorlesen</button>
       </div>
 
       <div class="progLabel">Beispiel</div>
       <div class="progCodeBox"><pre>${escapeHTML(l.beispiel)}</pre></div>
       <div class="progBtnRow">
         <button class="progRunBtn" onclick="progBeispielAusfuehren()">Beispiel ausführen</button>
-        <button class="progRunBtn" onclick="progSprich(${JSON.stringify(l.beispiel)})">🔊 Code vorlesen</button>
+        <button class="progRunBtn" onclick="progVorleseBeispiel()">🔊 Code vorlesen</button>
       </div>
       <div class="progConsole empty" id="progBeispielConsole">Noch keine Ausgabe.</div>
 
       <div class="progLabel" style="margin-top:18px;">Übung</div>
       <div class="progCard" style="padding-bottom:6px;">
         <p>${escapeHTML(l.aufgabe)}</p>
-        <button class="progRunBtn" style="margin-bottom:10px;" onclick="progSprich(${JSON.stringify(l.aufgabe)})">🔊 Aufgabe vorlesen</button>
+        <button class="progRunBtn" style="margin-bottom:10px;" onclick="progVorleseAufgabe()">🔊 Aufgabe vorlesen</button>
         <textarea class="progInput" id="progUebungInput" spellcheck="false">${escapeHTML(l.starter)}</textarea>
         <div class="progBtnRow">
           <button class="progRunBtn" onclick="progUebungAusfuehren()">Code ausführen</button>
@@ -2318,6 +2318,18 @@ function progSprich(text){
   const utter = new SpeechSynthesisUtterance(text);
   utter.lang = 'de-DE';
   speechSynthesis.speak(utter);
+}
+function progVorleseErklaerung(){
+  const l = PROG_LESSONS[progState.current];
+  progSprich(l.erklaerung.join(' '));
+}
+function progVorleseBeispiel(){
+  const l = PROG_LESSONS[progState.current];
+  progSprich(l.beispiel);
+}
+function progVorleseAufgabe(){
+  const l = PROG_LESSONS[progState.current];
+  progSprich(l.aufgabe);
 }
 
 function progBeispielAusfuehren(){
