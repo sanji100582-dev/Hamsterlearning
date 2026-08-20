@@ -274,6 +274,76 @@
   .uebungEnde p{color:var(--text-muted); margin-bottom:20px;}
   .uebungEnde .iconBtn{margin:4px;}
 
+  /* ---------- Programmieren lernen ---------- */
+  .progOverlay{
+    position:fixed; inset:0; z-index:80; background:var(--filz-2);
+    display:flex; flex-direction:column; padding:0; overflow-y:auto;
+  }
+  .progTop{
+    position:sticky; top:0; z-index:5; display:flex; align-items:center; gap:10px;
+    padding:14px 16px; background:linear-gradient(180deg, rgba(247,241,227,0.98), rgba(247,241,227,0.9));
+    backdrop-filter:blur(4px); border-bottom:1px solid rgba(0,0,0,0.06);
+  }
+  .progTop h2{flex:1; font-family:var(--schrift-hand); font-size:1.2rem; margin:0; color:#7a5c2e;}
+  .progBody{padding:16px 16px 40px; max-width:640px; margin:0 auto; width:100%;}
+  .progTrack{display:flex; gap:6px; overflow-x:auto; padding-bottom:14px; scrollbar-width:thin;}
+  .progDot{
+    flex:0 0 auto; width:30px; height:30px; border-radius:50%; display:flex; align-items:center;
+    justify-content:center; font-family:var(--schrift-sans); font-size:0.78rem; font-weight:700;
+    border:2px solid rgba(0,0,0,0.15); background:#fffdf8; color:var(--text-muted); cursor:pointer;
+  }
+  .progDot.done{background:#2b6b45; border-color:#2b6b45; color:#fff;}
+  .progDot.active{border-color:var(--gelb-dk); box-shadow:0 0 0 3px rgba(224,184,74,0.25); color:var(--text-main);}
+  .progEyebrow{font-size:0.72rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); font-weight:600; margin:0 0 4px;}
+  .progTitel{font-family:var(--schrift-hand); font-size:1.5rem; margin:0 0 14px; color:var(--text-main);}
+  .progCard{
+    background:#fffdf8; border:1px solid rgba(0,0,0,0.08); border-radius:12px;
+    padding:16px 18px; margin-bottom:16px; box-shadow:0 4px 10px rgba(90,70,40,0.1);
+  }
+  .progCard p{margin:0 0 8px; font-size:0.9rem; line-height:1.55; color:var(--text-main);}
+  .progCard p:last-child{margin-bottom:0;}
+  .progLabel{font-size:0.7rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); font-weight:700; margin:0 0 8px;}
+  .progCodeBox{background:#2b2620; border-radius:10px; overflow:hidden; margin-bottom:10px;}
+  .progCodeBox pre{margin:0; padding:14px 16px; font-family:'SFMono-Regular',Consolas,monospace; font-size:0.82rem; color:#f1ede4; overflow-x:auto; line-height:1.5;}
+  .progInput{
+    width:100%; min-height:100px; background:#2b2620; color:#f1ede4;
+    font-family:'SFMono-Regular',Consolas,monospace; font-size:0.82rem; line-height:1.5;
+    border:1px solid rgba(0,0,0,0.15); border-radius:10px; padding:14px 16px; resize:vertical; outline:none;
+  }
+  .progInput:focus{border-color:var(--gelb-dk);}
+  .progBtnRow{display:flex; gap:8px; margin:10px 0 4px; flex-wrap:wrap;}
+  .progRunBtn, .progCheckBtn{
+    font-size:0.78rem; font-weight:600; padding:8px 14px; border-radius:8px; border:none; cursor:pointer;
+    font-family:var(--schrift-sans);
+  }
+  .progRunBtn{background:rgba(0,0,0,0.06); color:var(--text-main);}
+  .progCheckBtn{background:#2b6b45; color:#fff;}
+  .progConsole{
+    background:#20241e; border-radius:10px; padding:10px 14px; font-family:'SFMono-Regular',Consolas,monospace;
+    font-size:0.78rem; color:#8fd6b0; white-space:pre-wrap; min-height:18px; margin-top:2px;
+  }
+  .progConsole.empty{color:#7a7a72; font-style:italic;}
+  .progConsole .err{color:#e08a76;}
+  .progFeedback{margin-top:10px; padding:9px 12px; border-radius:8px; font-size:0.82rem; font-weight:600; display:none;}
+  .progFeedback.ok{display:block; background:#d6efdb; color:#1f5c34;}
+  .progFeedback.bad{display:block; background:#f7ded3; color:#8a3520;}
+  .progQuizQ{font-size:0.9rem; font-weight:600; margin:0 0 10px; color:var(--text-main);}
+  .progQuizOpt{
+    display:block; width:100%; text-align:left; padding:10px 13px; margin-bottom:7px;
+    background:#f7f3e6; border:1.5px solid rgba(0,0,0,0.1); border-radius:8px;
+    color:var(--text-main); font-family:var(--schrift-sans); font-size:0.85rem; cursor:pointer;
+  }
+  .progQuizOpt.richtig{background:#d6efdb; border-color:#3f8a58; font-weight:700;}
+  .progQuizOpt.falsch{background:#f7ded3; border-color:#c4593a; font-weight:700;}
+  .progQuizOpt[disabled]{cursor:default;}
+  .progNavRow{display:flex; justify-content:space-between; margin-top:22px;}
+  .progNavBtn{
+    font-family:var(--schrift-sans); font-size:0.82rem; font-weight:600; padding:10px 16px;
+    border-radius:8px; border:1px solid rgba(0,0,0,0.12); background:#fffdf8; color:var(--text-main); cursor:pointer;
+  }
+  .progNavBtn:disabled{opacity:0.35; cursor:default;}
+  .progNavBtn.primary{background:var(--gelb-dk); color:#3d2c05; border-color:var(--gelb-dk);}
+
   /* ---------- Quiz ---------- */
   .quizFrage{font-size:1rem; line-height:1.45; margin:0 0 18px; color:var(--tinte);}
   .quizOptionen{display:flex; flex-direction:column; gap:10px;}
@@ -482,6 +552,7 @@
 </nav>
 
 <div id="uebungOverlay" class="uebungOverlay" style="display:none;"></div>
+<div id="progOverlay" class="progOverlay" style="display:none;"></div>
 
 <dialog id="uebenWahlDialog">
   <div class="modalInner">
@@ -507,6 +578,7 @@
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); loescheAktuellesSeminar();">🗑 Aktuelles Seminar löschen</button>
       <button class="mehrItem" onclick="loadTemplate('verhandeln_pm'); document.getElementById('mehrDialog').close();">⤓ Vorlage „Verhandeln im PM-Alltag" laden</button>
       <button class="mehrItem" onclick="zufallskarte(); document.getElementById('mehrDialog').close();">🎲 Zufallskarte</button>
+      <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); oeffneProgrammierkurs();">💻 Programmieren lernen</button>
       <button class="mehrItem" onclick="exportJSON()">💾 Sichern (Backup exportieren)</button>
       <button class="mehrItem" onclick="document.getElementById('importInput').click()">📂 Laden (Backup importieren)</button>
       <input type="file" id="importInput" accept="application/json" style="display:none" onchange="importJSON(event)">
@@ -1977,6 +2049,318 @@ async function scanAlsKarteSpeichern(){
 function scanAbbrechen(){
   scanAktuelleDatei = null;
   document.getElementById('scanDialog').close();
+}
+
+/* ---------- Programmieren lernen ---------- */
+const PROG_LESSONS = [
+  {
+    title:"Was ist Programmieren?", konzept:"Grundidee",
+    erklaerung:[
+      "Programmieren heißt: Anweisungen aufschreiben, die der Computer Schritt für Schritt ausführt. Nichts Magisches – nur eine sehr genaue Art, Aufgaben zu beschreiben.",
+      "Unser wichtigstes Werkzeug hier ist console.log(). Es zeigt dir, was dein Code gerade produziert."
+    ],
+    beispiel:'console.log("Hallo Welt!");',
+    aufgabe:"Schreib eine Zeile Code, die deinen Namen mit console.log() ausgibt.",
+    starter:'// Schreib hier deinen Code\n',
+    pruefen:(out)=> out.length>0
+      ? {ok:true,msg:"Erste Ausgabe steht – willkommen im Kurs."}
+      : {ok:false,msg:'Noch keine Ausgabe. Nutze console.log("...");'},
+    quiz:{ frage:"Womit gibst du in JavaScript einen Wert aus?", optionen:["print()","console.log()","echo()","show()"], richtig:1 }
+  },
+  {
+    title:"Variablen & Datentypen", konzept:"Werte speichern",
+    erklaerung:[
+      "Mit let oder const speicherst du einen Wert unter einem Namen. let kann sich später ändern, const bleibt fest.",
+      "Die drei Grundtypen: String (Text, in Anführungszeichen), Number (Zahl) und Boolean (true/false)."
+    ],
+    beispiel:'let name = "Sascha";\nlet alter = 40;\nconsole.log(name, alter);',
+    aufgabe:"Erstelle eine Variable stadt mit deiner Stadt als Text und gib sie mit console.log() aus.",
+    starter:'let stadt = "";\n// gib die Variable stadt aus\n',
+    pruefen:(out,code)=>{
+      const hasVar = /let\s+stadt/.test(code);
+      const hasOutput = out.length>0 && out.some(o=>o.trim().length>0);
+      return hasVar && hasOutput
+        ? {ok:true,msg:"Variable gesetzt und ausgegeben – genau so."}
+        : {ok:false,msg:"Prüfe: Variable stadt angelegt und mit console.log() ausgegeben?"};
+    },
+    quiz:{ frage:"Welcher Datentyp ist true oder false?", optionen:["String","Number","Boolean","Array"], richtig:2 }
+  },
+  {
+    title:"Operatoren & Rechnen", konzept:"Werte verknüpfen",
+    erklaerung:[
+      "Mit +, -, *, / rechnest du mit Zahlen. Mit === vergleichst du zwei Werte auf Gleichheit.",
+      "Der Modulo-Operator % liefert den Rest einer Division – praktisch, um z. B. gerade Zahlen zu erkennen."
+    ],
+    beispiel:'console.log(5 + 3);\nconsole.log(10 / 2);',
+    aufgabe:"Berechne 12 mal 4 und gib das Ergebnis aus.",
+    starter:'// berechne 12 * 4 und logge das Ergebnis\n',
+    pruefen:(out)=> out.join(' ').includes('48')
+      ? {ok:true,msg:"48 – korrekt berechnet."}
+      : {ok:false,msg:"Ergebnis 48 taucht noch nicht in der Ausgabe auf."},
+    quiz:{ frage:"Was ergibt 7 % 2?", optionen:["3","1","0","3.5"], richtig:1 }
+  },
+  {
+    title:"Bedingungen", konzept:"if / else",
+    erklaerung:[
+      "Mit if(...) { } else { } lässt du den Code unterschiedlich reagieren, je nachdem ob eine Bedingung wahr oder falsch ist.",
+      "Beispiel: if(alter >= 18) für eine Volljährigkeitsprüfung."
+    ],
+    beispiel:'let alter = 20;\nif (alter >= 18) {\n  console.log("volljährig");\n} else {\n  console.log("minderjährig");\n}',
+    aufgabe:"Die Zahl num ist vorgegeben. Prüfe mit if/else, ob sie gerade ist (num % 2 === 0), und logge \"gerade\" oder \"ungerade\".",
+    starter:'let num = 6;\n// dein if/else hier\n',
+    pruefen:(out)=>{
+      const text = out.join(' ').toLowerCase();
+      return text.includes('gerade')
+        ? {ok:true,msg:"Die Bedingung greift – sauber gelöst."}
+        : {ok:false,msg:'Noch keine Ausgabe "gerade"/"ungerade" erkannt.'};
+    },
+    quiz:{ frage:"Welches Symbol prüft auf Gleichheit von Wert und Typ?", optionen:["=","==","===","!=="], richtig:2 }
+  },
+  {
+    title:"Schleifen", konzept:"for-Loop",
+    erklaerung:[
+      "Eine for-Schleife wiederholt Code, solange eine Bedingung wahr ist: for(let i=0; i<5; i++).",
+      "i ist der Zähler, i<5 die Bedingung, i++ zählt bei jedem Durchlauf eins hoch."
+    ],
+    beispiel:'for (let i = 1; i <= 3; i++) {\n  console.log(i);\n}',
+    aufgabe:"Schreib eine for-Schleife, die die Zahlen 1 bis 5 einzeln loggt.",
+    starter:'// Schleife von 1 bis 5\n',
+    pruefen:(out)=> (out.length>=5 && out.includes('1') && out.includes('5'))
+      ? {ok:true,msg:"5 Durchläufe, Start und Ende stimmen."}
+      : {ok:false,msg:"Erwartet: 5 Ausgaben, von 1 bis 5."},
+    quiz:{ frage:"Wie oft läuft for(let i=0; i<3; i++) durch?", optionen:["2 mal","3 mal","4 mal","unendlich"], richtig:1 }
+  },
+  {
+    title:"Funktionen", konzept:"Code bündeln",
+    erklaerung:[
+      "Eine Funktion bündelt Code, den du wiederverwenden willst: function name(parameter) { return ...; }.",
+      "return gibt einen Wert an die Stelle zurück, von der die Funktion aufgerufen wurde."
+    ],
+    beispiel:'function begruessung(name) {\n  return "Hallo " + name;\n}\nconsole.log(begruessung("Welt"));',
+    aufgabe:"Schreib eine Funktion verdoppeln(zahl), die die Zahl verdoppelt zurückgibt. Ruf sie mit 5 auf und logge das Ergebnis.",
+    starter:'// function verdoppeln(zahl) { ... }\n\n',
+    pruefen:(out)=> out.join(' ').includes('10')
+      ? {ok:true,msg:"10 – die Funktion liefert das richtige Ergebnis."}
+      : {ok:false,msg:"Ergebnis 10 taucht noch nicht auf."},
+    quiz:{ frage:"Womit gibt eine Funktion einen Wert an den Aufrufer zurück?", optionen:["return","output","console.log","give"], richtig:0 }
+  },
+  {
+    title:"Arrays", konzept:"Listen von Werten",
+    erklaerung:[
+      "Ein Array ist eine geordnete Liste: let obst = [\"Apfel\", \"Birne\"]. Zugriff über Index, beginnend bei 0.",
+      "obst[0] ist also \"Apfel\", obst[1] ist \"Birne\"."
+    ],
+    beispiel:'let obst = ["Apfel", "Birne"];\nconsole.log(obst[0]);',
+    aufgabe:"Erstelle ein Array mit drei Farben und logge das zweite Element (Index 1).",
+    starter:'// let farben = [...]\n\n',
+    pruefen:(out,code)=> (code.includes('[') && out.length>0)
+      ? {ok:true,msg:"Array angelegt und Element ausgegeben."}
+      : {ok:false,msg:"Noch kein Array-Zugriff mit Ausgabe erkennbar."},
+    quiz:{ frage:"Welchen Index hat das erste Element eines Arrays?", optionen:["0","1","-1","erstes"], richtig:0 }
+  },
+  {
+    title:"Objekte", konzept:"Eigenschaften bündeln",
+    erklaerung:[
+      "Ein Objekt bündelt zusammengehörige Werte unter benannten Eigenschaften: { name: \"Sascha\", beruf: \"Trainer\" }.",
+      "Zugriff über den Punkt: person.name."
+    ],
+    beispiel:'let person = { name: "Sascha", beruf: "Trainer" };\nconsole.log(person.name);',
+    aufgabe:"Erstelle ein Objekt training mit den Eigenschaften titel und dauer. Logge titel.",
+    starter:'// let training = { titel: "...", dauer: ... }\n\n',
+    pruefen:(out,code)=> (/\{[\s\S]*\}/.test(code) && out.length>0)
+      ? {ok:true,msg:"Objekt erstellt, Eigenschaft ausgegeben."}
+      : {ok:false,msg:"Noch kein Objekt mit Ausgabe erkennbar."},
+    quiz:{ frage:"Wie greift man auf eine Objekt-Eigenschaft zu?", optionen:["objekt->eigenschaft","objekt[eigenschaft:0]","objekt.eigenschaft","eigenschaft(objekt)"], richtig:2 }
+  },
+  {
+    title:"Mini-Projekt", konzept:"Alles kombiniert",
+    erklaerung:[
+      "Letzter Schritt: Array, Schleife und Funktion zusammen. Das ist der typische Aufbau vieler echter Programme.",
+      "Aufgabe: eine Funktion, die für jeden Namen in einem Array eine Begrüßung ausgibt."
+    ],
+    beispiel:'function begruessung(n){ return "Hallo " + n + "!"; }\nlet team = ["Julia","Christian"];\nfor (let i = 0; i < team.length; i++) {\n  console.log(begruessung(team[i]));\n}',
+    aufgabe:"Erstelle ein Array mit 3 Namen, eine Funktion begruessung(name) und eine Schleife, die für jeden Namen eine Begrüßung loggt.",
+    starter:'// Array + Funktion + Schleife kombinieren\n\n',
+    pruefen:(out)=> out.length>=3
+      ? {ok:true,msg:"Alle drei Bausteine greifen ineinander – geschafft."}
+      : {ok:false,msg:"Noch weniger als 3 Ausgaben – jede Person sollte eine Zeile bekommen."},
+    quiz:null
+  }
+];
+
+let progState = { completed:[], current:0 };
+let progLoaded = false;
+
+function progRunSandboxed(code){
+  const out = [];
+  let error = null;
+  const fakeConsole = { log:(...args)=> out.push(args.map(a=> typeof a==='object' ? JSON.stringify(a) : String(a)).join(' ')) };
+  try{
+    const fn = new Function('console', code);
+    fn(fakeConsole);
+  }catch(e){ error = e.message; }
+  return { out, error };
+}
+
+function progRenderConsole(el, result){
+  if(result.error){
+    el.classList.remove('empty');
+    el.innerHTML = '<span class="err">Fehler: ' + escapeHTML(result.error) + '</span>';
+  }else if(result.out.length===0){
+    el.classList.add('empty');
+    el.textContent = 'Keine Ausgabe.';
+  }else{
+    el.classList.remove('empty');
+    el.textContent = result.out.join('\n');
+  }
+}
+
+async function oeffneProgrammierkurs(){
+  if(!progLoaded){
+    const gespeichert = await storeGet('progFortschritt');
+    if(gespeichert && Array.isArray(gespeichert.completed)){
+      progState = gespeichert;
+    }
+    progLoaded = true;
+  }
+  document.getElementById('progOverlay').style.display = 'flex';
+  progRenderAll();
+}
+
+function schliesseProgrammierkurs(){
+  document.getElementById('progOverlay').style.display = 'none';
+}
+
+async function progSpeichern(){
+  await storeSet('progFortschritt', progState);
+}
+
+function progWaehleModul(i){
+  progState.current = i;
+  progRenderAll();
+}
+
+function progReset(){
+  const sicher = confirm('Fortschritt im Programmierkurs wirklich zurücksetzen?');
+  if(!sicher) return;
+  progState = { completed:[], current:0 };
+  progSpeichern();
+  progRenderAll();
+}
+
+function progRenderAll(){
+  const ov = document.getElementById('progOverlay');
+  const l = PROG_LESSONS[progState.current];
+  const trackHTML = PROG_LESSONS.map((m,i)=>{
+    const cls = 'progDot' + (progState.completed.includes(i)?' done':'') + (i===progState.current?' active':'');
+    return `<div class="${cls}" onclick="progWaehleModul(${i})">${progState.completed.includes(i)?'✓':(i+1)}</div>`;
+  }).join('');
+
+  const quizHTML = l.quiz ? `
+    <div class="progLabel">Kurzcheck</div>
+    <div class="progCard">
+      <div class="progQuizQ">${escapeHTML(l.quiz.frage)}</div>
+      <div id="progQuizOptionen">
+        ${l.quiz.optionen.map((opt,i)=>`<button class="progQuizOpt" onclick="progQuizAntworten(${i})">${escapeHTML(opt)}</button>`).join('')}
+      </div>
+      <div class="progFeedback" id="progQuizFeedback"></div>
+    </div>` : '';
+
+  ov.innerHTML = `
+    <div class="progTop">
+      <button class="uebungCloseBtn" onclick="schliesseProgrammierkurs()">✕</button>
+      <h2>💻 Programmieren lernen</h2>
+      <button class="iconBtn" onclick="progReset()" style="background:transparent;border:none;font-size:0.75rem;color:var(--text-muted);">Zurücksetzen</button>
+    </div>
+    <div class="progBody">
+      <div class="progTrack">${trackHTML}</div>
+      <div class="progEyebrow">Modul ${progState.current+1} von ${PROG_LESSONS.length} · ${escapeHTML(l.konzept)}</div>
+      <div class="progTitel">${escapeHTML(l.title)}</div>
+      <div class="progCard">${l.erklaerung.map(p=>`<p>${escapeHTML(p)}</p>`).join('')}</div>
+
+      <div class="progLabel">Beispiel</div>
+      <div class="progCodeBox"><pre>${escapeHTML(l.beispiel)}</pre></div>
+      <div class="progBtnRow"><button class="progRunBtn" onclick="progBeispielAusfuehren()">Beispiel ausführen</button></div>
+      <div class="progConsole empty" id="progBeispielConsole">Noch keine Ausgabe.</div>
+
+      <div class="progLabel" style="margin-top:18px;">Übung</div>
+      <div class="progCard" style="padding-bottom:6px;">
+        <p>${escapeHTML(l.aufgabe)}</p>
+        <textarea class="progInput" id="progUebungInput" spellcheck="false">${escapeHTML(l.starter)}</textarea>
+        <div class="progBtnRow">
+          <button class="progRunBtn" onclick="progUebungAusfuehren()">Code ausführen</button>
+          <button class="progCheckBtn" onclick="progUebungPruefen()">Aufgabe prüfen</button>
+        </div>
+        <div class="progConsole empty" id="progUebungConsole">Noch keine Ausgabe.</div>
+        <div class="progFeedback" id="progUebungFeedback"></div>
+      </div>
+
+      ${quizHTML}
+
+      <div class="progNavRow">
+        <button class="progNavBtn" onclick="progVorheriges()" ${progState.current===0?'disabled':''}>← Zurück</button>
+        <button class="progNavBtn primary" onclick="progNaechstes()">${progState.current===PROG_LESSONS.length-1?'Fertig':'Weiter →'}</button>
+      </div>
+    </div>`;
+}
+
+function progBeispielAusfuehren(){
+  const l = PROG_LESSONS[progState.current];
+  progRenderConsole(document.getElementById('progBeispielConsole'), progRunSandboxed(l.beispiel));
+}
+
+function progUebungAusfuehren(){
+  const code = document.getElementById('progUebungInput').value;
+  progRenderConsole(document.getElementById('progUebungConsole'), progRunSandboxed(code));
+}
+
+async function progUebungPruefen(){
+  const l = PROG_LESSONS[progState.current];
+  const code = document.getElementById('progUebungInput').value;
+  const result = progRunSandboxed(code);
+  progRenderConsole(document.getElementById('progUebungConsole'), result);
+  const fb = document.getElementById('progUebungFeedback');
+  if(result.error){
+    fb.className = 'progFeedback bad';
+    fb.textContent = 'Läuft noch nicht: ' + result.error;
+    return;
+  }
+  const check = l.pruefen(result.out, code);
+  fb.className = 'progFeedback ' + (check.ok ? 'ok' : 'bad');
+  fb.textContent = check.msg;
+  if(check.ok && !progState.completed.includes(progState.current)){
+    progState.completed.push(progState.current);
+    await progSpeichern();
+    document.querySelector('.progTrack').innerHTML = PROG_LESSONS.map((m,i)=>{
+      const cls = 'progDot' + (progState.completed.includes(i)?' done':'') + (i===progState.current?' active':'');
+      return `<div class="${cls}" onclick="progWaehleModul(${i})">${progState.completed.includes(i)?'✓':(i+1)}</div>`;
+    }).join('');
+  }
+}
+
+function progQuizAntworten(i){
+  const l = PROG_LESSONS[progState.current];
+  const buttons = document.querySelectorAll('#progQuizOptionen .progQuizOpt');
+  buttons.forEach(b=>b.disabled = true);
+  const fb = document.getElementById('progQuizFeedback');
+  if(i === l.quiz.richtig){
+    buttons[i].classList.add('richtig');
+    fb.className = 'progFeedback ok';
+    fb.textContent = 'Richtig.';
+  }else{
+    buttons[i].classList.add('falsch');
+    buttons[l.quiz.richtig].classList.add('richtig');
+    fb.className = 'progFeedback bad';
+    fb.textContent = 'Nicht ganz – die richtige Antwort ist markiert.';
+  }
+}
+
+async function progVorheriges(){
+  if(progState.current>0){ progState.current--; await progSpeichern(); progRenderAll(); }
+}
+async function progNaechstes(){
+  if(progState.current<PROG_LESSONS.length-1){ progState.current++; await progSpeichern(); progRenderAll(); }
+  else{ schliesseProgrammierkurs(); }
 }
 
 init();
