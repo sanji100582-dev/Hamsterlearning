@@ -307,6 +307,11 @@
     padding:6px 2px; cursor:pointer; font-family:var(--schrift-sans); border-radius:10px;
   }
   .navBtn span{font-size:1.25rem; line-height:1;}
+  .navIcon{
+    width:26px; height:26px; border-radius:50%; object-fit:cover;
+    box-shadow:0 1px 3px rgba(0,0,0,0.15); opacity:0.75; transition:opacity .15s, transform .15s;
+  }
+  .navBtn.active .navIcon{ opacity:1; transform:scale(1.08); box-shadow:0 2px 6px rgba(224,184,74,0.5); }
   .navBtn.active{color:#8a5a1f; background:rgba(224,184,74,0.2);}
 
   /* ---------- Übersicht (Kacheln) ---------- */
@@ -469,10 +474,10 @@
 </main>
 
 <nav class="bottomNav">
-  <button class="navBtn active" id="navUebersicht" onclick="zurueckZurUebersicht()"><span>🏠</span>Übersicht</button>
-  <button class="navBtn" id="navVorlesen" onclick="toggleVorlesenModus()"><span>🔊</span>Vorlesen</button>
-  <button class="navBtn" id="navUeben" onclick="document.getElementById('uebenWahlDialog').showModal()"><span>🧠</span>Üben</button>
-  <button class="navBtn" id="navFortschritt" onclick="zeigeFortschritt()"><span>📊</span>Fortschritt</button>
+  <button class="navBtn active" id="navUebersicht" onclick="zurueckZurUebersicht()"><img src="nav_home_tempel.png" class="navIcon">Übersicht</button>
+  <button class="navBtn" id="navVorlesen" onclick="toggleVorlesenModus()"><img src="nav_audio_welle.png" class="navIcon">Vorlesen</button>
+  <button class="navBtn" id="navUeben" onclick="document.getElementById('uebenWahlDialog').showModal()"><img src="nav_gehirn_gruen.png" class="navIcon">Üben</button>
+  <button class="navBtn" id="navFortschritt" onclick="zeigeFortschritt()"><img src="nav_fortschritt_chart.png" class="navIcon">Fortschritt</button>
   <button class="navBtn" id="navMehr" onclick="document.getElementById('mehrDialog').showModal()"><span>⋯</span>Mehr</button>
 </nav>
 
