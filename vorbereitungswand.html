@@ -298,7 +298,7 @@
     display:flex; justify-content:space-around; align-items:stretch;
     background:linear-gradient(0deg, rgba(247,241,227,0.98), rgba(247,241,227,0.9));
     border-top:1px solid rgba(0,0,0,0.08);
-    padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+    padding:8px 4px calc(8px + env(safe-area-inset-bottom));
     backdrop-filter:blur(6px);
   }
   .navBtn{
@@ -308,10 +308,10 @@
   }
   .navBtn span{font-size:1.25rem; line-height:1;}
   .navIcon{
-    width:26px; height:26px; border-radius:50%; object-fit:cover;
-    box-shadow:0 1px 3px rgba(0,0,0,0.15); opacity:0.75; transition:opacity .15s, transform .15s;
+    width:36px; height:36px; border-radius:50%; object-fit:cover;
+    box-shadow:0 1px 3px rgba(0,0,0,0.15); opacity:0.85; transition:opacity .15s, transform .15s;
   }
-  .navBtn.active .navIcon{ opacity:1; transform:scale(1.08); box-shadow:0 2px 6px rgba(224,184,74,0.5); }
+  .navBtn.active .navIcon{ opacity:1; transform:scale(1.1); box-shadow:0 2px 7px rgba(224,184,74,0.5); }
   .navBtn.active{color:#8a5a1f; background:rgba(224,184,74,0.2);}
 
   /* ---------- Übersicht (Kacheln) ---------- */
