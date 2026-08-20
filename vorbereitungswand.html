@@ -306,7 +306,11 @@
     background:transparent; border:none; color:var(--text-muted); font-size:0.66rem;
     padding:6px 2px; cursor:pointer; font-family:var(--schrift-sans); border-radius:10px;
   }
-  .navBtn span{font-size:1.25rem; line-height:1;}
+  .navIcon{
+    width:26px; height:26px; border-radius:50%; object-fit:cover;
+    box-shadow:0 1px 3px rgba(0,0,0,0.15); opacity:0.7; transition:opacity .15s, transform .15s;
+  }
+  .navBtn.active .navIcon{ opacity:1; transform:scale(1.08); box-shadow:0 2px 6px rgba(224,184,74,0.5); }
   .navBtn.active{color:#8a5a1f; background:rgba(224,184,74,0.2);}
 
   /* ---------- Übersicht (Kacheln) ---------- */
@@ -345,6 +349,35 @@
   .boardHeader .addBtn{
     background:var(--gelb); color:#5c4413; border:none; border-radius:8px;
     width:36px; height:36px; font-size:1.2rem; cursor:pointer;
+  }
+
+  /* ---------- Sortiermodus ---------- */
+  .sortHinweis{
+    font-size:0.8rem; color:var(--text-muted); margin-bottom:12px; text-align:center;
+  }
+  .sortListe{display:flex; flex-direction:column; gap:8px; position:relative;}
+  .sortRow{
+    display:flex; align-items:center; gap:10px;
+    background:#fffdf8; border:1px solid rgba(0,0,0,0.1); border-radius:10px;
+    padding:12px 12px; height:44px; box-sizing:border-box;
+    transition:transform .18s ease;
+    touch-action:none; user-select:none; -webkit-user-select:none;
+  }
+  .sortRow.dragging{
+    transition:none; box-shadow:0 8px 18px rgba(90,70,40,0.25); z-index:20; position:relative; background:#fff;
+  }
+  .sortHandle{
+    font-size:1.3rem; color:#8a7f6a; cursor:grab; padding:4px 6px; touch-action:none; flex:0 0 auto;
+  }
+  .sortTypDot{
+    width:10px; height:10px; border-radius:50%; flex:0 0 auto;
+  }
+  .sortTypDot.fach{background:var(--gelb-dk);}
+  .sortTypDot.ablauf{background:var(--blau-dk);}
+  .sortTypDot.reflexion{background:var(--gruen-dk);}
+  .sortNummer{font-weight:700; color:var(--text-muted); flex:0 0 auto;}
+  .sortTitel{
+    flex:1; font-size:0.9rem; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
 
   /* ---------- Mehr-Menü ---------- */
@@ -440,11 +473,11 @@
 </main>
 
 <nav class="bottomNav">
-  <button class="navBtn active" id="navUebersicht" onclick="zurueckZurUebersicht()"><span>🏠</span>Übersicht</button>
-  <button class="navBtn" id="navVorlesen" onclick="toggleVorlesenModus()"><span>🔊</span>Vorlesen</button>
-  <button class="navBtn" id="navUeben" onclick="document.getElementById('uebenWahlDialog').showModal()"><span>🧠</span>Üben</button>
-  <button class="navBtn" id="navFortschritt" onclick="zeigeFortschritt()"><span>📊</span>Fortschritt</button>
-  <button class="navBtn" id="navMehr" onclick="document.getElementById('mehrDialog').showModal()"><span>⋯</span>Mehr</button>
+  <button class="navBtn active" id="navUebersicht" onclick="zurueckZurUebersicht()"><img src="hamster_lesen.png" class="navIcon">Übersicht</button>
+  <button class="navBtn" id="navVorlesen" onclick="toggleVorlesenModus()"><img src="hamster_musik.png" class="navIcon">Vorlesen</button>
+  <button class="navBtn" id="navUeben" onclick="document.getElementById('uebenWahlDialog').showModal()"><img src="hamster_rechner.png" class="navIcon">Üben</button>
+  <button class="navBtn" id="navFortschritt" onclick="zeigeFortschritt()"><img src="hamster_stern.png" class="navIcon">Fortschritt</button>
+  <button class="navBtn" id="navMehr" onclick="document.getElementById('mehrDialog').showModal()"><img src="hamster_laptop.png" class="navIcon">Mehr</button>
 </nav>
 
 <div id="uebungOverlay" class="uebungOverlay" style="display:none;"></div>
@@ -913,10 +946,7 @@ function gefilterteKarten(){
   if(boardTyp === 'fach'){
     liste = liste.filter(k => boardGruppe === null ? !k.gruppe : k.gruppe === boardGruppe);
   }
-  return liste.sort((a,b)=>{
-    if(a.typ === 'ablauf') return (a.ord||1) - (b.ord||1);
-    return 0;
-  });
+  return liste.sort((a,b)=> (a.ord||9999) - (b.ord||9999));
 }
 
 function sucheGefiltert(){
@@ -990,8 +1020,13 @@ function renderBoard(){
     renderUebersicht(area);
     return;
   }
+  if(sortierAktiv){
+    renderBoardHeader(area, true);
+    renderSortierListe(area);
+    return;
+  }
   const liste = gefilterteKarten();
-  renderBoardHeader(area);
+  renderBoardHeader(area, false);
   if(!liste.length){
     const leer = document.createElement('div');
     leer.className = 'leer';
@@ -1003,15 +1038,142 @@ function renderBoard(){
   else renderAuditiv(area, liste);
 }
 
-function renderBoardHeader(area){
+function renderBoardHeader(area, imSortierModus){
   const gruppenLabel = boardTyp === 'fach' ? (boardGruppe || 'Sonstige Fachinhalte') : TYP_LABEL[boardTyp];
   const header = document.createElement('div');
   header.className = 'boardHeader';
-  header.innerHTML = `
-    <button class="backBtn" onclick="zurueckZurUebersicht()">← Übersicht</button>
-    <h2>${escapeHTML(gruppenLabel)}</h2>
-    <button class="addBtn" onclick="openKartenModal()" title="Karte hinzufügen">+</button>`;
+  if(imSortierModus){
+    header.innerHTML = `
+      <button class="backBtn" onclick="sortierAbbrechen()">✕ Abbrechen</button>
+      <h2>Sortieren</h2>`;
+  }else{
+    header.innerHTML = `
+      <button class="backBtn" onclick="zurueckZurUebersicht()">← Übersicht</button>
+      <h2>${escapeHTML(gruppenLabel)}</h2>
+      <button class="addBtn" onclick="sortierStarten()" title="Reihenfolge ändern" style="background:#eaf4fb;color:#2f5c82;font-size:1rem;">🔀</button>
+      <button class="addBtn" onclick="openKartenModal()" title="Karte hinzufügen">+</button>`;
+  }
   area.appendChild(header);
+}
+
+/* ---------- Sortiermodus (Karten per Ziehen umordnen) ---------- */
+let sortierAktiv = false;
+let sortArbeitsliste = [];
+let sortState = null;
+
+function sortierStarten(){
+  sortArbeitsliste = [...gefilterteKarten()];
+  if(sortArbeitsliste.length < 2){ zeigeToast('Mindestens 2 Karten nötig zum Sortieren'); return; }
+  sortierAktiv = true;
+  renderBoard();
+}
+function sortierAbbrechen(){
+  sortierAktiv = false;
+  sortArbeitsliste = [];
+  renderBoard();
+}
+async function sortierFertig(){
+  sortArbeitsliste.forEach((k, idx)=>{
+    const echteKarte = karten.find(x=>x.id===k.id);
+    if(echteKarte) echteKarte.ord = idx + 1;
+  });
+  await speichereKartenListe();
+  sortierAktiv = false;
+  sortArbeitsliste = [];
+  renderBoard();
+  zeigeToast('Reihenfolge gespeichert');
+}
+
+function renderSortierListe(area){
+  const hinweis = document.createElement('div');
+  hinweis.className = 'sortHinweis';
+  hinweis.textContent = 'Am Griff ⠿ halten und nach oben/unten ziehen, um umzusortieren.';
+  area.appendChild(hinweis);
+
+  const liste = document.createElement('div');
+  liste.className = 'sortListe';
+  liste.id = 'sortListe';
+  sortArbeitsliste.forEach((k, idx)=>{
+    const row = document.createElement('div');
+    row.className = 'sortRow';
+    row.dataset.id = k.id;
+    const nummer = boardTyp === 'ablauf' ? `<span class="sortNummer">${idx+1}.</span>` : '';
+    row.innerHTML = `
+      <span class="sortHandle">⠿</span>
+      <span class="sortTypDot ${k.typ}"></span>
+      ${nummer}
+      <span class="sortTitel">${escapeHTML(k.titel)}</span>`;
+    liste.appendChild(row);
+  });
+  area.appendChild(liste);
+
+  const fertigBtn = document.createElement('button');
+  fertigBtn.className = 'uebungAntwortBtn';
+  fertigBtn.style.marginTop = '18px';
+  fertigBtn.textContent = '✓ Fertig – Reihenfolge speichern';
+  fertigBtn.onclick = sortierFertig;
+  area.appendChild(fertigBtn);
+
+  liste.querySelectorAll('.sortHandle').forEach(handle=>{
+    handle.addEventListener('pointerdown', sortPointerDown);
+  });
+}
+
+function sortPointerDown(e){
+  e.preventDefault();
+  const handle = e.currentTarget;
+  const row = handle.closest('.sortRow');
+  const list = document.getElementById('sortListe');
+  const rows = Array.from(list.children);
+  const startIndex = rows.indexOf(row);
+  const rowHeight = row.getBoundingClientRect().height + 8;
+  sortState = { row, rows, startIndex, targetIndex: startIndex, startY: e.clientY, rowHeight };
+  row.classList.add('dragging');
+  handle.setPointerCapture(e.pointerId);
+  handle.addEventListener('pointermove', sortPointerMove);
+  handle.addEventListener('pointerup', sortPointerUp);
+  handle.addEventListener('pointercancel', sortPointerUp);
+}
+
+function sortPointerMove(e){
+  const s = sortState;
+  if(!s) return;
+  const deltaY = e.clientY - s.startY;
+  s.row.style.transform = `translateY(${deltaY}px)`;
+
+  let neu = s.startIndex + Math.round(deltaY / s.rowHeight);
+  neu = Math.max(0, Math.min(s.rows.length - 1, neu));
+  s.targetIndex = neu;
+
+  s.rows.forEach((r, i)=>{
+    if(r === s.row) return;
+    let shift = 0;
+    if(neu > s.startIndex && i > s.startIndex && i <= neu) shift = -s.rowHeight;
+    else if(neu < s.startIndex && i < s.startIndex && i >= neu) shift = s.rowHeight;
+    r.style.transform = shift ? `translateY(${shift}px)` : '';
+  });
+}
+
+function sortPointerUp(e){
+  const s = sortState;
+  if(!s) return;
+  const handle = e.currentTarget;
+  handle.removeEventListener('pointermove', sortPointerMove);
+  handle.removeEventListener('pointerup', sortPointerUp);
+  handle.removeEventListener('pointercancel', sortPointerUp);
+  if(s.targetIndex !== s.startIndex){
+    const item = sortArbeitsliste.splice(s.startIndex, 1)[0];
+    sortArbeitsliste.splice(s.targetIndex, 0, item);
+  }
+  sortState = null;
+  renderSortierListeInPlace();
+}
+
+function renderSortierListeInPlace(){
+  const area = document.getElementById('boardArea');
+  area.innerHTML = '';
+  renderBoardHeader(area, true);
+  renderSortierListe(area);
 }
 
 function renderSucheErgebnisse(area){
