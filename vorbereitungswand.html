@@ -275,74 +275,74 @@
   .uebungEnde .iconBtn{margin:4px;}
 
   /* ---------- Programmieren lernen ---------- */
-  .progOverlay{
+  .kursOverlay{
     position:fixed; inset:0; z-index:80; background:var(--filz-2);
     display:flex; flex-direction:column; padding:0; overflow-y:auto;
   }
-  .progTop{
+  .kursTop{
     position:sticky; top:0; z-index:5; display:flex; align-items:center; gap:10px;
     padding:14px 16px; background:linear-gradient(180deg, rgba(247,241,227,0.98), rgba(247,241,227,0.9));
     backdrop-filter:blur(4px); border-bottom:1px solid rgba(0,0,0,0.06);
   }
-  .progTop h2{flex:1; font-family:var(--schrift-hand); font-size:1.2rem; margin:0; color:#7a5c2e;}
-  .progBody{padding:16px 16px 40px; max-width:640px; margin:0 auto; width:100%;}
-  .progTrack{display:flex; gap:6px; overflow-x:auto; padding-bottom:14px; scrollbar-width:thin;}
-  .progDot{
+  .kursTop h2{flex:1; font-family:var(--schrift-hand); font-size:1.2rem; margin:0; color:#7a5c2e;}
+  .kursBody{padding:16px 16px 40px; max-width:640px; margin:0 auto; width:100%;}
+  .kursTrack{display:flex; gap:6px; overflow-x:auto; padding-bottom:14px; scrollbar-width:thin;}
+  .kursDot{
     flex:0 0 auto; width:30px; height:30px; border-radius:50%; display:flex; align-items:center;
     justify-content:center; font-family:var(--schrift-sans); font-size:0.78rem; font-weight:700;
     border:2px solid rgba(0,0,0,0.15); background:#fffdf8; color:var(--text-muted); cursor:pointer;
   }
-  .progDot.done{background:#2b6b45; border-color:#2b6b45; color:#fff;}
-  .progDot.active{border-color:var(--gelb-dk); box-shadow:0 0 0 3px rgba(224,184,74,0.25); color:var(--text-main);}
-  .progEyebrow{font-size:0.72rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); font-weight:600; margin:0 0 4px;}
-  .progTitel{font-family:var(--schrift-hand); font-size:1.5rem; margin:0 0 14px; color:var(--text-main);}
-  .progCard{
+  .kursDot.done{background:#2b6b45; border-color:#2b6b45; color:#fff;}
+  .kursDot.active{border-color:var(--gelb-dk); box-shadow:0 0 0 3px rgba(224,184,74,0.25); color:var(--text-main);}
+  .kursEyebrow{font-size:0.72rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); font-weight:600; margin:0 0 4px;}
+  .kursTitel{font-family:var(--schrift-hand); font-size:1.5rem; margin:0 0 14px; color:var(--text-main);}
+  .kursCard{
     background:#fffdf8; border:1px solid rgba(0,0,0,0.08); border-radius:12px;
     padding:16px 18px; margin-bottom:16px; box-shadow:0 4px 10px rgba(90,70,40,0.1);
   }
-  .progCard p{margin:0 0 8px; font-size:0.9rem; line-height:1.55; color:var(--text-main);}
-  .progCard p:last-child{margin-bottom:0;}
-  .progLabel{font-size:0.7rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); font-weight:700; margin:0 0 8px;}
-  .progCodeBox{background:#2b2620; border-radius:10px; overflow:hidden; margin-bottom:10px;}
-  .progCodeBox pre{margin:0; padding:14px 16px; font-family:'SFMono-Regular',Consolas,monospace; font-size:0.82rem; color:#f1ede4; overflow-x:auto; line-height:1.5;}
-  .progInput{
+  .kursCard p{margin:0 0 8px; font-size:0.9rem; line-height:1.55; color:var(--text-main);}
+  .kursCard p:last-child{margin-bottom:0;}
+  .kursLabel{font-size:0.7rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); font-weight:700; margin:0 0 8px;}
+  .kursCodeBox{background:#2b2620; border-radius:10px; overflow:hidden; margin-bottom:10px;}
+  .kursCodeBox pre{margin:0; padding:14px 16px; font-family:'SFMono-Regular',Consolas,monospace; font-size:0.82rem; color:#f1ede4; overflow-x:auto; line-height:1.5;}
+  .kursInput{
     width:100%; min-height:100px; background:#2b2620; color:#f1ede4;
     font-family:'SFMono-Regular',Consolas,monospace; font-size:0.82rem; line-height:1.5;
     border:1px solid rgba(0,0,0,0.15); border-radius:10px; padding:14px 16px; resize:vertical; outline:none;
   }
-  .progInput:focus{border-color:var(--gelb-dk);}
-  .progBtnRow{display:flex; gap:8px; margin:10px 0 4px; flex-wrap:wrap;}
-  .progRunBtn, .progCheckBtn{
+  .kursInput:focus{border-color:var(--gelb-dk);}
+  .kursBtnRow{display:flex; gap:8px; margin:10px 0 4px; flex-wrap:wrap;}
+  .kursRunBtn, .kursCheckBtn{
     font-size:0.78rem; font-weight:600; padding:8px 14px; border-radius:8px; border:none; cursor:pointer;
     font-family:var(--schrift-sans);
   }
-  .progRunBtn{background:rgba(0,0,0,0.06); color:var(--text-main);}
-  .progCheckBtn{background:#2b6b45; color:#fff;}
-  .progConsole{
+  .kursRunBtn{background:rgba(0,0,0,0.06); color:var(--text-main);}
+  .kursCheckBtn{background:#2b6b45; color:#fff;}
+  .kursConsole{
     background:#20241e; border-radius:10px; padding:10px 14px; font-family:'SFMono-Regular',Consolas,monospace;
     font-size:0.78rem; color:#8fd6b0; white-space:pre-wrap; min-height:18px; margin-top:2px;
   }
-  .progConsole.empty{color:#7a7a72; font-style:italic;}
-  .progConsole .err{color:#e08a76;}
-  .progFeedback{margin-top:10px; padding:9px 12px; border-radius:8px; font-size:0.82rem; font-weight:600; display:none;}
-  .progFeedback.ok{display:block; background:#d6efdb; color:#1f5c34;}
-  .progFeedback.bad{display:block; background:#f7ded3; color:#8a3520;}
-  .progQuizQ{font-size:0.9rem; font-weight:600; margin:0 0 10px; color:var(--text-main);}
-  .progQuizOpt{
+  .kursConsole.empty{color:#7a7a72; font-style:italic;}
+  .kursConsole .err{color:#e08a76;}
+  .kursFeedback{margin-top:10px; padding:9px 12px; border-radius:8px; font-size:0.82rem; font-weight:600; display:none;}
+  .kursFeedback.ok{display:block; background:#d6efdb; color:#1f5c34;}
+  .kursFeedback.bad{display:block; background:#f7ded3; color:#8a3520;}
+  .kursQuizQ{font-size:0.9rem; font-weight:600; margin:0 0 10px; color:var(--text-main);}
+  .kursQuizOpt{
     display:block; width:100%; text-align:left; padding:10px 13px; margin-bottom:7px;
     background:#f7f3e6; border:1.5px solid rgba(0,0,0,0.1); border-radius:8px;
     color:var(--text-main); font-family:var(--schrift-sans); font-size:0.85rem; cursor:pointer;
   }
-  .progQuizOpt.richtig{background:#d6efdb; border-color:#3f8a58; font-weight:700;}
-  .progQuizOpt.falsch{background:#f7ded3; border-color:#c4593a; font-weight:700;}
-  .progQuizOpt[disabled]{cursor:default;}
-  .progNavRow{display:flex; justify-content:space-between; margin-top:22px;}
-  .progNavBtn{
+  .kursQuizOpt.richtig{background:#d6efdb; border-color:#3f8a58; font-weight:700;}
+  .kursQuizOpt.falsch{background:#f7ded3; border-color:#c4593a; font-weight:700;}
+  .kursQuizOpt[disabled]{cursor:default;}
+  .kursNavRow{display:flex; justify-content:space-between; margin-top:22px;}
+  .kursNavBtn{
     font-family:var(--schrift-sans); font-size:0.82rem; font-weight:600; padding:10px 16px;
     border-radius:8px; border:1px solid rgba(0,0,0,0.12); background:#fffdf8; color:var(--text-main); cursor:pointer;
   }
-  .progNavBtn:disabled{opacity:0.35; cursor:default;}
-  .progNavBtn.primary{background:var(--gelb-dk); color:#3d2c05; border-color:var(--gelb-dk);}
+  .kursNavBtn:disabled{opacity:0.35; cursor:default;}
+  .kursNavBtn.primary{background:var(--gelb-dk); color:#3d2c05; border-color:var(--gelb-dk);}
 
   /* ---------- Quiz ---------- */
   .quizFrage{font-size:1rem; line-height:1.45; margin:0 0 18px; color:var(--tinte);}
@@ -530,8 +530,29 @@
   <p class="splashSlogan">Dein Wissen, gut gehamstert.</p>
 </div>
 
+<div id="startScreen" style="display:none;">
+  <header>
+    <h1 onclick="zeigeStartbildschirm()" style="cursor:pointer;">
+      <img src="icon-180.png" alt="" class="h1Icon">
+      <span>Hamster dein Wissen</span>
+      <button class="infoBtn" onclick="event.stopPropagation(); document.getElementById('einstellungenDialog').showModal();" title="Einstellungen" style="margin-left:auto;">⚙️</button>
+      <button class="infoBtn" onclick="event.stopPropagation(); document.getElementById('infoDialog').showModal();" title="Wie funktioniert die App?">❓</button>
+    </h1>
+  </header>
+  <div style="padding:18px 14px 30px; max-width:1200px; margin:0 auto;">
+    <div style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.5px; color:#7a6f52; font-weight:600; margin:6px 4px 10px;">Bereich wählen</div>
+    <div class="uebersichtGrid" id="startKacheln"></div>
+  </div>
+</div>
+
+<div id="seminarApp" style="display:none;">
 <header>
-  <h1><img src="icon-180.png" alt="" class="h1Icon"><span>Hamster dein Wissen</span><button class="infoBtn" onclick="document.getElementById('infoDialog').showModal()" title="Wie funktioniert die App?">❓</button></h1>
+  <h1 onclick="zeigeStartbildschirm()" style="cursor:pointer;">
+    <img src="icon-180.png" alt="" class="h1Icon">
+    <span>Hamster dein Wissen</span>
+    <button class="infoBtn" onclick="event.stopPropagation(); document.getElementById('einstellungenDialog').showModal();" title="Einstellungen" style="margin-left:auto;">⚙️</button>
+    <button class="infoBtn" onclick="event.stopPropagation(); document.getElementById('infoDialog').showModal();" title="Wie funktioniert die App?">❓</button>
+  </h1>
   <div class="tabRow" id="tabRow"></div>
   <div class="searchRow">
     <input type="text" id="suchfeld" placeholder="🔍 Karte suchen..." oninput="onSuche(this.value)">
@@ -550,9 +571,11 @@
   <button class="navBtn" id="navFortschritt" onclick="zeigeFortschritt()"><img src="nav_fortschritt_chart.png" class="navIcon">Fortschritt</button>
   <button class="navBtn" id="navMehr" onclick="document.getElementById('mehrDialog').showModal()"><span>⋯</span>Mehr</button>
 </nav>
+</div>
 
 <div id="uebungOverlay" class="uebungOverlay" style="display:none;"></div>
-<div id="progOverlay" class="progOverlay" style="display:none;"></div>
+<div id="kursOverlay" class="kursOverlay" style="display:none;"></div>
+
 
 <dialog id="uebenWahlDialog">
   <div class="modalInner">
@@ -578,7 +601,6 @@
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); loescheAktuellesSeminar();">🗑 Aktuelles Seminar löschen</button>
       <button class="mehrItem" onclick="loadTemplate('verhandeln_pm'); document.getElementById('mehrDialog').close();">⤓ Vorlage „Verhandeln im PM-Alltag" laden</button>
       <button class="mehrItem" onclick="zufallskarte(); document.getElementById('mehrDialog').close();">🎲 Zufallskarte</button>
-      <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); oeffneProgrammierkurs();">💻 Programmieren lernen</button>
       <button class="mehrItem" onclick="exportJSON()">💾 Sichern (Backup exportieren)</button>
       <button class="mehrItem" onclick="document.getElementById('importInput').click()">📂 Laden (Backup importieren)</button>
       <input type="file" id="importInput" accept="application/json" style="display:none" onchange="importJSON(event)">
@@ -633,11 +655,11 @@
     </div>
     <div class="detailSection">
       <div class="detailLabel">Worum geht's</div>
-      <div class="detailBody">Diese App ist deine persönliche Seminarvorbereitung – wie eine digitale Pinnwand mit Metaplankarten, aber mit Übungsfunktionen, die dir beim Einprägen der Inhalte helfen.</div>
+      <div class="detailBody">Diese App ist dein Lernbegleiter – der Hamster oben links bringt dich jederzeit zur Bereichsauswahl zurück: Seminarvorbereitung und deine Lernkurse (z. B. Programmieren).</div>
     </div>
     <div class="detailSection">
-      <div class="detailLabel">Übersicht & Board</div>
-      <div class="detailBody">Jedes Seminar hat eine Übersicht mit Kacheln (z. B. „Konzepte", „Rollenspiele"). Antippen öffnet das Board mit den einzelnen Karten dieser Gruppe. Eine Karte antippen zeigt den vollen Inhalt strukturiert an.</div>
+      <div class="detailLabel">Seminarvorbereitung</div>
+      <div class="detailBody">Wie eine digitale Pinnwand mit Metaplankarten. Jedes Seminar hat eine Übersicht mit Kacheln (z. B. „Konzepte", „Rollenspiele"). Antippen öffnet das Board mit den einzelnen Karten dieser Gruppe. Eine Karte antippen zeigt den vollen Inhalt strukturiert an.</div>
     </div>
     <div class="detailSection">
       <div class="detailLabel">🧠 Üben</div>
@@ -653,14 +675,32 @@
     </div>
     <div class="detailSection">
       <div class="detailLabel">⋯ Mehr</div>
-      <div class="detailBody">Hier legst du neue Karten und Seminare an, scannst Dokumente/Flipcharts (mit automatischer Texterkennung), sicherst oder lädst ein Backup, und kannst ein Seminar samt Fotos wieder löschen.</div>
+      <div class="detailBody">Hier legst du neue Karten und Seminare an, scannst Dokumente/Flipcharts (mit automatischer Texterkennung), und kannst ein Seminar samt Fotos wieder löschen.</div>
     </div>
     <div class="detailSection">
       <div class="detailLabel">💾 Backup nicht vergessen</div>
-      <div class="detailBody">Deine Karten liegen nur auf diesem Gerät/Browser. Sichere regelmäßig über ⋯ Mehr → 💾 Sichern, damit nichts verloren geht.</div>
+      <div class="detailBody">Deine Daten liegen nur auf diesem Gerät/Browser. Sichere regelmäßig über ⚙️ Einstellungen → 💾 Gesamt-Backup sichern, damit nichts verloren geht.</div>
     </div>
     <div class="modal-actions">
       <button class="save" onclick="document.getElementById('infoDialog').close()">Verstanden</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="einstellungenDialog">
+  <div class="modalInner">
+    <div class="detailHeader">
+      <h2>⚙️ Einstellungen</h2>
+      <button class="iconBtn" onclick="document.getElementById('einstellungenDialog').close()" style="background:#e6dfc4;color:#4a4a3a;">✕</button>
+    </div>
+    <div class="mehrList">
+      <button class="mehrItem" onclick="gesamtExportJSON()">💾 Gesamt-Backup sichern</button>
+      <button class="mehrItem" onclick="document.getElementById('gesamtImportInput').click()">📂 Gesamt-Backup laden</button>
+      <input type="file" id="gesamtImportInput" accept="application/json" style="display:none" onchange="gesamtImportJSON(event)">
+    </div>
+    <p style="font-size:0.8rem; color:var(--text-muted); margin-top:14px;">Sichert alle Seminare und den Fortschritt aller Lernkurse in einer Datei.</p>
+    <div class="modal-actions">
+      <button class="cancel" onclick="document.getElementById('einstellungenDialog').close()">Schließen</button>
     </div>
   </div>
 </dialog>
@@ -894,14 +934,117 @@ async function init(){
     aktuellesSeminarId = (last && seminare.find(s=>s.id===last)) ? last : seminare[0].id;
     karten = (await storeGet('karten_' + aktuellesSeminarId)) || [];
   }
-  renderSeminarTabs();
-  renderBoard();
+  const letzterBereich = await storeGet('letzterBereich');
+  if(letzterBereich === 'seminare'){
+    await betreteSeminare(false);
+  }else if(letzterBereich && letzterBereich.indexOf('kurs:')===0){
+    const kursId = letzterBereich.slice(5);
+    if(LERNKURSE[kursId]) await oeffneKurs(kursId, false);
+    else await zeigeStartbildschirm(false);
+  }else{
+    await zeigeStartbildschirm(false);
+  }
   if(!storageOk){
     zeigeToast('Automatische Speicherung nicht verfügbar – bitte regelmäßig 💾 Sichern nutzen');
   }
   const vergangen = Date.now() - splashStart;
   const restwartezeit = Math.max(0, 5000 - vergangen);
   setTimeout(splashAusblenden, restwartezeit);
+}
+
+async function zeigeStartbildschirm(speichern=true){
+  document.getElementById('seminarApp').style.display = 'none';
+  document.getElementById('kursOverlay').style.display = 'none';
+  document.getElementById('startScreen').style.display = 'block';
+  if(speichern) await storeSet('letzterBereich', 'start');
+  await renderStartKacheln();
+}
+
+async function betreteSeminare(speichern=true){
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('kursOverlay').style.display = 'none';
+  document.getElementById('seminarApp').style.display = 'block';
+  if(speichern) await storeSet('letzterBereich', 'seminare');
+  renderSeminarTabs();
+  renderBoard();
+}
+
+async function renderStartKacheln(){
+  const cont = document.getElementById('startKacheln');
+  let html = `<div class="kachel" onclick="betreteSeminare()">
+    <div class="kachelTitel">Seminarvorbereitung</div>
+    <div class="kachelMeta">${seminare.length} Seminar${seminare.length===1?'':'e'}</div>
+  </div>`;
+  for(const kursId in LERNKURSE){
+    const kurs = LERNKURSE[kursId];
+    let fortschritt = await storeGet('kursFortschritt_' + kursId);
+    if(!fortschritt && kursId === 'programmieren'){
+      const alt = await storeGet('kursFortschritt');
+      if(alt && Array.isArray(alt.completed)) fortschritt = alt;
+    }
+    const fertig = (fortschritt && Array.isArray(fortschritt.completed)) ? fortschritt.completed.length : 0;
+    const meta = fertig > 0 ? `${fertig} von ${kurs.lessons.length} Modulen` : 'Noch nicht begonnen';
+    html += `<div class="kachel" onclick="oeffneKurs('${kursId}')">
+      <div class="kachelTitel">${kurs.icon} ${escapeHTML(kurs.titel)}</div>
+      <div class="kachelMeta">${escapeHTML(meta)}</div>
+    </div>`;
+  }
+  cont.innerHTML = html;
+}
+
+async function gesamtExportJSON(){
+  const data = { seminare, kartenProSeminar:{}, kurse:{} };
+  for(const s of seminare){
+    data.kartenProSeminar[s.id] = (s.id === aktuellesSeminarId) ? karten : (await storeGet('karten_'+s.id)) || [];
+  }
+  for(const kursId in LERNKURSE){
+    let fortschritt = await storeGet('kursFortschritt_' + kursId);
+    if(!fortschritt && kursId === 'programmieren'){
+      const alt = await storeGet('kursFortschritt');
+      if(alt && Array.isArray(alt.completed)) fortschritt = alt;
+    }
+    data.kurse[kursId] = fortschritt || { completed:[], current:0 };
+  }
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'hamster_gesamt_backup.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  zeigeToast('Gesamt-Backup heruntergeladen');
+}
+
+function gesamtImportJSON(evt){
+  const file = evt.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    try{
+      const data = JSON.parse(e.target.result);
+      seminare = data.seminare || [];
+      await storeSet('seminare', seminare);
+      for(const sid in (data.kartenProSeminar || {})){
+        await storeSet('karten_' + sid, data.kartenProSeminar[sid]);
+      }
+      for(const kursId in (data.kurse || {})){
+        await storeSet('kursFortschritt_' + kursId, data.kurse[kursId]);
+      }
+      if(seminare.length){
+        aktuellesSeminarId = seminare[0].id;
+        karten = data.kartenProSeminar[aktuellesSeminarId] || [];
+        await storeSet('letztesSeminar', aktuellesSeminarId);
+      }
+      kursLoadedIds = new Set();
+      document.getElementById('einstellungenDialog').close();
+      zeigeToast('Gesamt-Backup geladen');
+      await zeigeStartbildschirm(false);
+    }catch(err){
+      zeigeToast('Datei konnte nicht gelesen werden');
+    }
+  };
+  reader.readAsText(file);
+  evt.target.value = '';
 }
 
 function splashAusblenden(){
@@ -2052,7 +2195,11 @@ function scanAbbrechen(){
 }
 
 /* ---------- Programmieren lernen ---------- */
-const PROG_LESSONS = [
+const LERNKURSE = {
+programmieren: {
+titel: 'Programmieren lernen',
+icon: '💻',
+lessons: [
   {
     title:"Was ist Programmieren?", konzept:"Grundidee",
     erklaerung:[
@@ -2186,12 +2333,17 @@ const PROG_LESSONS = [
       : {ok:false,msg:"Noch weniger als 3 Ausgaben – jede Person sollte eine Zeile bekommen."},
     quiz:null
   }
-];
+]
+}
+};
 
-let progState = { completed:[], current:0 };
-let progLoaded = false;
+function aktiverKurs(){ return LERNKURSE[kursState.kursId]; }
+function aktiveLessons(){ return LERNKURSE[kursState.kursId].lessons; }
 
-function progRunSandboxed(code){
+let kursState = { kursId:null, completed:[], current:0 };
+let kursLoadedIds = new Set();
+
+function kursRunSandboxed(code){
   const out = [];
   let error = null;
   const fakeConsole = { log:(...args)=> out.push(args.map(a=> typeof a==='object' ? JSON.stringify(a) : String(a)).join(' ')) };
@@ -2202,7 +2354,7 @@ function progRunSandboxed(code){
   return { out, error };
 }
 
-function progRenderConsole(el, result){
+function kursRenderConsole(el, result){
   if(result.error){
     el.classList.remove('empty');
     el.innerHTML = '<span class="err">Fehler: ' + escapeHTML(result.error) + '</span>';
@@ -2215,182 +2367,190 @@ function progRenderConsole(el, result){
   }
 }
 
-async function oeffneProgrammierkurs(){
-  if(!progLoaded){
-    const gespeichert = await storeGet('progFortschritt');
-    if(gespeichert && Array.isArray(gespeichert.completed)){
-      progState = gespeichert;
+async function oeffneKurs(kursId, speichern=true){
+  kursState.kursId = kursId;
+  if(!kursLoadedIds.has(kursId)){
+    let gespeichert = await storeGet('kursFortschritt_' + kursId);
+    if(!gespeichert && kursId === 'programmieren'){
+      const alt = await storeGet('kursFortschritt');
+      if(alt && Array.isArray(alt.completed)) gespeichert = alt;
     }
-    progLoaded = true;
+    kursState.completed = (gespeichert && Array.isArray(gespeichert.completed)) ? gespeichert.completed : [];
+    kursState.current = (gespeichert && typeof gespeichert.current === 'number') ? gespeichert.current : 0;
+    kursLoadedIds.add(kursId);
   }
-  document.getElementById('progOverlay').style.display = 'flex';
-  progRenderAll();
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('seminarApp').style.display = 'none';
+  document.getElementById('kursOverlay').style.display = 'flex';
+  if(speichern) await storeSet('letzterBereich', 'kurs:' + kursId);
+  kursRenderAll();
 }
 
-function schliesseProgrammierkurs(){
-  document.getElementById('progOverlay').style.display = 'none';
+function schliesseKurs(){
+  zeigeStartbildschirm();
 }
 
-async function progSpeichern(){
-  await storeSet('progFortschritt', progState);
+async function kursSpeichern(){
+  await storeSet('kursFortschritt_' + kursState.kursId, { completed: kursState.completed, current: kursState.current });
 }
 
-function progWaehleModul(i){
-  progState.current = i;
-  progRenderAll();
+function kursWaehleModul(i){
+  kursState.current = i;
+  kursRenderAll();
 }
 
-function progReset(){
-  const sicher = confirm('Fortschritt im Programmierkurs wirklich zurücksetzen?');
+function kursReset(){
+  const sicher = confirm('Fortschritt in „' + aktiverKurs().titel + '" wirklich zurücksetzen?');
   if(!sicher) return;
-  progState = { completed:[], current:0 };
-  progSpeichern();
-  progRenderAll();
+  kursState.completed = [];
+  kursState.current = 0;
+  kursSpeichern();
+  kursRenderAll();
 }
 
-function progRenderAll(){
-  const ov = document.getElementById('progOverlay');
-  const l = PROG_LESSONS[progState.current];
-  const trackHTML = PROG_LESSONS.map((m,i)=>{
-    const cls = 'progDot' + (progState.completed.includes(i)?' done':'') + (i===progState.current?' active':'');
-    return `<div class="${cls}" onclick="progWaehleModul(${i})">${progState.completed.includes(i)?'✓':(i+1)}</div>`;
+function kursRenderAll(){
+  const ov = document.getElementById('kursOverlay');
+  const l = aktiveLessons()[kursState.current];
+  const trackHTML = aktiveLessons().map((m,i)=>{
+    const cls = 'kursDot' + (kursState.completed.includes(i)?' done':'') + (i===kursState.current?' active':'');
+    return `<div class="${cls}" onclick="kursWaehleModul(${i})">${kursState.completed.includes(i)?'✓':(i+1)}</div>`;
   }).join('');
 
   const quizHTML = l.quiz ? `
-    <div class="progLabel">Kurzcheck</div>
-    <div class="progCard">
-      <div class="progQuizQ">${escapeHTML(l.quiz.frage)}</div>
-      <div id="progQuizOptionen">
-        ${l.quiz.optionen.map((opt,i)=>`<button class="progQuizOpt" onclick="progQuizAntworten(${i})">${escapeHTML(opt)}</button>`).join('')}
+    <div class="kursLabel">Kurzcheck</div>
+    <div class="kursCard">
+      <div class="kursQuizQ">${escapeHTML(l.quiz.frage)}</div>
+      <div id="kursQuizOptionen">
+        ${l.quiz.optionen.map((opt,i)=>`<button class="kursQuizOpt" onclick="kursQuizAntworten(${i})">${escapeHTML(opt)}</button>`).join('')}
       </div>
-      <div class="progFeedback" id="progQuizFeedback"></div>
+      <div class="kursFeedback" id="kursQuizFeedback"></div>
     </div>` : '';
 
   ov.innerHTML = `
-    <div class="progTop">
-      <button class="uebungCloseBtn" onclick="schliesseProgrammierkurs()">✕</button>
-      <h2>💻 Programmieren lernen</h2>
+    <div class="kursTop">
+      <button class="uebungCloseBtn" onclick="schliesseKurs()">✕</button>
+      <h2>${aktiverKurs().icon} ${escapeHTML(aktiverKurs().titel)}</h2>
       <button class="iconBtn" onclick="stopVorlesen()" style="background:transparent;border:none;font-size:0.9rem;" title="Vorlesen stoppen">⏹</button>
-      <button class="iconBtn" onclick="progReset()" style="background:transparent;border:none;font-size:0.75rem;color:var(--text-muted);">Zurücksetzen</button>
+      <button class="iconBtn" onclick="kursReset()" style="background:transparent;border:none;font-size:0.75rem;color:var(--text-muted);">Zurücksetzen</button>
     </div>
-    <div class="progBody">
-      <div class="progTrack">${trackHTML}</div>
-      <div class="progEyebrow">Modul ${progState.current+1} von ${PROG_LESSONS.length} · ${escapeHTML(l.konzept)}</div>
-      <div class="progTitel">${escapeHTML(l.title)}</div>
-      <div class="progCard">
+    <div class="kursBody">
+      <div class="kursTrack">${trackHTML}</div>
+      <div class="kursEyebrow">Modul ${kursState.current+1} von ${aktiveLessons().length} · ${escapeHTML(l.konzept)}</div>
+      <div class="kursTitel">${escapeHTML(l.title)}</div>
+      <div class="kursCard">
         ${l.erklaerung.map(p=>`<p>${escapeHTML(p)}</p>`).join('')}
-        <button class="progRunBtn" style="margin-top:4px;" onclick="progVorleseErklaerung()">🔊 Erklärung vorlesen</button>
+        <button class="kursRunBtn" style="margin-top:4px;" onclick="kursVorleseErklaerung()">🔊 Erklärung vorlesen</button>
       </div>
 
-      <div class="progLabel">Beispiel</div>
-      <div class="progCodeBox"><pre>${escapeHTML(l.beispiel)}</pre></div>
-      <div class="progBtnRow">
-        <button class="progRunBtn" onclick="progBeispielAusfuehren()">Beispiel ausführen</button>
-        <button class="progRunBtn" onclick="progVorleseBeispiel()">🔊 Code vorlesen</button>
+      <div class="kursLabel">Beispiel</div>
+      <div class="kursCodeBox"><pre>${escapeHTML(l.beispiel)}</pre></div>
+      <div class="kursBtnRow">
+        <button class="kursRunBtn" onclick="kursBeispielAusfuehren()">Beispiel ausführen</button>
+        <button class="kursRunBtn" onclick="kursVorleseBeispiel()">🔊 Code vorlesen</button>
       </div>
-      <div class="progConsole empty" id="progBeispielConsole">Noch keine Ausgabe.</div>
+      <div class="kursConsole empty" id="kursBeispielConsole">Noch keine Ausgabe.</div>
 
-      <div class="progLabel" style="margin-top:18px;">Übung</div>
-      <div class="progCard" style="padding-bottom:6px;">
+      <div class="kursLabel" style="margin-top:18px;">Übung</div>
+      <div class="kursCard" style="padding-bottom:6px;">
         <p>${escapeHTML(l.aufgabe)}</p>
-        <button class="progRunBtn" style="margin-bottom:10px;" onclick="progVorleseAufgabe()">🔊 Aufgabe vorlesen</button>
-        <textarea class="progInput" id="progUebungInput" spellcheck="false">${escapeHTML(l.starter)}</textarea>
-        <div class="progBtnRow">
-          <button class="progRunBtn" onclick="progUebungAusfuehren()">Code ausführen</button>
-          <button class="progCheckBtn" onclick="progUebungPruefen()">Aufgabe prüfen</button>
-          <button class="progRunBtn" onclick="progSprich(document.getElementById('progUebungInput').value)">🔊 Meinen Code vorlesen</button>
+        <button class="kursRunBtn" style="margin-bottom:10px;" onclick="kursVorleseAufgabe()">🔊 Aufgabe vorlesen</button>
+        <textarea class="kursInput" id="kursUebungInput" spellcheck="false">${escapeHTML(l.starter)}</textarea>
+        <div class="kursBtnRow">
+          <button class="kursRunBtn" onclick="kursUebungAusfuehren()">Code ausführen</button>
+          <button class="kursCheckBtn" onclick="kursUebungPruefen()">Aufgabe prüfen</button>
+          <button class="kursRunBtn" onclick="kursSprich(document.getElementById('kursUebungInput').value)">🔊 Meinen Code vorlesen</button>
         </div>
-        <div class="progConsole empty" id="progUebungConsole">Noch keine Ausgabe.</div>
-        <div class="progFeedback" id="progUebungFeedback"></div>
+        <div class="kursConsole empty" id="kursUebungConsole">Noch keine Ausgabe.</div>
+        <div class="kursFeedback" id="kursUebungFeedback"></div>
       </div>
 
       ${quizHTML}
 
-      <div class="progNavRow">
-        <button class="progNavBtn" onclick="progVorheriges()" ${progState.current===0?'disabled':''}>← Zurück</button>
-        <button class="progNavBtn primary" onclick="progNaechstes()">${progState.current===PROG_LESSONS.length-1?'Fertig':'Weiter →'}</button>
+      <div class="kursNavRow">
+        <button class="kursNavBtn" onclick="kursVorheriges()" ${kursState.current===0?'disabled':''}>← Zurück</button>
+        <button class="kursNavBtn primary" onclick="kursNaechstes()">${kursState.current===aktiveLessons().length-1?'Fertig':'Weiter →'}</button>
       </div>
     </div>`;
 }
 
-function progSprich(text){
+function kursSprich(text){
   stopVorlesen();
   const utter = new SpeechSynthesisUtterance(text);
   utter.lang = 'de-DE';
   speechSynthesis.speak(utter);
 }
-function progVorleseErklaerung(){
-  const l = PROG_LESSONS[progState.current];
-  progSprich(l.erklaerung.join(' '));
+function kursVorleseErklaerung(){
+  const l = aktiveLessons()[kursState.current];
+  kursSprich(l.erklaerung.join(' '));
 }
-function progVorleseBeispiel(){
-  const l = PROG_LESSONS[progState.current];
-  progSprich(l.beispiel);
+function kursVorleseBeispiel(){
+  const l = aktiveLessons()[kursState.current];
+  kursSprich(l.beispiel);
 }
-function progVorleseAufgabe(){
-  const l = PROG_LESSONS[progState.current];
-  progSprich(l.aufgabe);
-}
-
-function progBeispielAusfuehren(){
-  const l = PROG_LESSONS[progState.current];
-  progRenderConsole(document.getElementById('progBeispielConsole'), progRunSandboxed(l.beispiel));
+function kursVorleseAufgabe(){
+  const l = aktiveLessons()[kursState.current];
+  kursSprich(l.aufgabe);
 }
 
-function progUebungAusfuehren(){
-  const code = document.getElementById('progUebungInput').value;
-  progRenderConsole(document.getElementById('progUebungConsole'), progRunSandboxed(code));
+function kursBeispielAusfuehren(){
+  const l = aktiveLessons()[kursState.current];
+  kursRenderConsole(document.getElementById('kursBeispielConsole'), kursRunSandboxed(l.beispiel));
 }
 
-async function progUebungPruefen(){
-  const l = PROG_LESSONS[progState.current];
-  const code = document.getElementById('progUebungInput').value;
-  const result = progRunSandboxed(code);
-  progRenderConsole(document.getElementById('progUebungConsole'), result);
-  const fb = document.getElementById('progUebungFeedback');
+function kursUebungAusfuehren(){
+  const code = document.getElementById('kursUebungInput').value;
+  kursRenderConsole(document.getElementById('kursUebungConsole'), kursRunSandboxed(code));
+}
+
+async function kursUebungPruefen(){
+  const l = aktiveLessons()[kursState.current];
+  const code = document.getElementById('kursUebungInput').value;
+  const result = kursRunSandboxed(code);
+  kursRenderConsole(document.getElementById('kursUebungConsole'), result);
+  const fb = document.getElementById('kursUebungFeedback');
   if(result.error){
-    fb.className = 'progFeedback bad';
+    fb.className = 'kursFeedback bad';
     fb.textContent = 'Läuft noch nicht: ' + result.error;
-    progSprich('Läuft noch nicht: ' + result.error);
+    kursSprich('Läuft noch nicht: ' + result.error);
     return;
   }
   const check = l.pruefen(result.out, code);
-  fb.className = 'progFeedback ' + (check.ok ? 'ok' : 'bad');
+  fb.className = 'kursFeedback ' + (check.ok ? 'ok' : 'bad');
   fb.textContent = check.msg;
-  progSprich(check.msg);
-  if(check.ok && !progState.completed.includes(progState.current)){
-    progState.completed.push(progState.current);
-    await progSpeichern();
-    document.querySelector('.progTrack').innerHTML = PROG_LESSONS.map((m,i)=>{
-      const cls = 'progDot' + (progState.completed.includes(i)?' done':'') + (i===progState.current?' active':'');
-      return `<div class="${cls}" onclick="progWaehleModul(${i})">${progState.completed.includes(i)?'✓':(i+1)}</div>`;
+  kursSprich(check.msg);
+  if(check.ok && !kursState.completed.includes(kursState.current)){
+    kursState.completed.push(kursState.current);
+    await kursSpeichern();
+    document.querySelector('.kursTrack').innerHTML = aktiveLessons().map((m,i)=>{
+      const cls = 'kursDot' + (kursState.completed.includes(i)?' done':'') + (i===kursState.current?' active':'');
+      return `<div class="${cls}" onclick="kursWaehleModul(${i})">${kursState.completed.includes(i)?'✓':(i+1)}</div>`;
     }).join('');
   }
 }
 
-function progQuizAntworten(i){
-  const l = PROG_LESSONS[progState.current];
-  const buttons = document.querySelectorAll('#progQuizOptionen .progQuizOpt');
+function kursQuizAntworten(i){
+  const l = aktiveLessons()[kursState.current];
+  const buttons = document.querySelectorAll('#kursQuizOptionen .kursQuizOpt');
   buttons.forEach(b=>b.disabled = true);
-  const fb = document.getElementById('progQuizFeedback');
+  const fb = document.getElementById('kursQuizFeedback');
   if(i === l.quiz.richtig){
     buttons[i].classList.add('richtig');
-    fb.className = 'progFeedback ok';
+    fb.className = 'kursFeedback ok';
     fb.textContent = 'Richtig.';
   }else{
     buttons[i].classList.add('falsch');
     buttons[l.quiz.richtig].classList.add('richtig');
-    fb.className = 'progFeedback bad';
+    fb.className = 'kursFeedback bad';
     fb.textContent = 'Nicht ganz – die richtige Antwort ist markiert.';
   }
 }
 
-async function progVorheriges(){
-  if(progState.current>0){ progState.current--; await progSpeichern(); progRenderAll(); }
+async function kursVorheriges(){
+  if(kursState.current>0){ kursState.current--; await kursSpeichern(); kursRenderAll(); }
 }
-async function progNaechstes(){
-  if(progState.current<PROG_LESSONS.length-1){ progState.current++; await progSpeichern(); progRenderAll(); }
-  else{ schliesseProgrammierkurs(); }
+async function kursNaechstes(){
+  if(kursState.current<aktiveLessons().length-1){ kursState.current++; await kursSpeichern(); kursRenderAll(); }
+  else{ schliesseKurs(); }
 }
 
 init();
