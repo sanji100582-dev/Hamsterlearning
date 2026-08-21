@@ -452,6 +452,12 @@
   .navBtn.active{color:#8a5a1f; background:rgba(224,184,74,0.2);}
 
   /* ---------- Übersicht (Kacheln) ---------- */
+  .countdownBanner{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    background:linear-gradient(135deg, #f3d34a, #e8b84a); color:#4a3410; border-radius:12px;
+    padding:12px 14px; margin-bottom:16px; box-shadow:0 4px 12px rgba(90,70,40,0.15);
+  }
+  .countdownText{font-weight:700; font-size:0.95rem;}
   .uebersichtGrid{
     display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:6px;
   }
@@ -1605,7 +1611,37 @@ function renderSucheErgebnisse(area){
   else renderAuditiv(area, liste);
 }
 
+function tageBisSeminar(datum){
+  if(!datum) return null;
+  const heute = new Date(); heute.setHours(0,0,0,0);
+  const ziel = new Date(datum + 'T00:00:00');
+  if(isNaN(ziel.getTime())) return null;
+  return Math.round((ziel - heute) / 86400000);
+}
+
+let cramModusAktiv = false;
+function starteCramModus(){
+  cramModusAktiv = true;
+  document.getElementById('uebenWahlDialog').showModal();
+}
+
 function renderUebersicht(area){
+  const sem = seminare.find(s=>s.id===aktuellesSeminarId);
+  if(sem && sem.datum){
+    const tage = tageBisSeminar(sem.datum);
+    if(tage !== null){
+      let text;
+      if(tage > 1) text = `🗓 Noch ${tage} Tage bis zum Seminar`;
+      else if(tage === 1) text = `🗓 Morgen ist dein Seminar!`;
+      else if(tage === 0) text = `🎉 Heute ist dein Seminar!`;
+      else text = `Seminar war vor ${Math.abs(tage)} Tag${Math.abs(tage)===1?'':'en'}`;
+      const banner = document.createElement('div');
+      banner.className = 'countdownBanner';
+      banner.innerHTML = `<div class="countdownText">${text}</div>` +
+        (tage >= 0 ? `<button class="iconBtn" onclick="starteCramModus()" style="background:#fff;">🔁 Komplett auffrischen</button>` : '');
+      area.appendChild(banner);
+    }
+  }
   const fachKarten = karten.filter(k => k.typ === 'fach');
   const gruppenMap = {};
   fachKarten.forEach(k=>{
@@ -2325,14 +2361,18 @@ function aktivitaetsStreifenHTML(map){
 function starteUebung(){
   const liste = suchbegriff.trim() ? sucheGefiltert() : (currentView === 'uebersicht' ? karten.filter(k=>k.typ==='fach') : gefilterteKarten());
   if(!liste.length){ zeigeToast('Keine Karten in der aktuellen Auswahl'); return; }
+  const nutzeCram = cramModusAktiv;
+  cramModusAktiv = false;
   const elemente = alleLernelemente(liste);
-  const { pool, nurFaellig, gesamt } = faelligeZuerst(elemente);
+  const { pool, nurFaellig, gesamt } = nutzeCram ? { pool: elemente, nurFaellig:false, gesamt: elemente.length } : faelligeZuerst(elemente);
   uebungListe = [...pool];
   uebungIdx = 0;
   uebungOffen = true;
   document.getElementById('uebungOverlay').style.display = 'flex';
   renderUebungKarte();
-  if(nurFaellig && pool.length < gesamt){
+  if(nutzeCram){
+    zeigeToast(`🔁 Komplettauffrischung: ${pool.length} Lerneinheiten`);
+  }else if(nurFaellig && pool.length < gesamt){
     zeigeToast(`${pool.length} von ${gesamt} Lerneinheiten sind heute fällig`);
   }else if(!nurFaellig){
     zeigeToast('Nichts aktuell fällig – komplette Auswahl wird geübt');
@@ -2554,14 +2594,18 @@ function mischeGewichtet(liste){
 function starteQuiz(){
   const liste = suchbegriff.trim() ? sucheGefiltert() : (currentView === 'uebersicht' ? karten.filter(k=>k.typ==='fach') : gefilterteKarten());
   if(liste.length < 2){ zeigeToast('Mindestens 2 Karten nötig für ein Quiz'); return; }
-  const { pool, nurFaellig, gesamt } = faelligeZuerst(liste);
+  const nutzeCram = cramModusAktiv;
+  cramModusAktiv = false;
+  const { pool, nurFaellig, gesamt } = nutzeCram ? { pool: liste, nurFaellig:false, gesamt: liste.length } : faelligeZuerst(liste);
   if(pool.length < 2){ zeigeToast('Mindestens 2 fällige Karten nötig – ganze Auswahl wird genutzt'); quizListe = mischeGewichtet(liste); }
   else quizListe = mischeGewichtet(pool);
   quizIdx = 0;
   quizRichtig = 0;
   document.getElementById('uebungOverlay').style.display = 'flex';
   renderQuizFrage();
-  if(nurFaellig && pool.length < gesamt && pool.length >= 2){
+  if(nutzeCram){
+    zeigeToast(`🔁 Komplettauffrischung: ${quizListe.length} Fragen`);
+  }else if(nurFaellig && pool.length < gesamt && pool.length >= 2){
     zeigeToast(`${pool.length} von ${gesamt} Karten sind heute fällig`);
   }
 }
