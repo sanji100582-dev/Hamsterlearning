@@ -1450,10 +1450,11 @@ function renderBoardHeader(area, imSortierModus){
       <h2>Sortieren</h2>`;
   }else{
     const listeAktiv = ansichtsStil === 'liste';
+    const stilBtn = modus === 'auditiv' ? '' : `<button class="addBtn" onclick="toggleAnsichtsStil()" title="${listeAktiv ? 'Zur Pinnwand' : 'Als Liste lesen (empfohlene Reihenfolge)'}" style="background:#eaf4fb;color:#2f5c82;font-size:1rem;">${listeAktiv ? '📌' : '📋'}</button>`;
     header.innerHTML = `
       <button class="backBtn" onclick="zurueckZurUebersicht()">← Übersicht</button>
       <h2>${escapeHTML(gruppenLabel)}</h2>
-      <button class="addBtn" onclick="toggleAnsichtsStil()" title="${listeAktiv ? 'Zur Pinnwand' : 'Als Liste lesen (empfohlene Reihenfolge)'}" style="background:#eaf4fb;color:#2f5c82;font-size:1rem;">${listeAktiv ? '📌' : '📋'}</button>
+      ${stilBtn}
       <button class="addBtn" onclick="sortierStarten()" title="Reihenfolge ändern" style="background:#eaf4fb;color:#2f5c82;font-size:1rem;">🔀</button>
       <button class="addBtn" onclick="openKartenModal()" title="Karte hinzufügen">+</button>`;
   }
