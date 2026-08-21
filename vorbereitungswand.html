@@ -326,6 +326,21 @@
   .uebungKarte{
     background:#fffdf8; color:var(--tinte); border-radius:16px; padding:24px 20px;
     box-shadow:0 10px 24px rgba(90,70,40,0.2);
+    touch-action:pan-y; will-change:transform;
+  }
+  .uebungKarte.swipeSitzt{box-shadow:0 10px 24px rgba(90,70,40,0.2), 0 0 0 4px #3f8a58 inset;}
+  .uebungKarte.swipeNochmal{box-shadow:0 10px 24px rgba(90,70,40,0.2), 0 0 0 4px #c4593a inset;}
+  .swipeHinweis{
+    text-align:center; font-size:0.72rem; color:var(--text-muted); margin-top:10px;
+  }
+  .konfettiContainer{position:fixed; inset:0; z-index:200; pointer-events:none; overflow:hidden;}
+  .konfettiStueck{
+    position:absolute; top:-20px; width:8px; height:14px; opacity:0.95; border-radius:2px;
+    animation-name:konfettiFall; animation-timing-function:cubic-bezier(.25,.46,.45,.94); animation-fill-mode:forwards;
+  }
+  @keyframes konfettiFall{
+    0%{ transform:translateY(0) rotate(0deg); opacity:1; }
+    100%{ transform:translateY(112vh) rotate(560deg); opacity:0.4; }
   }
   .uebungTypBadge{font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:3px 10px; border-radius:999px; color:#20241e; display:inline-block; margin-bottom:10px;}
   .uebungTitel{font-family:var(--schrift-hand); font-weight:700; font-size:1.4rem; margin:0 0 6px;}
@@ -2637,9 +2652,29 @@ async function vergebePunkte(anzahl, warRichtig){
   const neuLevel = berechneLevel(spielstand.punkte).level;
   await speichereSpielstand();
   if(neuLevel > vorherLevel){
-    setTimeout(()=> zeigeToast(`🎉 Level ${neuLevel} erreicht!`), 400);
+    setTimeout(()=> { zeigeToast(`🎉 Level ${neuLevel} erreicht!`); feuerwerkKonfetti(); }, 400);
   }
   await pruefeAbzeichen();
+}
+
+/* ---------- Konfetti-Effekt (Levelaufstieg, Abzeichen) ---------- */
+function feuerwerkKonfetti(){
+  const farben = ['#f3d34a','#6fa8cc','#7ec18f','#c4593a','#8a5a1f','#e0b84a'];
+  const container = document.createElement('div');
+  container.className = 'konfettiContainer';
+  const anzahl = 26;
+  for(let i=0;i<anzahl;i++){
+    const stueck = document.createElement('div');
+    stueck.className = 'konfettiStueck';
+    stueck.style.left = Math.random()*100 + 'vw';
+    stueck.style.background = farben[Math.floor(Math.random()*farben.length)];
+    stueck.style.animationDelay = (Math.random()*0.35) + 's';
+    stueck.style.animationDuration = (1.7 + Math.random()*0.9) + 's';
+    stueck.style.transform = `rotate(${Math.random()*360}deg)`;
+    container.appendChild(stueck);
+  }
+  document.body.appendChild(container);
+  setTimeout(()=> container.remove(), 3000);
 }
 
 async function pruefeAbzeichen(){
@@ -2650,7 +2685,7 @@ async function pruefeAbzeichen(){
     if(!spielstand.abzeichen.includes(def.id) && def.pruefe(spielstand, streak)){
       spielstand.abzeichen.push(def.id);
       neu = true;
-      setTimeout(()=> zeigeToast(`🏅 Abzeichen freigeschaltet: ${def.titel}`), 900);
+      setTimeout(()=> { zeigeToast(`🏅 Abzeichen freigeschaltet: ${def.titel}`); feuerwerkKonfetti(); }, 900);
     }
   });
   if(neu) await speichereSpielstand();
@@ -2991,9 +3026,57 @@ function uebungAntwortZeigen(eingegebeneAntwort, trifftZu){
     <div class="uebungBewertung">
       <button class="btnNochmal" onclick="uebungBewerten(false)">🔁 Nochmal üben</button>
       <button class="btnSitzt" onclick="uebungBewerten(true)">✅ Sitzt</button>
-    </div>`;
+    </div>
+    <div class="swipeHinweis">Oder Karte wischen: ← Nochmal · Sitzt →</div>`;
   box.innerHTML = html;
   document.querySelector('.uebungAntwortBtn[onclick*="uebungAntwortZeigen"]')?.remove();
+  aktiviereKartenSwipe();
+}
+
+/* ---------- Wisch-Geste: rechts = Sitzt, links = Nochmal (nur nach Aufdecken der Antwort) ---------- */
+function aktiviereKartenSwipe(){
+  const karte = document.querySelector('.uebungKarte');
+  if(!karte) return;
+  let startX = 0, startY = 0, dragging = false, deltaX = 0;
+  const schwelle = 90;
+
+  function onDown(e){
+    dragging = true;
+    startX = e.clientX; startY = e.clientY; deltaX = 0;
+    karte.style.transition = 'none';
+    try{ karte.setPointerCapture(e.pointerId); }catch(err){}
+  }
+  function onMove(e){
+    if(!dragging) return;
+    deltaX = e.clientX - startX;
+    const deltaY = e.clientY - startY;
+    if(Math.abs(deltaY) > Math.abs(deltaX) * 1.3) return;
+    karte.style.transform = `translateX(${deltaX}px) rotate(${deltaX/18}deg)`;
+    karte.classList.toggle('swipeSitzt', deltaX > 30);
+    karte.classList.toggle('swipeNochmal', deltaX < -30);
+  }
+  function onUp(){
+    if(!dragging) return;
+    dragging = false;
+    karte.style.transition = 'transform .25s ease, opacity .25s ease';
+    if(deltaX > schwelle){
+      karte.style.transform = `translateX(650px) rotate(22deg)`;
+      karte.style.opacity = '0';
+      setTimeout(()=> uebungBewerten(true), 180);
+    }else if(deltaX < -schwelle){
+      karte.style.transform = `translateX(-650px) rotate(-22deg)`;
+      karte.style.opacity = '0';
+      setTimeout(()=> uebungBewerten(false), 180);
+    }else{
+      karte.style.transform = '';
+      karte.classList.remove('swipeSitzt','swipeNochmal');
+    }
+  }
+
+  karte.addEventListener('pointerdown', onDown);
+  karte.addEventListener('pointermove', onMove);
+  karte.addEventListener('pointerup', onUp);
+  karte.addEventListener('pointercancel', onUp);
 }
 
 function vorlesenLernelement(el){
