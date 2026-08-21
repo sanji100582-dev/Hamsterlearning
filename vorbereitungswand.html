@@ -572,6 +572,14 @@
   }
   .toast.show{opacity:1;}
 
+  .fokusTimerBadge{
+    position:fixed; top:12px; right:12px; z-index:80;
+    background:#2b6b45; color:#fff; padding:8px 14px; border-radius:999px;
+    font-size:0.85rem; font-weight:700; box-shadow:0 4px 12px rgba(0,0,0,0.25);
+    cursor:pointer; padding-top:calc(8px + env(safe-area-inset-top));
+  }
+  .fokusTimerBadge.ablaufend{background:#c4593a;}
+
   /* ---------- Suche ---------- */
   .searchRow{display:flex; align-items:center; gap:8px; margin-top:8px;}
   .searchRow input{
@@ -702,12 +710,29 @@
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); loescheAktuellesSeminar();">🗑 Aktuelles Seminar löschen</button>
       <button class="mehrItem" onclick="loadTemplate('verhandeln_pm'); document.getElementById('mehrDialog').close();">⤓ Vorlage „Verhandeln im PM-Alltag" laden</button>
       <button class="mehrItem" onclick="zufallskarte(); document.getElementById('mehrDialog').close();">🎲 Zufallskarte</button>
+      <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); oeffneFokusTimerDialog();">⏱ Fokus-Timer starten</button>
       <button class="mehrItem" onclick="exportJSON()">💾 Sichern (Backup exportieren)</button>
       <button class="mehrItem" onclick="document.getElementById('importInput').click()">📂 Laden (Backup importieren)</button>
       <input type="file" id="importInput" accept="application/json" style="display:none" onchange="importJSON(event)">
     </div>
     <div class="modal-actions">
       <button class="cancel" onclick="document.getElementById('mehrDialog').close()">Schließen</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="fokusTimerDialog">
+  <div class="modalInner">
+    <h2>⏱ Fokus-Timer</h2>
+    <p style="font-size:0.85rem; color:var(--text-muted); margin:0 0 14px;">Läuft im Hintergrund weiter, egal was du in der App gerade machst.</p>
+    <div class="mehrList">
+      <button class="mehrItem" onclick="starteFokusTimer(5)">5 Minuten</button>
+      <button class="mehrItem" onclick="starteFokusTimer(10)">10 Minuten</button>
+      <button class="mehrItem" onclick="starteFokusTimer(15)">15 Minuten</button>
+      <button class="mehrItem" onclick="starteFokusTimer(25)">25 Minuten</button>
+    </div>
+    <div class="modal-actions">
+      <button class="cancel" onclick="document.getElementById('fokusTimerDialog').close()">Abbrechen</button>
     </div>
   </div>
 </dialog>
@@ -897,6 +922,10 @@
 
 <div class="toast" id="toast"></div>
 
+<div class="fokusTimerBadge" id="fokusTimerBadge" style="display:none;" onclick="frageFokusTimerStopp()">
+  <span id="fokusTimerText">⏱ 00:00</span>
+</div>
+
 <script>
 const TYP_LABEL = { fach:'Fachinhalt', ablauf:'Ablauf', reflexion:'Reflexion' };
 
@@ -1072,6 +1101,55 @@ function zeigeToast(msg){
   t.classList.add('show');
   clearTimeout(t._timer);
   t._timer = setTimeout(()=> t.classList.remove('show'), 2200);
+}
+
+/* ---------- Fokus-Timer (läuft app-weit im Hintergrund) ---------- */
+let fokusTimerEnde = null;
+let fokusTimerIntervall = null;
+
+function oeffneFokusTimerDialog(){
+  document.getElementById('fokusTimerDialog').showModal();
+}
+
+function starteFokusTimer(minuten){
+  document.getElementById('fokusTimerDialog').close();
+  fokusTimerEnde = Date.now() + minuten * 60000;
+  const badge = document.getElementById('fokusTimerBadge');
+  badge.style.display = 'block';
+  badge.classList.remove('ablaufend');
+  aktualisiereFokusTimerBadge();
+  clearInterval(fokusTimerIntervall);
+  fokusTimerIntervall = setInterval(aktualisiereFokusTimerBadge, 1000);
+  zeigeToast(`⏱ Fokus-Timer gestartet: ${minuten} Minuten`);
+}
+
+function aktualisiereFokusTimerBadge(){
+  if(!fokusTimerEnde) return;
+  const restMs = fokusTimerEnde - Date.now();
+  const badge = document.getElementById('fokusTimerBadge');
+  const text = document.getElementById('fokusTimerText');
+  if(restMs <= 0){
+    clearInterval(fokusTimerIntervall);
+    fokusTimerIntervall = null;
+    fokusTimerEnde = null;
+    badge.style.display = 'none';
+    zeigeToast('⏱ Fokus-Zeit vorbei – gut gemacht! 🎉');
+    return;
+  }
+  const restSek = Math.ceil(restMs / 1000);
+  const min = Math.floor(restSek / 60);
+  const sek = restSek % 60;
+  text.textContent = `⏱ ${min}:${sek.toString().padStart(2,'0')}`;
+  badge.classList.toggle('ablaufend', restSek <= 30);
+}
+
+function frageFokusTimerStopp(){
+  if(confirm('Fokus-Timer stoppen?')){
+    clearInterval(fokusTimerIntervall);
+    fokusTimerIntervall = null;
+    fokusTimerEnde = null;
+    document.getElementById('fokusTimerBadge').style.display = 'none';
+  }
 }
 
 function hashRotation(id){
