@@ -294,6 +294,20 @@
   }
   .luecktextFeedback.richtig{background:#d6efdb; color:#1f5c34;}
   .luecktextFeedback.falsch{background:#f7ded3; color:#8a3520;}
+
+  /* ---------- Zuordnen ---------- */
+  .zuordnenSpalten{display:flex; gap:10px;}
+  .zuordnenSpalte{flex:1; display:flex; flex-direction:column; gap:8px;}
+  .zuordnenKarte{
+    padding:12px 10px; border-radius:10px; border:1.5px solid rgba(0,0,0,0.15);
+    background:#fffdf8; color:var(--text-main); font-size:0.82rem; line-height:1.3;
+    cursor:pointer; text-align:left; font-family:var(--schrift-sans); min-height:52px;
+  }
+  .zuordnenKarte.ausgewaehlt{border-color:var(--gelb-dk); background:var(--gelb); font-weight:600;}
+  .zuordnenKarte.richtig{background:#d6efdb; border-color:#3f8a58; color:#1f5c34; cursor:default;}
+  .zuordnenKarte.falsch{background:#f7ded3; border-color:#c4593a; color:#8a3520;}
+  .zuordnenKarte[disabled]{opacity:0.5; pointer-events:none;}
+  .zuordnenScoreLine{font-size:0.85rem; color:var(--text-muted); margin-bottom:12px; text-align:center;}
   .uebungAntwortBtn{
     display:block; width:100%; padding:14px; border-radius:10px; border:none;
     background:#3f8a58; color:#fff; font-size:1rem; font-weight:600; cursor:pointer; margin-top:10px;
@@ -632,6 +646,7 @@
     <div class="mehrList">
       <button class="mehrItem" onclick="document.getElementById('uebenWahlDialog').close(); starteUebung();">🗂 Karteikarten<br><span style="font-weight:400;font-size:0.8rem;color:var(--text-muted);">Selbst erinnern, dann Antwort aufdecken</span></button>
       <button class="mehrItem" onclick="document.getElementById('uebenWahlDialog').close(); starteQuiz();">❓ Quiz<br><span style="font-weight:400;font-size:0.8rem;color:var(--text-muted);">Multiple-Choice-Fragen, automatisch erstellt</span></button>
+      <button class="mehrItem" onclick="document.getElementById('uebenWahlDialog').close(); starteZuordnen();">🔗 Zuordnen<br><span style="font-weight:400;font-size:0.8rem;color:var(--text-muted);">Titel und Inhalte per Antippen einander zuordnen</span></button>
     </div>
     <div class="modal-actions">
       <button class="cancel" onclick="document.getElementById('uebenWahlDialog').close()">Abbrechen</button>
@@ -2472,6 +2487,98 @@ function starteQuizWiederholung(){
   quizIdx = 0;
   quizRichtig = 0;
   renderQuizFrage();
+}
+
+/* ---------- Zuordnen (Titel/Inhalt per Antippen verbinden) ---------- */
+let zuordnenPaare = [];
+let zuordnenLinks = [];
+let zuordnenRechts = [];
+let zuordnenAusgewaehlt = null;
+let zuordnenGeloest = 0;
+
+function starteZuordnen(){
+  const liste = suchbegriff.trim() ? sucheGefiltert() : (currentView === 'uebersicht' ? karten.filter(k=>k.typ==='fach') : gefilterteKarten());
+  if(liste.length < 3){ zeigeToast('Mindestens 3 Karten nötig zum Zuordnen'); return; }
+  const auswahl = mische(liste).slice(0, Math.min(6, liste.length));
+  zuordnenPaare = auswahl.map((k, i) => ({ id: 'p' + i, titel: k.titel, inhalt: teaserText(k.text) }));
+  zuordnenLinks = zuordnenPaare.map(p => ({ pairId: p.id, text: p.titel }));
+  zuordnenRechts = mische(zuordnenPaare.map(p => ({ pairId: p.id, text: p.inhalt })));
+  zuordnenAusgewaehlt = null;
+  zuordnenGeloest = 0;
+  document.getElementById('uebungOverlay').style.display = 'flex';
+  renderZuordnen();
+}
+
+function beendeZuordnen(){
+  document.getElementById('uebungOverlay').style.display = 'none';
+  renderBoard();
+}
+
+function renderZuordnen(){
+  const ov = document.getElementById('uebungOverlay');
+  if(zuordnenGeloest >= zuordnenPaare.length){
+    ov.innerHTML = `
+      <div class="uebungTop">
+        <button class="uebungCloseBtn" onclick="beendeZuordnen()">✕</button>
+      </div>
+      <div class="uebungEnde">
+        <h2>Alle zugeordnet 🎉</h2>
+        <p>${zuordnenPaare.length} Paare richtig verbunden.</p>
+        <button class="iconBtn" onclick="starteZuordnen()">🔀 Neue Runde</button><br>
+        <button class="iconBtn" onclick="beendeZuordnen()">Zurück zum Board</button>
+      </div>`;
+    return;
+  }
+  const linksHTML = zuordnenLinks.map(l => {
+    if(!l) return '';
+    const ausgewaehlt = zuordnenAusgewaehlt && zuordnenAusgewaehlt.seite === 'links' && zuordnenAusgewaehlt.pairId === l.pairId;
+    return `<button class="zuordnenKarte${ausgewaehlt ? ' ausgewaehlt' : ''}" data-seite="links" data-pairid="${l.pairId}" onclick="zuordnenAuswahl('links','${l.pairId}')">${escapeHTML(l.text)}</button>`;
+  }).join('');
+  const rechtsHTML = zuordnenRechts.map(r => {
+    if(!r) return '';
+    const ausgewaehlt = zuordnenAusgewaehlt && zuordnenAusgewaehlt.seite === 'rechts' && zuordnenAusgewaehlt.pairId === r.pairId;
+    return `<button class="zuordnenKarte${ausgewaehlt ? ' ausgewaehlt' : ''}" data-seite="rechts" data-pairid="${r.pairId}" onclick="zuordnenAuswahl('rechts','${r.pairId}')">${escapeHTML(r.text)}</button>`;
+  }).join('');
+  ov.innerHTML = `
+    <div class="uebungTop">
+      <button class="uebungCloseBtn" onclick="beendeZuordnen()">✕</button>
+      <div class="uebungProgress"><div style="width:${Math.round((zuordnenGeloest/zuordnenPaare.length)*100)}%"></div></div>
+      <div class="uebungCount">${zuordnenGeloest} / ${zuordnenPaare.length}</div>
+    </div>
+    <div class="uebungCardWrap">
+      <div class="zuordnenScoreLine">Tippe zuerst links den Titel, dann rechts den passenden Inhalt an.</div>
+      <div class="zuordnenSpalten">
+        <div class="zuordnenSpalte" id="zuordnenLinks">${linksHTML}</div>
+        <div class="zuordnenSpalte" id="zuordnenRechts">${rechtsHTML}</div>
+      </div>
+    </div>`;
+}
+
+function zuordnenAuswahl(seite, pairId){
+  if(!zuordnenAusgewaehlt){
+    zuordnenAusgewaehlt = { seite, pairId };
+    renderZuordnen();
+    return;
+  }
+  if(zuordnenAusgewaehlt.seite === seite){
+    zuordnenAusgewaehlt = { seite, pairId };
+    renderZuordnen();
+    return;
+  }
+  const treffer = zuordnenAusgewaehlt.pairId === pairId;
+  if(treffer){
+    zuordnenGeloest++;
+    zuordnenLinks = zuordnenLinks.map(l => (l && l.pairId === pairId) ? null : l);
+    zuordnenRechts = zuordnenRechts.map(r => (r && r.pairId === pairId) ? null : r);
+    zuordnenAusgewaehlt = null;
+    renderZuordnen();
+  }else{
+    const vorherigeSeite = zuordnenAusgewaehlt.seite;
+    const vorherigeId = zuordnenAusgewaehlt.pairId;
+    document.querySelector(`.zuordnenKarte[data-seite="${vorherigeSeite}"][data-pairid="${vorherigeId}"]`)?.classList.add('falsch');
+    document.querySelector(`.zuordnenKarte[data-seite="${seite}"][data-pairid="${pairId}"]`)?.classList.add('falsch');
+    setTimeout(()=>{ zuordnenAusgewaehlt = null; renderZuordnen(); }, 500);
+  }
 }
 
 /* ---------- Dokument/Flipchart scannen (Foto + OCR) ---------- */
