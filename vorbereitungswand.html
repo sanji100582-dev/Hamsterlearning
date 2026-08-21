@@ -452,12 +452,11 @@
   .navBtn.active{color:#8a5a1f; background:rgba(224,184,74,0.2);}
 
   /* ---------- Übersicht (Kacheln) ---------- */
-  .countdownBanner{
-    display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
-    background:linear-gradient(135deg, #f3d34a, #e8b84a); color:#4a3410; border-radius:12px;
-    padding:12px 14px; margin-bottom:16px; box-shadow:0 4px 12px rgba(90,70,40,0.15);
+  .countdownKreis{
+    width:42px; height:42px; border-radius:50%; border:2px solid var(--gelb-dk);
+    background:#fdf8ec; font-size:1.3rem; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; margin-bottom:12px; box-shadow:0 2px 6px rgba(90,70,40,0.15);
   }
-  .countdownText{font-weight:700; font-size:0.95rem;}
   .uebersichtGrid{
     display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:6px;
   }
@@ -717,6 +716,17 @@
     </div>
     <div class="modal-actions">
       <button class="cancel" onclick="document.getElementById('mehrDialog').close()">Schließen</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="countdownDialog">
+  <div class="modalInner">
+    <h2>🗓 Seminar-Countdown</h2>
+    <p id="countdownDetailText" style="font-size:0.95rem; margin:0 0 16px;"></p>
+    <button class="mehrItem" id="countdownCramBtn" onclick="starteCramModus()">🔁 Komplett auffrischen</button>
+    <div class="modal-actions">
+      <button class="cancel" onclick="document.getElementById('countdownDialog').close()">Schließen</button>
     </div>
   </div>
 </dialog>
@@ -1734,8 +1744,23 @@ function tageBisSeminar(datum){
 
 let cramModusAktiv = false;
 function starteCramModus(){
+  document.getElementById('countdownDialog').close();
   cramModusAktiv = true;
   document.getElementById('uebenWahlDialog').showModal();
+}
+
+function zeigeCountdownDetail(){
+  const sem = seminare.find(s=>s.id===aktuellesSeminarId);
+  if(!sem || !sem.datum) return;
+  const tage = tageBisSeminar(sem.datum);
+  let text;
+  if(tage > 1) text = `Noch ${tage} Tage bis zum Seminar.`;
+  else if(tage === 1) text = `Morgen ist dein Seminar!`;
+  else if(tage === 0) text = `Heute ist dein Seminar! 🎉`;
+  else text = `Das Seminar war vor ${Math.abs(tage)} Tag${Math.abs(tage)===1?'':'en'}.`;
+  document.getElementById('countdownDetailText').textContent = text;
+  document.getElementById('countdownCramBtn').style.display = tage >= 0 ? 'block' : 'none';
+  document.getElementById('countdownDialog').showModal();
 }
 
 function renderUebersicht(area){
@@ -1743,16 +1768,12 @@ function renderUebersicht(area){
   if(sem && sem.datum){
     const tage = tageBisSeminar(sem.datum);
     if(tage !== null){
-      let text;
-      if(tage > 1) text = `🗓 Noch ${tage} Tage bis zum Seminar`;
-      else if(tage === 1) text = `🗓 Morgen ist dein Seminar!`;
-      else if(tage === 0) text = `🎉 Heute ist dein Seminar!`;
-      else text = `Seminar war vor ${Math.abs(tage)} Tag${Math.abs(tage)===1?'':'en'}`;
-      const banner = document.createElement('div');
-      banner.className = 'countdownBanner';
-      banner.innerHTML = `<div class="countdownText">${text}</div>` +
-        (tage >= 0 ? `<button class="iconBtn" onclick="starteCramModus()" style="background:#fff;">🔁 Komplett auffrischen</button>` : '');
-      area.appendChild(banner);
+      const kreis = document.createElement('button');
+      kreis.className = 'countdownKreis';
+      kreis.textContent = tage === 0 ? '🎉' : '🗓';
+      kreis.title = 'Countdown zum Seminar';
+      kreis.onclick = zeigeCountdownDetail;
+      area.appendChild(kreis);
     }
   }
   const fachKarten = karten.filter(k => k.typ === 'fach');
