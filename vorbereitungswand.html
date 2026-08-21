@@ -100,6 +100,13 @@
   }
   }
   .tabRow{display:flex; gap:6px; overflow-x:auto; padding-bottom:6px; scrollbar-width:thin;}
+  .aktSeminarZeile{
+    display:flex; align-items:center; justify-content:space-between; width:100%;
+    background:rgba(0,0,0,0.04); border:1px solid rgba(0,0,0,0.1); border-radius:10px;
+    padding:9px 12px; font-size:0.9rem; font-weight:600; color:#5c4413;
+    cursor:pointer; font-family:var(--schrift-sans); margin-bottom:2px;
+  }
+  .aktSeminarWechsel{font-size:0.76rem; font-weight:600; color:#2f5c82; opacity:0.85;}
   .tab{
     flex:0 0 auto;
     padding:8px 14px;
@@ -262,6 +269,16 @@
   }
   .lernmarkerHinweis{font-size:0.72rem; color:#8a7f6a; margin:6px 0 6px;}
   .lernmarkerBtnRow{display:flex; gap:8px; flex-wrap:wrap;}
+  .sprachBtnRow{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+  .sprachBtn{
+    background:#fff6dd; border:1px solid var(--gelb-dk); color:#5c4413;
+    border-radius:8px; padding:9px 13px; font-size:0.85rem; cursor:pointer; font-family:var(--schrift-sans);
+  }
+  .sprachBtn.aufnahme{background:#c4593a; color:#fff; border-color:#c4593a; animation:pulsieren 1.4s infinite;}
+  .sprachZeit{font-size:0.85rem; color:#8a3520; font-weight:700;}
+  .sprachPlayer{display:flex; align-items:center; gap:8px; width:100%;}
+  .sprachPlayer audio{flex:1; height:36px;}
+  @keyframes pulsieren{ 0%,100%{opacity:1;} 50%{opacity:0.6;} }
   .lernmarkerBtn{
     background:#fff6dd; border:1px solid var(--gelb-dk); color:#5c4413;
     border-radius:8px; padding:7px 11px; font-size:0.78rem; cursor:pointer; font-family:var(--schrift-sans);
@@ -529,6 +546,7 @@
     text-align:left; padding:13px 14px; border-radius:10px; border:1px solid #d8cfa8;
     background:#fffdf5; color:#20241e; font-size:0.92rem; cursor:pointer; font-family:var(--schrift-sans);
   }
+  .mehrItem.aktuell{background:var(--gelb); border-color:var(--gelb-dk); font-weight:700;}
 
   /* ---------- Modal ---------- */
   dialog{
@@ -706,6 +724,7 @@
       <input type="file" id="scanInput" accept="image/*" capture="environment" style="display:none" onchange="scanFotoAusgewaehlt(event)">
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); openNeuesSeminarDialog();">📁 Neues Seminar</button>
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); openSeminarBearbeiten();">✏️ Aktuelles Seminar bearbeiten</button>
+      <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); oeffneSeminarWechsel();">🔀 Seminar wechseln</button>
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); loescheAktuellesSeminar();">🗑 Aktuelles Seminar löschen</button>
       <button class="mehrItem" onclick="loadTemplate('verhandeln_pm'); document.getElementById('mehrDialog').close();">⤓ Vorlage „Verhandeln im PM-Alltag" laden</button>
       <button class="mehrItem" onclick="zufallskarte(); document.getElementById('mehrDialog').close();">🎲 Zufallskarte</button>
@@ -716,6 +735,16 @@
     </div>
     <div class="modal-actions">
       <button class="cancel" onclick="document.getElementById('mehrDialog').close()">Schließen</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="seminarWechselDialog">
+  <div class="modalInner">
+    <h2>Seminar wechseln</h2>
+    <div class="mehrList" id="seminarWechselListe"></div>
+    <div class="modal-actions">
+      <button class="cancel" onclick="document.getElementById('seminarWechselDialog').close()">Schließen</button>
     </div>
   </div>
 </dialog>
@@ -902,6 +931,10 @@
         <button type="button" class="lernmarkerBtn" onclick="markiereAuswahlAlsLernkarte()">✨ Auswahl markieren</button>
         <button type="button" class="lernmarkerBtn" onclick="entferneMarkierungInAuswahl()">Markierung entfernen</button>
       </div>
+    </div>
+    <div class="field">
+      <label>Sprachnotiz (optional)</label>
+      <div id="sprachnotizBereich"></div>
     </div>
     <div class="modal-actions">
       <button class="danger" id="kDeleteBtn" style="display:none;" onclick="deleteKarte()">Löschen</button>
@@ -1091,6 +1124,73 @@ async function fotosFuerSeminarLoeschen(seminarId){
     return new Promise((resolve,reject)=>{
       const tx = db.transaction(FOTO_STORE, 'readwrite');
       const store = tx.objectStore(FOTO_STORE);
+      const req = store.openCursor();
+      req.onsuccess = (e)=>{
+        const cursor = e.target.result;
+        if(cursor){
+          if(cursor.value.seminarId === seminarId) cursor.delete();
+          cursor.continue();
+        }
+      };
+      tx.oncomplete = ()=>resolve();
+      tx.onerror = ()=>reject(tx.error);
+    });
+  }catch(e){ /* egal */ }
+}
+
+/* ---------- Sprachnotizen-Speicher (IndexedDB) – eigene Audio-Aufnahmen je Karte ---------- */
+const AUDIO_DB_NAME = 'vbwand_audio';
+const AUDIO_STORE = 'audio';
+function openAudioDB(){
+  return new Promise((resolve, reject)=>{
+    const req = indexedDB.open(AUDIO_DB_NAME, 1);
+    req.onupgradeneeded = (e)=>{
+      const db = e.target.result;
+      if(!db.objectStoreNames.contains(AUDIO_STORE)) db.createObjectStore(AUDIO_STORE, {keyPath:'id'});
+    };
+    req.onsuccess = ()=>resolve(req.result);
+    req.onerror = ()=>reject(req.error);
+  });
+}
+async function audioSpeichern(id, seminarId, blob){
+  try{
+    const db = await openAudioDB();
+    return new Promise((resolve,reject)=>{
+      const tx = db.transaction(AUDIO_STORE, 'readwrite');
+      tx.objectStore(AUDIO_STORE).put({id, seminarId, blob});
+      tx.oncomplete = ()=>resolve(true);
+      tx.onerror = ()=>reject(tx.error);
+    });
+  }catch(e){ console.error('Sprachnotiz speichern fehlgeschlagen', e); return false; }
+}
+async function audioLaden(id){
+  try{
+    const db = await openAudioDB();
+    return new Promise((resolve,reject)=>{
+      const tx = db.transaction(AUDIO_STORE, 'readonly');
+      const req = tx.objectStore(AUDIO_STORE).get(id);
+      req.onsuccess = ()=>resolve(req.result ? req.result.blob : null);
+      req.onerror = ()=>reject(req.error);
+    });
+  }catch(e){ return null; }
+}
+async function audioLoeschen(id){
+  try{
+    const db = await openAudioDB();
+    return new Promise((resolve,reject)=>{
+      const tx = db.transaction(AUDIO_STORE, 'readwrite');
+      tx.objectStore(AUDIO_STORE).delete(id);
+      tx.oncomplete = ()=>resolve();
+      tx.onerror = ()=>reject(tx.error);
+    });
+  }catch(e){ /* egal */ }
+}
+async function audiosFuerSeminarLoeschen(seminarId){
+  try{
+    const db = await openAudioDB();
+    return new Promise((resolve,reject)=>{
+      const tx = db.transaction(AUDIO_STORE, 'readwrite');
+      const store = tx.objectStore(AUDIO_STORE);
       const req = store.openCursor();
       req.onsuccess = (e)=>{
         const cursor = e.target.result;
@@ -1307,24 +1407,34 @@ async function speichereKartenListe(){
 function renderSeminarTabs(){
   const row = document.getElementById('tabRow');
   row.innerHTML = '';
+  if(!seminare.length){
+    const hinweis = document.createElement('div');
+    hinweis.className = 'aktSeminarZeile';
+    hinweis.innerHTML = `<span>Kein Seminar angelegt</span>`;
+    hinweis.onclick = () => document.getElementById('mehrDialog').showModal();
+    row.appendChild(hinweis);
+    return;
+  }
+  const aktuelles = seminare.find(s=>s.id===aktuellesSeminarId) || seminare[0];
+  const zeile = document.createElement('button');
+  zeile.className = 'aktSeminarZeile';
+  zeile.innerHTML = `<span>📁 ${escapeHTML(aktuelles.titel)}${aktuelles.datum ? ' · ' + aktuelles.datum : ''}</span>` +
+    (seminare.length > 1 ? '<span class="aktSeminarWechsel">Wechseln ▾</span>' : '');
+  zeile.onclick = () => oeffneSeminarWechsel();
+  row.appendChild(zeile);
+}
+
+function oeffneSeminarWechsel(){
+  const liste = document.getElementById('seminarWechselListe');
+  liste.innerHTML = '';
   seminare.forEach(s=>{
     const b = document.createElement('button');
-    b.className = 'tab' + (s.id === aktuellesSeminarId ? ' active' : '');
-    b.textContent = s.titel + (s.datum ? ' · ' + s.datum : '');
-    b.onclick = () => wechsleSeminar(s.id);
-    row.appendChild(b);
+    b.className = 'mehrItem' + (s.id === aktuellesSeminarId ? ' aktuell' : '');
+    b.textContent = s.titel + (s.datum ? ' · ' + s.datum : '') + (s.id === aktuellesSeminarId ? ' (aktuell)' : '');
+    b.onclick = () => { document.getElementById('seminarWechselDialog').close(); wechsleSeminar(s.id); };
+    liste.appendChild(b);
   });
-  const addBtn = document.createElement('button');
-  addBtn.className = 'tab add';
-  addBtn.textContent = '+ Seminar';
-  addBtn.onclick = () => openNeuesSeminarDialog();
-  row.appendChild(addBtn);
-
-  const tplBtn = document.createElement('button');
-  tplBtn.className = 'tab tpl';
-  tplBtn.textContent = '⤓ Vorlage „Verhandeln im PM-Alltag"';
-  tplBtn.onclick = () => loadTemplate('verhandeln_pm');
-  row.appendChild(tplBtn);
+  document.getElementById('seminarWechselDialog').showModal();
 }
 
 async function wechsleSeminar(id){
@@ -1403,6 +1513,7 @@ async function loescheAktuellesSeminar(){
   window.localStorage.removeItem(LS_PREFIX + 'lernstand_' + zuLoeschenId);
   window.localStorage.removeItem(LS_PREFIX + 'spielstand_' + zuLoeschenId);
   await fotosFuerSeminarLoeschen(zuLoeschenId);
+  await audiosFuerSeminarLoeschen(zuLoeschenId);
   aktuellesSeminarId = seminare.length ? seminare[0].id : null;
   karten = aktuellesSeminarId ? ((await storeGet('karten_' + aktuellesSeminarId)) || []) : [];
   await ladeLernstand(aktuellesSeminarId);
@@ -1981,6 +2092,20 @@ function openDetail(id){
       else img.style.display = 'none';
     });
   }
+  if(k.audioId){
+    const wrap = document.createElement('div');
+    wrap.className = 'sprachPlayer';
+    wrap.style.marginBottom = '14px';
+    wrap.innerHTML = `<span style="font-size:0.85rem;color:var(--text-muted);">🎙️</span>`;
+    body.appendChild(wrap);
+    audioLaden(k.audioId).then(blob=>{
+      if(!blob) return;
+      const audio = document.createElement('audio');
+      audio.controls = true;
+      audio.src = URL.createObjectURL(blob);
+      wrap.appendChild(audio);
+    });
+  }
   const abschnitte = parseAbschnitte(k.text);
   abschnitte.forEach(a=>{
     const sec = document.createElement('div');
@@ -2139,6 +2264,8 @@ function openKartenModal(id){
   editKarteId = id || null;
   const dlg = document.getElementById('kartenDialog');
   const delBtn = document.getElementById('kDeleteBtn');
+  sprachnotizNeuBlob = null;
+  sprachnotizGeloescht = false;
   if(id){
     const k = karten.find(x=>x.id===id);
     document.getElementById('kDialogTitel').textContent = 'Karte bearbeiten';
@@ -2148,6 +2275,7 @@ function openKartenModal(id){
     document.getElementById('kText').value = k.text;
     document.getElementById('kOrd').value = k.ord || 1;
     delBtn.style.display = 'inline-block';
+    sprachnotizBestehendId = k.audioId || null;
   }else{
     document.getElementById('kDialogTitel').textContent = 'Neue Karte';
     const vorTyp = (currentView === 'board') ? boardTyp : 'fach';
@@ -2157,7 +2285,9 @@ function openKartenModal(id){
     document.getElementById('kText').value = '';
     document.getElementById('kOrd').value = karten.filter(k=>k.typ==='ablauf').length + 1;
     delBtn.style.display = 'none';
+    sprachnotizBestehendId = null;
   }
+  renderSprachnotizBereich();
   updateOrdFieldVisibility();
   dlg.showModal();
 }
@@ -2165,6 +2295,96 @@ document.querySelectorAll('input[name="kTyp"]').forEach(r => r.addEventListener(
 function updateOrdFieldVisibility(){
   const typ = document.querySelector('input[name="kTyp"]:checked').value;
   document.getElementById('ordField').style.display = (typ === 'ablauf') ? 'block' : 'none';
+}
+
+/* ---------- Sprachnotiz aufnehmen (Karten-Editor) ---------- */
+let sprachnotizRecorder = null;
+let sprachnotizChunks = [];
+let sprachnotizNeuBlob = null;
+let sprachnotizBestehendId = null;
+let sprachnotizGeloescht = false;
+let sprachnotizStartzeit = null;
+let sprachnotizTimerId = null;
+
+function renderSprachnotizBereich(){
+  const box = document.getElementById('sprachnotizBereich');
+  if(sprachnotizNeuBlob){
+    const url = URL.createObjectURL(sprachnotizNeuBlob);
+    box.innerHTML = `
+      <div class="sprachPlayer">
+        <audio controls src="${url}"></audio>
+        <button type="button" class="sprachBtn" onclick="sprachnotizVerwerfen()">🗑</button>
+      </div>`;
+    return;
+  }
+  if(sprachnotizBestehendId && !sprachnotizGeloescht){
+    box.innerHTML = `<div class="sprachPlayer"><span>⏳ lädt…</span></div>`;
+    audioLaden(sprachnotizBestehendId).then(blob=>{
+      if(!blob) return;
+      const url = URL.createObjectURL(blob);
+      box.innerHTML = `
+        <div class="sprachPlayer">
+          <audio controls src="${url}"></audio>
+          <button type="button" class="sprachBtn" onclick="sprachnotizVerwerfen()">🗑</button>
+        </div>`;
+    });
+    return;
+  }
+  box.innerHTML = `
+    <div class="sprachBtnRow">
+      <button type="button" class="sprachBtn" onclick="sprachnotizAufnahmeStarten()">🎙️ Aufnehmen</button>
+    </div>`;
+}
+
+function sprachnotizVerwerfen(){
+  sprachnotizNeuBlob = null;
+  sprachnotizGeloescht = true;
+  sprachnotizBestehendId = null;
+  renderSprachnotizBereich();
+}
+
+async function sprachnotizAufnahmeStarten(){
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    zeigeToast('Aufnahme wird von diesem Browser nicht unterstützt');
+    return;
+  }
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    sprachnotizChunks = [];
+    const mimeKandidaten = ['audio/mp4', 'audio/webm', 'audio/webm;codecs=opus'];
+    const mime = mimeKandidaten.find(m => window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(m));
+    sprachnotizRecorder = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
+    sprachnotizRecorder.ondataavailable = (e) => { if(e.data.size > 0) sprachnotizChunks.push(e.data); };
+    sprachnotizRecorder.onstop = () => {
+      sprachnotizNeuBlob = new Blob(sprachnotizChunks, { type: sprachnotizRecorder.mimeType || 'audio/webm' });
+      sprachnotizGeloescht = false;
+      stream.getTracks().forEach(t => t.stop());
+      renderSprachnotizBereich();
+    };
+    sprachnotizRecorder.start();
+    sprachnotizStartzeit = Date.now();
+    const box = document.getElementById('sprachnotizBereich');
+    box.innerHTML = `
+      <div class="sprachBtnRow">
+        <button type="button" class="sprachBtn aufnahme" onclick="sprachnotizAufnahmeStoppen()">⏹ Stopp</button>
+        <span class="sprachZeit" id="sprachnotizZeit">0:00</span>
+      </div>`;
+    sprachnotizTimerId = setInterval(()=>{
+      const sek = Math.floor((Date.now() - sprachnotizStartzeit)/1000);
+      const anzeige = document.getElementById('sprachnotizZeit');
+      if(anzeige) anzeige.textContent = Math.floor(sek/60) + ':' + (sek%60).toString().padStart(2,'0');
+    }, 500);
+  }catch(e){
+    console.error(e);
+    zeigeToast('Zugriff aufs Mikrofon nicht möglich – bitte Berechtigung prüfen');
+  }
+}
+
+function sprachnotizAufnahmeStoppen(){
+  clearInterval(sprachnotizTimerId);
+  if(sprachnotizRecorder && sprachnotizRecorder.state !== 'inactive'){
+    sprachnotizRecorder.stop();
+  }
 }
 
 async function saveKarte(){
@@ -2175,11 +2395,21 @@ async function saveKarte(){
   const text = document.getElementById('kText').value.trim();
   const ord = parseInt(document.getElementById('kOrd').value) || 1;
   if(!titel){ zeigeToast('Bitte einen Titel eingeben'); return; }
+
+  let audioId = sprachnotizGeloescht ? null : sprachnotizBestehendId;
+  if(sprachnotizNeuBlob){
+    if(sprachnotizBestehendId) await audioLoeschen(sprachnotizBestehendId);
+    audioId = 'audio_' + Date.now();
+    await audioSpeichern(audioId, aktuellesSeminarId, sprachnotizNeuBlob);
+  }else if(sprachnotizGeloescht && sprachnotizBestehendId){
+    await audioLoeschen(sprachnotizBestehendId);
+  }
+
   if(editKarteId){
     const k = karten.find(x=>x.id===editKarteId);
-    k.typ = typ; k.titel = titel; k.gruppe = gruppe; k.text = text; k.ord = ord;
+    k.typ = typ; k.titel = titel; k.gruppe = gruppe; k.text = text; k.ord = ord; k.audioId = audioId || undefined;
   }else{
-    karten.push({ id:'k_'+Date.now(), typ, titel, gruppe, text, ord });
+    karten.push({ id:'k_'+Date.now(), typ, titel, gruppe, text, ord, audioId: audioId || undefined });
   }
   await speichereKartenListe();
   document.getElementById('kartenDialog').close();
@@ -2190,6 +2420,7 @@ async function deleteKarte(){
   if(!editKarteId) return;
   const k = karten.find(x=>x.id===editKarteId);
   if(k && k.bildId) await fotoLoeschen(k.bildId);
+  if(k && k.audioId) await audioLoeschen(k.audioId);
   karten = karten.filter(k=>k.id !== editKarteId);
   await speichereKartenListe();
   document.getElementById('kartenDialog').close();
