@@ -280,7 +280,8 @@
     font-size:0.9rem; line-height:1.5; color:#3b332a;
   }
   .lernLuecke{
-    background:#e0b84a; color:#e0b84a; border-radius:4px; letter-spacing:1px;
+    display:inline-block; min-width:70px; border-bottom:2.5px solid var(--gelb-dk);
+    height:1.1em; vertical-align:text-bottom; margin:0 2px;
   }
   .uebungAntwortBtn{
     display:block; width:100%; padding:14px; border-radius:10px; border:none;
@@ -2004,7 +2005,7 @@ function srsBewerten(k, gut){
   faellig.setDate(faellig.getDate() + tage);
   k.srsBox = neueBox;
   k.srsFaellig = faellig.toISOString().slice(0,10);
-  k.geuebt = neueBox >= 3; // für Fortschrittsanzeige/Häkchen: ab Box 3 gilt eine Karte als "sitzt"
+  k.geuebt = neueBox >= 1; // für Fortschrittsanzeige/Häkchen: schon nach der ersten richtigen Antwort sichtbares Feedback
 }
 
 /* ---------- Lernstand je einzelner Lerneinheit (nicht mehr nur je ganzer Karte) ---------- */
@@ -2145,8 +2146,7 @@ function maskierteVorschauHTML(abschnitt, snippetText){
   const klar = klartext(abschnitt.inhalt);
   const escInhalt = escapeHTML(klar);
   const escSnippet = escapeHTML(snippetText);
-  const maskeLaenge = Math.min(Math.max(snippetText.length, 4), 24);
-  const maske = `<span class="lernLuecke">${'▓'.repeat(maskeLaenge)}</span>`;
+  const maske = `<span class="lernLuecke"></span>`;
   return escInhalt.split(escSnippet).join(maske);
 }
 
@@ -2172,12 +2172,14 @@ function renderUebungKarte(){
   stopVorlesen();
   const fortschritt = Math.round((uebungIdx / uebungListe.length) * 100);
   let vorschauHTML = '';
+  let aufgabenHinweis = 'Versuch dich zu erinnern, bevor du die Antwort aufdeckst.';
   if(!el.ganzeKarte){
     const abschnitt = findeAbschnittFuerSnippet(k, el.text);
     if(abschnitt.label){
       vorschauHTML += `<div class="detailLabel">${escapeHTML(abschnitt.label)}</div>`;
     }
     vorschauHTML += `<div class="detailBody">${maskierteVorschauHTML(abschnitt, el.text)}</div>`;
+    aufgabenHinweis = '🔤 Lückentext: Was gehört an die unterstrichene Stelle? Erst überlegen, dann Antwort aufdecken.';
   }
   ov.innerHTML = `
     <div class="uebungTop">
@@ -2189,8 +2191,8 @@ function renderUebungKarte(){
       <div class="uebungKarte">
         <span class="uebungTypBadge" style="background:${k.typ==='fach'?'var(--gelb)':k.typ==='ablauf'?'var(--blau)':'var(--gruen)'}">${TYP_LABEL[k.typ]}${k.gruppe ? ' · ' + k.gruppe : ''}</span>
         <h3 class="uebungTitel">${escapeHTML((k.typ==='ablauf' && k.ord ? k.ord+'. ' : '') + k.titel)}</h3>
+        <div class="uebungHinweis">${aufgabenHinweis}</div>
         ${vorschauHTML ? `<div class="uebungVorschau">${vorschauHTML}</div>` : ''}
-        <div class="uebungHinweis">Versuch dich zu erinnern, bevor du die Antwort aufdeckst.</div>
         <div id="uebungAntwort">
           <button class="uebungAntwortBtn" onclick="uebungAntwortZeigen()">👁️ Antwort zeigen</button>
         </div>
