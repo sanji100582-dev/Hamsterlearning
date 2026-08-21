@@ -131,6 +131,20 @@
     gap:34px 20px;
     padding:10px 6px 0;
   }
+  /* ---------- Listenansicht (durchgehendes Lesen in empfohlener Reihenfolge) ---------- */
+  .listenAnsicht{display:flex; flex-direction:column; gap:0; padding-top:6px;}
+  .listenBlock{
+    background:#fffdf8; border-radius:12px; padding:16px 16px 14px; margin-bottom:14px;
+    box-shadow:0 3px 10px rgba(90,70,40,0.1); border-left:5px solid var(--gelb-dk);
+  }
+  .listenBlock.ablauf{border-left-color:var(--blau-dk);}
+  .listenBlock.reflexion{border-left-color:var(--gruen-dk);}
+  .listenBlockKopf{margin-bottom:10px;}
+  .listenBlockKopf h3{
+    font-family:var(--schrift-hand); font-size:1.15rem; margin:0 0 6px; color:var(--text-main);
+  }
+  .listenBlockMeta{display:flex; gap:6px; flex-wrap:wrap;}
+  .listenBlockBody{padding-top:2px;}
   .karte{
     position:relative;
     padding:22px 16px 16px;
@@ -296,12 +310,16 @@
   .luecktextFeedback.falsch{background:#f7ded3; color:#8a3520;}
 
   /* ---------- Zuordnen ---------- */
-  .zuordnenSpalten{display:flex; gap:10px;}
-  .zuordnenSpalte{flex:1; display:flex; flex-direction:column; gap:8px;}
+  .zuordnenSpalten{display:flex; gap:10px; align-items:flex-start;}
+  .zuordnenSpalte{
+    flex:1; display:flex; flex-direction:column; gap:8px;
+    max-height:58vh; overflow-y:auto; padding-right:2px;
+  }
   .zuordnenKarte{
     padding:12px 10px; border-radius:10px; border:1.5px solid rgba(0,0,0,0.15);
-    background:#fffdf8; color:var(--text-main); font-size:0.82rem; line-height:1.3;
+    background:#fffdf8; color:var(--text-main); font-size:0.82rem; line-height:1.32;
     cursor:pointer; text-align:left; font-family:var(--schrift-sans); min-height:52px;
+    flex:0 0 auto;
   }
   .zuordnenKarte.ausgewaehlt{border-color:var(--gelb-dk); background:var(--gelb); font-weight:600;}
   .zuordnenKarte.richtig{background:#d6efdb; border-color:#3f8a58; color:#1f5c34; cursor:default;}
@@ -568,6 +586,18 @@
   .streakZeile{
     font-size:0.95rem; font-weight:700; color:#8a5a1f; margin-bottom:10px;
   }
+  .levelZeile{margin-bottom:12px;}
+  .levelKopf{
+    display:flex; justify-content:space-between; font-size:0.85rem; font-weight:600;
+    color:#4a4a3a; margin-bottom:5px;
+  }
+  .abzeichenReihe{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:4px;}
+  .abzeichenChip{
+    width:38px; height:38px; border-radius:50%; background:#fff6dd; border:2px solid var(--gelb-dk);
+    display:flex; align-items:center; justify-content:center; font-size:1.1rem;
+  }
+  .abzeichenChip.gesperrt{background:#e6dfc4; border-color:#d8cfa8; opacity:0.4; filter:grayscale(1);}
+  .abzeichenLabel{font-size:0.72rem; color:var(--text-muted); margin-bottom:16px;}
   .aktivitaetStreifen{
     display:flex; flex-wrap:wrap; gap:3px; margin-bottom:16px;
   }
@@ -868,6 +898,7 @@ let aktuellesSeminarId = null;
 let karten = [];
 let modus = 'visuell';
 let currentView = 'uebersicht';
+let ansichtsStil = 'pinnwand'; // 'pinnwand' oder 'liste'
 let boardTyp = 'fach';
 let boardGruppe = null;
 let suchbegriff = '';
@@ -1051,6 +1082,7 @@ async function init(){
     aktuellesSeminarId = (last && seminare.find(s=>s.id===last)) ? last : seminare[0].id;
     karten = (await storeGet('karten_' + aktuellesSeminarId)) || [];
     await ladeLernstand(aktuellesSeminarId);
+    await ladeSpielstand(aktuellesSeminarId);
   }
   const letzterBereich = await storeGet('letzterBereich');
   if(letzterBereich === 'seminare'){
@@ -1211,6 +1243,7 @@ async function wechsleSeminar(id){
   await storeSet('letztesSeminar', id);
   karten = (await storeGet('karten_' + id)) || [];
   await ladeLernstand(id);
+  await ladeSpielstand(id);
   renderSeminarTabs();
   renderBoard();
 }
@@ -1239,10 +1272,12 @@ async function loescheAktuellesSeminar(){
   await storeSet('seminare', seminare);
   window.localStorage.removeItem(LS_PREFIX + 'karten_' + zuLoeschenId);
   window.localStorage.removeItem(LS_PREFIX + 'lernstand_' + zuLoeschenId);
+  window.localStorage.removeItem(LS_PREFIX + 'spielstand_' + zuLoeschenId);
   await fotosFuerSeminarLoeschen(zuLoeschenId);
   aktuellesSeminarId = seminare.length ? seminare[0].id : null;
   karten = aktuellesSeminarId ? ((await storeGet('karten_' + aktuellesSeminarId)) || []) : [];
   await ladeLernstand(aktuellesSeminarId);
+    await ladeSpielstand(aktuellesSeminarId);
   await storeSet('letztesSeminar', aktuellesSeminarId);
   currentView = 'uebersicht';
   renderSeminarTabs();
@@ -1329,6 +1364,26 @@ async function zeigeFortschritt(){
     if(e.geuebt) gruppen[key].sitzt++;
   });
   let html = '';
+  const lvl = berechneLevel(spielstand.punkte || 0);
+  const heute = heuteISO();
+  const punkteHeute = (spielstand.tagesPunkte && spielstand.tagesPunkte[heute]) || 0;
+  const tageszielPct = Math.min(100, Math.round((punkteHeute / TAGESZIEL_PUNKTE) * 100));
+  html += `<div class="levelZeile">
+    <div class="levelKopf"><span>🏆 Level ${lvl.level}</span><span>${spielstand.punkte || 0} Punkte</span></div>
+    <div class="fortschrittBar"><div style="width:${Math.round(lvl.progress*100)}%; background:#c9a521;"></div></div>
+  </div>`;
+  html += `<div class="levelZeile">
+    <div class="levelKopf"><span>🎯 Tagesziel</span><span>${punkteHeute}/${TAGESZIEL_PUNKTE} Punkte</span></div>
+    <div class="fortschrittBar"><div style="width:${tageszielPct}%; background:#3f8a58;"></div></div>
+  </div>`;
+  const freigeschaltet = ABZEICHEN_DEFS.filter(d => (spielstand.abzeichen||[]).includes(d.id));
+  html += `<div class="abzeichenReihe">` +
+    ABZEICHEN_DEFS.map(d => {
+      const frei = (spielstand.abzeichen||[]).includes(d.id);
+      return `<div class="abzeichenChip${frei ? '' : ' gesperrt'}" title="${escapeHTML(d.titel)}">${d.icon}</div>`;
+    }).join('') +
+    `</div>
+  <div class="abzeichenLabel">${freigeschaltet.length}/${ABZEICHEN_DEFS.length} Abzeichen freigeschaltet</div>`;
   html += `<div class="streakZeile">🔥 <strong>${streak}</strong> Tag${streak===1?'':'e'} in Folge geübt</div>`;
   html += aktivitaetsStreifenHTML(aktivitaet);
   if(gesamtFaellig > 0){
@@ -1380,8 +1435,9 @@ function renderBoard(){
     area.appendChild(leer);
     return;
   }
-  if(modus === 'visuell') renderVisuell(area, liste);
-  else renderAuditiv(area, liste);
+  if(modus === 'auditiv') renderAuditiv(area, liste);
+  else if(ansichtsStil === 'liste') renderListenansicht(area, liste);
+  else renderVisuell(area, liste);
 }
 
 function renderBoardHeader(area, imSortierModus){
@@ -1393,13 +1449,20 @@ function renderBoardHeader(area, imSortierModus){
       <button class="backBtn" onclick="sortierAbbrechen()">✕ Abbrechen</button>
       <h2>Sortieren</h2>`;
   }else{
+    const listeAktiv = ansichtsStil === 'liste';
     header.innerHTML = `
       <button class="backBtn" onclick="zurueckZurUebersicht()">← Übersicht</button>
       <h2>${escapeHTML(gruppenLabel)}</h2>
+      <button class="addBtn" onclick="toggleAnsichtsStil()" title="${listeAktiv ? 'Zur Pinnwand' : 'Als Liste lesen (empfohlene Reihenfolge)'}" style="background:#eaf4fb;color:#2f5c82;font-size:1rem;">${listeAktiv ? '📌' : '📋'}</button>
       <button class="addBtn" onclick="sortierStarten()" title="Reihenfolge ändern" style="background:#eaf4fb;color:#2f5c82;font-size:1rem;">🔀</button>
       <button class="addBtn" onclick="openKartenModal()" title="Karte hinzufügen">+</button>`;
   }
   area.appendChild(header);
+}
+
+function toggleAnsichtsStil(){
+  ansichtsStil = (ansichtsStil === 'liste') ? 'pinnwand' : 'liste';
+  renderBoard();
 }
 
 /* ---------- Sortiermodus (Karten per Ziehen umordnen) ---------- */
@@ -1607,6 +1670,62 @@ function renderUebersicht(area){
     nebenReihe.appendChild(klein);
     area.appendChild(nebenReihe);
   }
+}
+
+function renderListenansicht(area, liste){
+  const wrap = document.createElement('div');
+  wrap.className = 'listenAnsicht';
+  liste.forEach(k=>{
+    const block = document.createElement('div');
+    block.className = 'listenBlock ' + k.typ;
+    const kopf = document.createElement('div');
+    kopf.className = 'listenBlockKopf';
+    const titelText = (k.typ === 'ablauf' && k.ord ? k.ord + '. ' : '') + k.titel;
+    kopf.innerHTML = `
+      <h3>${escapeHTML(titelText)}</h3>
+      <div class="listenBlockMeta">
+        <span class="detailBadge ${k.typ}">${TYP_LABEL[k.typ]}</span>
+        ${k.gruppe ? `<span class="detailBadge gruppe">${escapeHTML(k.gruppe)}</span>` : ''}
+      </div>`;
+    kopf.style.cursor = 'pointer';
+    kopf.onclick = () => openDetail(k.id);
+    block.appendChild(kopf);
+
+    const body = document.createElement('div');
+    body.className = 'listenBlockBody';
+    const abschnitte = parseAbschnitte(k.text);
+    abschnitte.forEach(a=>{
+      const sec = document.createElement('div');
+      sec.className = 'detailSection';
+      if(a.label){
+        const lab = document.createElement('div');
+        lab.className = 'detailLabel';
+        lab.textContent = a.label;
+        sec.appendChild(lab);
+      }
+      const bod = document.createElement('div');
+      const zeilen = a.inhalt.split('\n').filter(z=>z.trim());
+      const istListe = zeilen.length > 1 && zeilen.every(z => /^\d+\.\s/.test(z.trim()));
+      if(istListe){
+        bod.className = 'detailBody strategie';
+        const ol = document.createElement('ol');
+        zeilen.forEach(z=>{
+          const li = document.createElement('li');
+          li.innerHTML = formatiereMitLernmarkern(z.replace(/^\d+\.\s*/, ''));
+          ol.appendChild(li);
+        });
+        bod.appendChild(ol);
+      }else{
+        bod.className = 'detailBody';
+        bod.innerHTML = formatiereMitLernmarkern(a.inhalt);
+      }
+      sec.appendChild(bod);
+      body.appendChild(sec);
+    });
+    block.appendChild(body);
+    wrap.appendChild(block);
+  });
+  area.appendChild(wrap);
 }
 
 function renderVisuell(area, liste){
@@ -1908,11 +2027,12 @@ async function deleteKarte(){
 
 /* ---------- Export / Import ---------- */
 function exportJSON(){
-  const data = { seminare, kartenProSeminar:{}, lernstandProSeminar:{} };
+  const data = { seminare, kartenProSeminar:{}, lernstandProSeminar:{}, spielstandProSeminar:{} };
   (async ()=>{
     for(const s of seminare){
       data.kartenProSeminar[s.id] = (s.id === aktuellesSeminarId) ? karten : (await storeGet('karten_'+s.id)) || [];
       data.lernstandProSeminar[s.id] = (s.id === aktuellesSeminarId) ? lernstand : (await storeGet('lernstand_'+s.id)) || {};
+      data.spielstandProSeminar[s.id] = (s.id === aktuellesSeminarId) ? spielstand : (await storeGet('spielstand_'+s.id)) || {};
     }
     const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
     const url = URL.createObjectURL(blob);
@@ -1940,10 +2060,14 @@ function importJSON(evt){
       for(const sid in (data.lernstandProSeminar || {})){
         await storeSet('lernstand_' + sid, data.lernstandProSeminar[sid]);
       }
+      for(const sid in (data.spielstandProSeminar || {})){
+        await storeSet('spielstand_' + sid, data.spielstandProSeminar[sid]);
+      }
       if(seminare.length){
         aktuellesSeminarId = seminare[0].id;
         karten = data.kartenProSeminar[aktuellesSeminarId] || [];
         await ladeLernstand(aktuellesSeminarId);
+        await ladeSpielstand(aktuellesSeminarId);
         await storeSet('letztesSeminar', aktuellesSeminarId);
       }
       currentView = 'uebersicht';
@@ -2000,6 +2124,8 @@ async function loadTemplate(key){
   await speichereKartenListe();
   lernstand = {};
   await speichereLernstandListe();
+  spielstand = { punkte:0, richtigGesamt:0, antwortenGesamt:0, abzeichen:[], tagesPunkte:{} };
+  await speichereSpielstand();
   currentView = 'uebersicht';
   renderSeminarTabs();
   renderBoard();
@@ -2016,6 +2142,73 @@ const SRS_INTERVALLE = [0, 1, 3, 7, 16]; // Tage bis zur nächsten Fälligkeit j
 
 function heuteISO(){
   return new Date().toISOString().slice(0,10);
+}
+
+/* ---------- Spielelemente: Punkte, Level, Abzeichen, Tagesziel (je Seminar/Kurs getrennt) ---------- */
+let spielstand = { punkte:0, richtigGesamt:0, antwortenGesamt:0, abzeichen:[], tagesPunkte:{} };
+const TAGESZIEL_PUNKTE = 20;
+const LEVEL_SCHWELLEN = [0,50,120,220,350,520,750,1050,1450,1950,2600,3400,4400,5600,7000];
+
+const ABZEICHEN_DEFS = [
+  { id:'erste_schritte', titel:'Erste Schritte', icon:'🌱', pruefe: s => (s.antwortenGesamt||0) >= 1 },
+  { id:'zehn_richtig', titel:'Warmgelaufen', icon:'🔥', pruefe: s => (s.richtigGesamt||0) >= 10 },
+  { id:'fuenfzig_richtig', titel:'Auf Kurs', icon:'⭐', pruefe: s => (s.richtigGesamt||0) >= 50 },
+  { id:'hundert_richtig', titel:'Profi', icon:'🏆', pruefe: s => (s.richtigGesamt||0) >= 100 },
+  { id:'level_5', titel:'Level 5', icon:'🥉', pruefe: s => berechneLevel(s.punkte).level >= 5 },
+  { id:'level_10', titel:'Level 10', icon:'🥈', pruefe: s => berechneLevel(s.punkte).level >= 10 },
+  { id:'streak_7', titel:'7-Tage-Streak', icon:'📅', pruefe: (s, streak) => streak >= 7 },
+];
+
+function berechneLevel(punkte){
+  let level = 1;
+  for(let i=0;i<LEVEL_SCHWELLEN.length;i++){
+    if(punkte >= LEVEL_SCHWELLEN[i]) level = i+1;
+  }
+  const aktuelleSchwelle = LEVEL_SCHWELLEN[level-1];
+  const naechsteSchwelle = LEVEL_SCHWELLEN[level] !== undefined ? LEVEL_SCHWELLEN[level] : (aktuelleSchwelle + 1000);
+  const progress = naechsteSchwelle > aktuelleSchwelle ? Math.min(1, (punkte - aktuelleSchwelle) / (naechsteSchwelle - aktuelleSchwelle)) : 1;
+  return { level, aktuelleSchwelle, naechsteSchwelle, progress };
+}
+
+async function ladeSpielstand(seminarId){
+  const leer = { punkte:0, richtigGesamt:0, antwortenGesamt:0, abzeichen:[], tagesPunkte:{} };
+  spielstand = seminarId ? ((await storeGet('spielstand_' + seminarId)) || leer) : leer;
+  if(!spielstand.abzeichen) spielstand.abzeichen = [];
+  if(!spielstand.tagesPunkte) spielstand.tagesPunkte = {};
+}
+async function speichereSpielstand(){
+  if(!aktuellesSeminarId) return;
+  await storeSet('spielstand_' + aktuellesSeminarId, spielstand);
+}
+
+async function vergebePunkte(anzahl, warRichtig){
+  const punkteVorher = spielstand.punkte;
+  spielstand.punkte += anzahl;
+  spielstand.antwortenGesamt = (spielstand.antwortenGesamt||0) + 1;
+  if(warRichtig) spielstand.richtigGesamt = (spielstand.richtigGesamt||0) + 1;
+  const heute = heuteISO();
+  spielstand.tagesPunkte[heute] = (spielstand.tagesPunkte[heute]||0) + anzahl;
+  const vorherLevel = berechneLevel(punkteVorher).level;
+  const neuLevel = berechneLevel(spielstand.punkte).level;
+  await speichereSpielstand();
+  if(neuLevel > vorherLevel){
+    setTimeout(()=> zeigeToast(`🎉 Level ${neuLevel} erreicht!`), 400);
+  }
+  await pruefeAbzeichen();
+}
+
+async function pruefeAbzeichen(){
+  const aktivitaet = (await storeGet('aktivitaet')) || {};
+  const streak = berechneStreak(aktivitaet);
+  let neu = false;
+  ABZEICHEN_DEFS.forEach(def=>{
+    if(!spielstand.abzeichen.includes(def.id) && def.pruefe(spielstand, streak)){
+      spielstand.abzeichen.push(def.id);
+      neu = true;
+      setTimeout(()=> zeigeToast(`🏅 Abzeichen freigeschaltet: ${def.titel}`), 900);
+    }
+  });
+  if(neu) await speichereSpielstand();
 }
 
 function istFaellig(k){
@@ -2313,6 +2506,7 @@ async function uebungBewerten(gut){
     const k = karten.find(x => x.id === el.karteId);
     if(k){ k.srsBox = el.srsBox; k.srsFaellig = el.srsFaellig; k.geuebt = el.geuebt; speichereKartenListe(); }
   }
+  await vergebePunkte(gut ? 10 : 2, gut);
   uebungIdx++;
   renderUebungKarte();
 }
@@ -2468,6 +2662,7 @@ function quizAntworten(i){
   if(richtig) quizRichtig++;
   const k = karten.find(x=>x.id===frage.karte.id);
   if(k){ srsBewerten(k, richtig); speichereKartenListe(); markiereAktivitaetHeute(); }
+  vergebePunkte(richtig ? 10 : 2, richtig);
   document.querySelectorAll('#quizOptionen .quizOption').forEach((btn,idx)=>{
     btn.disabled = true;
     if(idx === frage.richtig) btn.classList.add('richtig');
@@ -2496,11 +2691,15 @@ let zuordnenRechts = [];
 let zuordnenAusgewaehlt = null;
 let zuordnenGeloest = 0;
 
+function kurzTeaser(text, laenge){
+  return teaserText(text);
+}
+
 function starteZuordnen(){
   const liste = suchbegriff.trim() ? sucheGefiltert() : (currentView === 'uebersicht' ? karten.filter(k=>k.typ==='fach') : gefilterteKarten());
   if(liste.length < 3){ zeigeToast('Mindestens 3 Karten nötig zum Zuordnen'); return; }
   const auswahl = mische(liste).slice(0, Math.min(6, liste.length));
-  zuordnenPaare = auswahl.map((k, i) => ({ id: 'p' + i, titel: k.titel, inhalt: teaserText(k.text) }));
+  zuordnenPaare = auswahl.map((k, i) => ({ id: 'p' + i, titel: k.titel, inhalt: kurzTeaser(k.text) }));
   zuordnenLinks = zuordnenPaare.map(p => ({ pairId: p.id, text: p.titel }));
   zuordnenRechts = mische(zuordnenPaare.map(p => ({ pairId: p.id, text: p.inhalt })));
   zuordnenAusgewaehlt = null;
@@ -2571,6 +2770,7 @@ function zuordnenAuswahl(seite, pairId){
     zuordnenLinks = zuordnenLinks.map(l => (l && l.pairId === pairId) ? null : l);
     zuordnenRechts = zuordnenRechts.map(r => (r && r.pairId === pairId) ? null : r);
     zuordnenAusgewaehlt = null;
+    vergebePunkte(8, true);
     renderZuordnen();
   }else{
     const vorherigeSeite = zuordnenAusgewaehlt.seite;
