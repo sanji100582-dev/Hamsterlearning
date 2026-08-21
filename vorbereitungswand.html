@@ -29,6 +29,31 @@
     --pin-metall:#d9d9d9;
     --schrift-hand: -apple-system, BlinkMacSystemFont, 'SF Pro Rounded', 'Segoe UI Rounded', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     --schrift-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --dialog-bg:#fbf6e6;
+    --dialog-text:#20241e;
+    --header-bg-1:rgba(247,241,227,0.98);
+    --header-bg-2:rgba(247,241,227,0.9);
+    --karte-bg:#fffdf8;
+  }
+  :root[data-theme="dark"]{
+    --filz-1:#242019;
+    --filz-2:#1c1914;
+    --filz-3:#161310;
+    --gelb:#8a6f2e;
+    --gelb-dk:#c9a521;
+    --blau:#3a5a72;
+    --blau-dk:#6fa8cc;
+    --gruen:#3d6b4d;
+    --gruen-dk:#7ec18f;
+    --tinte:#f1ede4;
+    --text-main:#e8e2d4;
+    --text-muted:#a89c80;
+    --pin-metall:#8a8a8a;
+    --dialog-bg:#2b2620;
+    --dialog-text:#f1ede4;
+    --header-bg-1:rgba(28,25,20,0.98);
+    --header-bg-2:rgba(28,25,20,0.9);
+    --karte-bg:#332c22;
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html{overflow-x:hidden; width:100%;}
@@ -47,7 +72,7 @@
   /* ---------- Header / Tabs ---------- */
   header{
     position:sticky; top:0; z-index:20;
-    background:linear-gradient(180deg, rgba(247,241,227,0.98), rgba(247,241,227,0.9));
+    background:linear-gradient(180deg, var(--header-bg-1), var(--header-bg-2));
     backdrop-filter:blur(4px);
     border-bottom:2px solid rgba(0,0,0,0.06);
     padding:10px 12px 8px;
@@ -67,7 +92,7 @@
   }
   .infoBtn{
     margin-left:auto; width:30px; height:30px; border-radius:50%; border:1px solid rgba(0,0,0,0.15);
-    background:#fffdf8; color:#7a5c2e; font-size:0.85rem; cursor:pointer; flex:0 0 auto;
+    background:var(--karte-bg); color:#7a5c2e; font-size:0.85rem; cursor:pointer; flex:0 0 auto;
   }
 
   /* ---------- Splash Screen ---------- */
@@ -141,7 +166,7 @@
   /* ---------- Listenansicht (durchgehendes Lesen in empfohlener Reihenfolge) ---------- */
   .listenAnsicht{display:flex; flex-direction:column; gap:0; padding-top:6px;}
   .listenBlock{
-    background:#fffdf8; border-radius:12px; padding:16px 16px 14px; margin-bottom:14px;
+    background:var(--karte-bg); border-radius:12px; padding:16px 16px 14px; margin-bottom:14px;
     box-shadow:0 3px 10px rgba(90,70,40,0.1); border-left:5px solid var(--gelb-dk);
   }
   .listenBlock.ablauf{border-left-color:var(--blau-dk);}
@@ -262,7 +287,7 @@
     font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;
     color:#6b551a; margin-bottom:4px;
   }
-  .detailBody{font-size:0.95rem; line-height:1.5; white-space:pre-wrap; color:#20241e;}
+  .detailBody{font-size:0.95rem; line-height:1.5; white-space:pre-wrap; color:var(--dialog-text);}
   .lernMarker{
     background:linear-gradient(180deg, transparent 55%, var(--gelb) 55%);
     padding:0 1px; border-radius:2px; font-weight:600;
@@ -287,14 +312,14 @@
   .reflexionLabel{font-size:0.82rem; font-weight:700; color:#5c4413; margin-bottom:8px;}
   .reflexionTextarea{
     width:100%; min-height:70px; padding:10px; border-radius:8px; border:1.5px solid rgba(0,0,0,0.12);
-    background:#fffdf8; color:var(--text-main); font-size:0.88rem; font-family:var(--schrift-sans);
+    background:var(--karte-bg); color:var(--text-main); font-size:0.88rem; font-family:var(--schrift-sans);
     box-sizing:border-box; margin-bottom:8px; resize:vertical;
   }
   .reflexionGespeichert{
     text-align:center; font-size:0.9rem; font-weight:600; color:#1f5c34; padding:10px;
   }
   .tagebuchEintrag{
-    background:#fffdf8; border:1px solid rgba(0,0,0,0.08); border-radius:10px;
+    background:var(--karte-bg); border:1px solid rgba(0,0,0,0.08); border-radius:10px;
     padding:12px 14px; margin-bottom:10px;
   }
   .tagebuchKopf{
@@ -324,7 +349,7 @@
   .uebungCloseBtn{background:rgba(0,0,0,0.06); border:none; color:var(--text-main); width:32px; height:32px; border-radius:50%; font-size:1rem; cursor:pointer;}
   .uebungCardWrap{flex:1; display:flex; flex-direction:column; justify-content:center; overflow-y:auto; padding:10px 2px 20px;}
   .uebungKarte{
-    background:#fffdf8; color:var(--tinte); border-radius:16px; padding:24px 20px;
+    background:var(--karte-bg); color:var(--tinte); border-radius:16px; padding:24px 20px;
     box-shadow:0 10px 24px rgba(90,70,40,0.2);
     touch-action:pan-y; will-change:transform;
   }
@@ -342,6 +367,11 @@
     0%{ transform:translateY(0) rotate(0deg); opacity:1; }
     100%{ transform:translateY(112vh) rotate(560deg); opacity:0.4; }
   }
+  @keyframes boardFadeInAnim{
+    from{ opacity:0; transform:translateY(8px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  .boardFadeIn{ animation:boardFadeInAnim .28s ease; }
   .uebungTypBadge{font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:3px 10px; border-radius:999px; color:#20241e; display:inline-block; margin-bottom:10px;}
   .uebungTitel{font-family:var(--schrift-hand); font-weight:700; font-size:1.4rem; margin:0 0 6px;}
   .uebungHinweis{font-size:0.82rem; color:#6b5c3f; margin-bottom:18px;}
@@ -355,7 +385,7 @@
   }
   .luecktextInput{
     width:100%; padding:13px 14px; border-radius:10px; border:1.5px solid rgba(0,0,0,0.15);
-    background:#fffdf8; color:var(--text-main); font-size:1rem; font-family:var(--schrift-sans);
+    background:var(--karte-bg); color:var(--text-main); font-size:1rem; font-family:var(--schrift-sans);
     margin-bottom:10px; box-sizing:border-box;
   }
   .luecktextInput:focus{border-color:var(--gelb-dk); outline:none;}
@@ -373,7 +403,7 @@
   }
   .zuordnenKarte{
     padding:12px 10px; border-radius:10px; border:1.5px solid rgba(0,0,0,0.15);
-    background:#fffdf8; color:var(--text-main); font-size:0.82rem; line-height:1.32;
+    background:var(--karte-bg); color:var(--text-main); font-size:0.82rem; line-height:1.32;
     cursor:pointer; text-align:left; font-family:var(--schrift-sans); min-height:52px;
     flex:0 0 auto;
   }
@@ -404,7 +434,7 @@
   }
   .kursTop{
     position:sticky; top:0; z-index:5; display:flex; align-items:center; gap:10px;
-    padding:14px 16px; background:linear-gradient(180deg, rgba(247,241,227,0.98), rgba(247,241,227,0.9));
+    padding:14px 16px; background:linear-gradient(180deg, var(--header-bg-1), var(--header-bg-2));
     backdrop-filter:blur(4px); border-bottom:1px solid rgba(0,0,0,0.06);
   }
   .kursTop h2{flex:1; font-family:var(--schrift-hand); font-weight:700; font-size:1.2rem; margin:0; color:#7a5c2e;}
@@ -413,14 +443,14 @@
   .kursDot{
     flex:0 0 auto; width:30px; height:30px; border-radius:50%; display:flex; align-items:center;
     justify-content:center; font-family:var(--schrift-sans); font-size:0.78rem; font-weight:700;
-    border:2px solid rgba(0,0,0,0.15); background:#fffdf8; color:var(--text-muted); cursor:pointer;
+    border:2px solid rgba(0,0,0,0.15); background:var(--karte-bg); color:var(--text-muted); cursor:pointer;
   }
   .kursDot.done{background:#2b6b45; border-color:#2b6b45; color:#fff;}
   .kursDot.active{border-color:var(--gelb-dk); box-shadow:0 0 0 3px rgba(224,184,74,0.25); color:var(--text-main);}
   .kursEyebrow{font-size:0.72rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); font-weight:600; margin:0 0 4px;}
   .kursTitel{font-family:var(--schrift-hand); font-weight:700; font-size:1.5rem; margin:0 0 14px; color:var(--text-main);}
   .kursCard{
-    background:#fffdf8; border:1px solid rgba(0,0,0,0.08); border-radius:12px;
+    background:var(--karte-bg); border:1px solid rgba(0,0,0,0.08); border-radius:12px;
     padding:16px 18px; margin-bottom:16px; box-shadow:0 4px 10px rgba(90,70,40,0.1);
   }
   .kursCard p{margin:0 0 8px; font-size:0.9rem; line-height:1.55; color:var(--text-main);}
@@ -462,7 +492,7 @@
   .kursNavRow{display:flex; justify-content:space-between; margin-top:22px;}
   .kursNavBtn{
     font-family:var(--schrift-sans); font-size:0.82rem; font-weight:600; padding:10px 16px;
-    border-radius:8px; border:1px solid rgba(0,0,0,0.12); background:#fffdf8; color:var(--text-main); cursor:pointer;
+    border-radius:8px; border:1px solid rgba(0,0,0,0.12); background:var(--karte-bg); color:var(--text-main); cursor:pointer;
   }
   .kursNavBtn:disabled{opacity:0.35; cursor:default;}
   .kursNavBtn.primary{background:var(--gelb-dk); color:#3d2c05; border-color:var(--gelb-dk);}
@@ -472,7 +502,7 @@
   .quizOptionen{display:flex; flex-direction:column; gap:10px;}
   .quizOption{
     text-align:left; padding:13px 14px; border-radius:10px; border:1.5px solid rgba(0,0,0,0.15);
-    background:#fffdf8; color:var(--text-main); font-size:0.9rem; cursor:pointer; font-family:var(--schrift-sans);
+    background:var(--karte-bg); color:var(--text-main); font-size:0.9rem; cursor:pointer; font-family:var(--schrift-sans);
   }
   .quizOption.richtig{background:#d6efdb; border-color:#3f8a58; color:#1f5c34; font-weight:600;}
   .quizOption.falsch{background:#f7ded3; border-color:#c4593a; color:#8a3520; font-weight:600;}
@@ -489,7 +519,7 @@
   .bottomNav{
     position:fixed; left:0; right:0; bottom:0; z-index:70;
     display:flex; justify-content:space-around; align-items:stretch;
-    background:linear-gradient(0deg, rgba(247,241,227,0.98), rgba(247,241,227,0.9));
+    background:linear-gradient(0deg, var(--header-bg-1), var(--header-bg-2));
     border-top:1px solid rgba(0,0,0,0.08);
     padding:8px 4px calc(8px + env(safe-area-inset-bottom));
     backdrop-filter:blur(6px);
@@ -531,7 +561,7 @@
   .kachelKlein{
     display:flex; align-items:center; justify-content:space-between; gap:10px;
     padding:12px 14px; border-radius:10px; cursor:pointer;
-    background:#eaf4fb; border:1px solid var(--blau-dk); color:var(--text-main);
+    background:var(--blau); border:1px solid var(--blau-dk); color:var(--tinte);
     font-size:0.85rem;
   }
   .kachelKlein .kleinMeta{font-size:0.72rem; opacity:0.85; color:var(--text-muted);}
@@ -557,7 +587,7 @@
   .sortListe{display:flex; flex-direction:column; gap:8px; position:relative;}
   .sortRow{
     display:flex; align-items:center; gap:10px;
-    background:#fffdf8; border:1px solid rgba(0,0,0,0.1); border-radius:10px;
+    background:var(--karte-bg); border:1px solid rgba(0,0,0,0.1); border-radius:10px;
     padding:12px 12px; height:44px; box-sizing:border-box;
     transition:transform .18s ease;
     touch-action:none; user-select:none; -webkit-user-select:none;
@@ -583,14 +613,14 @@
   .mehrList{display:flex; flex-direction:column; gap:8px;}
   .mehrItem{
     text-align:left; padding:13px 14px; border-radius:10px; border:1px solid #d8cfa8;
-    background:#fffdf5; color:#20241e; font-size:0.92rem; cursor:pointer; font-family:var(--schrift-sans);
+    background:var(--karte-bg); color:var(--dialog-text); font-size:0.92rem; cursor:pointer; font-family:var(--schrift-sans);
   }
   .mehrItem.aktuell{background:var(--gelb); border-color:var(--gelb-dk); font-weight:700;}
 
   /* ---------- Modal ---------- */
   dialog{
     border:none; border-radius:14px; padding:0; width:min(440px,92vw);
-    background:#fbf6e6; color:#20241e;
+    background:var(--dialog-bg); color:var(--dialog-text);
   }
   dialog::backdrop{background:rgba(0,0,0,0.6);}
   .modalInner{padding:20px;}
@@ -599,7 +629,7 @@
   .field label{display:block; font-size:0.78rem; font-weight:600; margin-bottom:4px; color:#4a4a3a;}
   .field input, .field select, .field textarea{
     width:100%; padding:10px; border-radius:8px; border:1.5px solid #d8cfa8; font-size:0.95rem;
-    font-family:var(--schrift-sans); background:#fffdf5;
+    font-family:var(--schrift-sans); background:var(--karte-bg);
   }
   .field textarea{min-height:110px; resize:vertical;}
   .typChoice{display:flex; gap:8px;}
@@ -640,7 +670,7 @@
   .searchRow{display:flex; align-items:center; gap:8px; margin-top:8px;}
   .searchRow input{
     flex:1; padding:9px 12px; border-radius:8px; border:1px solid rgba(0,0,0,0.12);
-    background:#fffdf8; color:var(--text-main); font-size:0.88rem; font-family:var(--schrift-sans);
+    background:var(--karte-bg); color:var(--text-main); font-size:0.88rem; font-family:var(--schrift-sans);
   }
   .searchRow input::placeholder{color:#a89c80;}
   .searchRow .clearBtn{
@@ -765,6 +795,7 @@
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); openSeminarBearbeiten();">✏️ Aktuelles Seminar bearbeiten</button>
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); oeffneSeminarWechsel();">🔀 Seminar wechseln</button>
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); zeigeTagebuch();">📔 Lerntagebuch</button>
+      <button class="mehrItem" id="darkModeBtn" onclick="toggleDarkMode()">🌙 Dark Mode</button>
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); loescheAktuellesSeminar();">🗑 Aktuelles Seminar löschen</button>
       <button class="mehrItem" onclick="loadTemplate('verhandeln_pm'); document.getElementById('mehrDialog').close();">⤓ Vorlage „Verhandeln im PM-Alltag" laden</button>
       <button class="mehrItem" onclick="zufallskarte(); document.getElementById('mehrDialog').close();">🎲 Zufallskarte</button>
@@ -1324,6 +1355,7 @@ function hashRotation(id){
 /* ---------- Init ---------- */
 async function init(){
   const splashStart = Date.now();
+  await ladeDarkMode();
   seminare = (await storeGet('seminare')) || [];
   const last = await storeGet('letztesSeminar');
   if(seminare.length){
@@ -1704,6 +1736,9 @@ function fortschrittZeileHTML(label, sitzt, gesamt, hervorgehoben){
 /* ---------- Hauptrendering ---------- */
 function renderBoard(){
   const area = document.getElementById('boardArea');
+  area.classList.remove('boardFadeIn');
+  void area.offsetWidth; // Reflow erzwingen, damit die Animation bei jedem Aufruf neu startet
+  area.classList.add('boardFadeIn');
   area.innerHTML = '';
   updateNavAktiv();
   if(!aktuellesSeminarId){
@@ -2604,6 +2639,24 @@ function heuteISO(){
   return new Date().toISOString().slice(0,10);
 }
 
+/* ---------- Dark Mode ---------- */
+async function ladeDarkMode(){
+  const an = await storeGet('darkMode');
+  setDarkModeUI(!!an);
+}
+async function toggleDarkMode(){
+  const aktuell = document.documentElement.getAttribute('data-theme') === 'dark';
+  const neu = !aktuell;
+  setDarkModeUI(neu);
+  await storeSet('darkMode', neu);
+  document.getElementById('mehrDialog').close();
+}
+function setDarkModeUI(an){
+  document.documentElement.setAttribute('data-theme', an ? 'dark' : 'light');
+  const btn = document.getElementById('darkModeBtn');
+  if(btn) btn.textContent = an ? '☀️ Light Mode' : '🌙 Dark Mode';
+}
+
 /* ---------- Spielelemente: Punkte, Level, Abzeichen, Tagesziel (je Seminar/Kurs getrennt) ---------- */
 let spielstand = { punkte:0, richtigGesamt:0, antwortenGesamt:0, abzeichen:[], tagesPunkte:{} };
 const TAGESZIEL_PUNKTE = 20;
@@ -2908,6 +2961,7 @@ function maskierteVorschauHTML(abschnitt, snippetText){
 
 function renderUebungKarte(){
   const ov = document.getElementById('uebungOverlay');
+  ov.classList.remove('boardFadeIn'); void ov.offsetWidth; ov.classList.add('boardFadeIn');
   if(uebungIdx >= uebungListe.length){
     const sitzt = uebungListe.filter(k=>k.geuebt).length;
     ov.innerHTML = `
@@ -3206,6 +3260,7 @@ function baueQuizfrage(k, pool){
 
 function renderQuizFrage(){
   const ov = document.getElementById('uebungOverlay');
+  ov.classList.remove('boardFadeIn'); void ov.offsetWidth; ov.classList.add('boardFadeIn');
   if(quizIdx >= quizListe.length){
     const pct = Math.round((quizRichtig/quizListe.length)*100);
     ov.innerHTML = `
