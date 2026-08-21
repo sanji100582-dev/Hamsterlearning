@@ -166,9 +166,10 @@
     background:rgba(0,0,0,0.12); color:inherit;
   }
   .karte .geuebtMarke{
-    position:absolute; top:10px; left:12px; width:18px; height:18px; border-radius:50%;
+    position:absolute; top:10px; left:12px; min-width:18px; height:18px; border-radius:9px; padding:0 4px;
     background:#2b6b45; color:#fff; font-size:0.7rem; display:flex; align-items:center; justify-content:center;
   }
+  .karte .geuebtMarke.teilweise{background:#c9a521; font-size:0.62rem; font-weight:700;}
 
   .karte.fach{background:var(--gelb); border-radius:4px; border:1px solid var(--gelb-dk);}
   .karte.ablauf{
@@ -241,6 +242,16 @@
     color:#6b551a; margin-bottom:4px;
   }
   .detailBody{font-size:0.95rem; line-height:1.5; white-space:pre-wrap; color:#20241e;}
+  .lernMarker{
+    background:linear-gradient(180deg, transparent 55%, var(--gelb) 55%);
+    padding:0 1px; border-radius:2px; font-weight:600;
+  }
+  .lernmarkerHinweis{font-size:0.72rem; color:#8a7f6a; margin:6px 0 6px;}
+  .lernmarkerBtnRow{display:flex; gap:8px; flex-wrap:wrap;}
+  .lernmarkerBtn{
+    background:#fff6dd; border:1px solid var(--gelb-dk); color:#5c4413;
+    border-radius:8px; padding:7px 11px; font-size:0.78rem; cursor:pointer; font-family:var(--schrift-sans);
+  }
   .detailBody.strategie ol{margin:0; padding-left:1.2em;}
   .detailBody.strategie li{margin-bottom:5px;}
   .detail-actions{display:flex; justify-content:space-between; gap:8px; margin-top:18px; padding-top:14px; border-top:1px solid #e6dfc4;}
@@ -264,6 +275,13 @@
   .uebungTypBadge{font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:3px 10px; border-radius:999px; color:#20241e; display:inline-block; margin-bottom:10px;}
   .uebungTitel{font-family:var(--schrift-hand); font-size:1.4rem; margin:0 0 6px;}
   .uebungHinweis{font-size:0.82rem; color:#6b5c3f; margin-bottom:18px;}
+  .uebungVorschau{
+    background:#f4efe0; border-radius:10px; padding:12px 14px; margin-bottom:14px;
+    font-size:0.9rem; line-height:1.5; color:#3b332a;
+  }
+  .lernLuecke{
+    background:#e0b84a; color:#e0b84a; border-radius:4px; letter-spacing:1px;
+  }
   .uebungAntwortBtn{
     display:block; width:100%; padding:14px; border-radius:10px; border:none;
     background:#3f8a58; color:#fff; font-size:1rem; font-weight:600; cursor:pointer; margin-top:10px;
@@ -517,6 +535,20 @@
 
   /* ---------- Fortschritt ---------- */
   .fortschrittZeile{margin-bottom:14px;}
+  .fortschrittFaellig{
+    background:#eaf4fb; border:1px solid var(--blau-dk); color:#2f5c82;
+    padding:10px 12px; border-radius:10px; font-size:0.85rem; font-weight:600; margin-bottom:16px;
+  }
+  .streakZeile{
+    font-size:0.95rem; font-weight:700; color:#8a5a1f; margin-bottom:10px;
+  }
+  .aktivitaetStreifen{
+    display:flex; flex-wrap:wrap; gap:3px; margin-bottom:16px;
+  }
+  .aktivitaetTag{
+    width:16px; height:16px; border-radius:3px; background:#e6dfc4; flex:0 0 auto;
+  }
+  .aktivitaetTag.aktiv{background:#3f8a58;}
   .fortschrittLabel{display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:5px; color:#4a4a3a;}
   .fortschrittBar{height:10px; border-radius:999px; background:#e6dfc4; overflow:hidden;}
   .fortschrittBar > div{height:100%; background:#2b6b45; border-radius:999px; transition:width .3s ease;}
@@ -668,7 +700,7 @@
     </div>
     <div class="detailSection">
       <div class="detailLabel">🧠 Üben</div>
-      <div class="detailBody">Zwei Modi: Karteikarten (selbst erinnern, dann Antwort aufdecken) oder Quiz (automatisch erstellte Multiple-Choice-Fragen aus deinen Karten). Beides merkt sich, was schon „sitzt".</div>
+      <div class="detailBody">Zwei Modi: Karteikarten (selbst erinnern, dann Antwort aufdecken) oder Quiz (automatisch erstellte Multiple-Choice-Fragen aus deinen Karten). Die App merkt sich, was du gut kannst, und bringt dir Karten, die du oft falsch beantwortest, häufiger – Karten, die sicher sitzen, tauchen seltener auf. So übst du automatisch das, was noch nötig ist, statt immer alles gleich oft zu wiederholen.</div>
     </div>
     <div class="detailSection">
       <div class="detailLabel">🔊 Vorlesen</div>
@@ -764,6 +796,13 @@
     <div class="field">
       <label>Text</label>
       <textarea id="kText" placeholder="Inhalt, Leitfragen, Stichpunkte... Tipp: Zeilen wie 'Setting: ...' oder 'Ziel: ...' werden in der Detailansicht automatisch als eigene Abschnitte angezeigt."></textarea>
+      <div class="lernmarkerHinweis">
+        Text markieren, der zur Lernkarte werden soll (Rest bleibt normaler Lesetext):
+      </div>
+      <div class="lernmarkerBtnRow">
+        <button type="button" class="lernmarkerBtn" onclick="markiereAuswahlAlsLernkarte()">✨ Auswahl markieren</button>
+        <button type="button" class="lernmarkerBtn" onclick="entferneMarkierungInAuswahl()">Markierung entfernen</button>
+      </div>
     </div>
     <div class="modal-actions">
       <button class="danger" id="kDeleteBtn" style="display:none;" onclick="deleteKarte()">Löschen</button>
@@ -815,7 +854,7 @@ let storageOk = true;
 const LABEL_MUSTER = /^Setting|^Ziel für die Führungskraft|^Trainerhinweis|^Gesprächsstrategie|^Ziel\b/;
 
 function teaserText(text){
-  const bereinigt = text.replace(/^(Setting|Ziel für die Führungskraft|Trainerhinweis \(DISG\)|Gesprächsstrategie|Ziel):\s*/gm, '');
+  const bereinigt = klartext(text).replace(/^(Setting|Ziel für die Führungskraft|Trainerhinweis \(DISG\)|Gesprächsstrategie|Ziel):\s*/gm, '');
   const erste = bereinigt.split(/\n\n+/).find(p => p.trim().length) || '';
   const einzeiler = erste.replace(/\n/g, ' ').trim();
   return einzeiler.length > 140 ? einzeiler.slice(0, 140).trim() + '…' : einzeiler;
@@ -833,6 +872,52 @@ function parseAbschnitte(text){
     }
   }
   return abschnitte;
+}
+
+/* ---------- Lernmarker: einzelne Sätze/Abschnitte als "==markiert==" zu Lernkarten machen ---------- */
+const LERNMARKER_MUSTER = /==(.+?)==/gs;
+
+// Wandelt Text sicher (HTML-escaped) in HTML um, markierte Stellen bekommen ein <mark>.
+function formatiereMitLernmarkern(text){
+  const escaped = escapeHTML(text);
+  // escapeHTML wandelt "==" nicht um, funktioniert also nach dem Escapen weiterhin als Marker
+  return escaped.replace(/==(.+?)==/gs, '<mark class="lernMarker">$1</mark>');
+}
+
+function hatLernmarker(text){
+  LERNMARKER_MUSTER.lastIndex = 0;
+  return LERNMARKER_MUSTER.test(text || '');
+}
+
+// Einfacher, stabiler String-Hash für IDs (kein Kryptozweck, nur Wiedererkennung gleicher Textstellen)
+function textHash(str){
+  let h = 0;
+  for(let i = 0; i < str.length; i++){
+    h = (h * 31 + str.charCodeAt(i)) | 0;
+  }
+  return Math.abs(h).toString(36);
+}
+
+/* Extrahiert aus einer Karte die zu übenden Lerneinheiten.
+   - Enthält der Text explizite ==Markierungen==, wird jede einzelne zu einer eigenen Lerneinheit.
+   - Enthält der Text KEINE Markierung, gilt die ganze Karte weiterhin als eine Lerneinheit
+     (Rückwärtskompatibilität mit alten Karten, die noch nie markiert wurden). */
+function extrahiereLernelemente(karte){
+  LERNMARKER_MUSTER.lastIndex = 0;
+  const treffer = [...(karte.text || '').matchAll(LERNMARKER_MUSTER)]
+    .map(m => m[1].trim())
+    .filter(Boolean);
+  if(treffer.length === 0){
+    return [{ id: 'le_' + karte.id + '_ganz', karteId: karte.id, text: karte.titel, ganzeKarte: true }];
+  }
+  // Mehrfache identische Markierungen im selben Text nur einmal zählen
+  const eindeutig = [...new Set(treffer)];
+  return eindeutig.map(t => ({
+    id: 'le_' + karte.id + '_' + textHash(t),
+    karteId: karte.id,
+    text: t,
+    ganzeKarte: false
+  }));
 }
 
 /* ---------- Storage: localStorage (funktioniert eigenständig in Safari, ohne Claude-Umgebung) ---------- */
@@ -938,6 +1023,7 @@ async function init(){
   if(seminare.length){
     aktuellesSeminarId = (last && seminare.find(s=>s.id===last)) ? last : seminare[0].id;
     karten = (await storeGet('karten_' + aktuellesSeminarId)) || [];
+    await ladeLernstand(aktuellesSeminarId);
   }
   const letzterBereich = await storeGet('letzterBereich');
   if(letzterBereich === 'seminare'){
@@ -1097,6 +1183,7 @@ async function wechsleSeminar(id){
   if(sf) sf.value = '';
   await storeSet('letztesSeminar', id);
   karten = (await storeGet('karten_' + id)) || [];
+  await ladeLernstand(id);
   renderSeminarTabs();
   renderBoard();
 }
@@ -1124,9 +1211,11 @@ async function loescheAktuellesSeminar(){
   seminare = seminare.filter(s=>s.id!==zuLoeschenId);
   await storeSet('seminare', seminare);
   window.localStorage.removeItem(LS_PREFIX + 'karten_' + zuLoeschenId);
+  window.localStorage.removeItem(LS_PREFIX + 'lernstand_' + zuLoeschenId);
   await fotosFuerSeminarLoeschen(zuLoeschenId);
   aktuellesSeminarId = seminare.length ? seminare[0].id : null;
   karten = aktuellesSeminarId ? ((await storeGet('karten_' + aktuellesSeminarId)) || []) : [];
+  await ladeLernstand(aktuellesSeminarId);
   await storeSet('letztesSeminar', aktuellesSeminarId);
   currentView = 'uebersicht';
   renderSeminarTabs();
@@ -1196,19 +1285,28 @@ function zufallskarte(){
 }
 
 /* ---------- Fortschritt ---------- */
-function zeigeFortschritt(){
+async function zeigeFortschritt(){
   if(!aktuellesSeminarId || !karten.length){ zeigeToast('Keine Karten in diesem Seminar'); return; }
   const body = document.getElementById('fortschrittBody');
-  const gesamt = karten.length;
-  const gesamtSitzt = karten.filter(k=>k.geuebt).length;
+  const alleElemente = alleLernelemente(karten);
+  const gesamt = alleElemente.length;
+  const gesamtSitzt = alleElemente.filter(e=>e.geuebt).length;
+  const gesamtFaellig = alleElemente.filter(istFaellig).length;
+  const aktivitaet = (await storeGet('aktivitaet')) || {};
+  const streak = berechneStreak(aktivitaet);
   const gruppen = {};
-  karten.forEach(k=>{
-    const key = k.gruppe || TYP_LABEL[k.typ];
+  alleElemente.forEach(e=>{
+    const key = e.karte.gruppe || TYP_LABEL[e.karte.typ];
     if(!gruppen[key]) gruppen[key] = { sitzt:0, gesamt:0 };
     gruppen[key].gesamt++;
-    if(k.geuebt) gruppen[key].sitzt++;
+    if(e.geuebt) gruppen[key].sitzt++;
   });
   let html = '';
+  html += `<div class="streakZeile">🔥 <strong>${streak}</strong> Tag${streak===1?'':'e'} in Folge geübt</div>`;
+  html += aktivitaetsStreifenHTML(aktivitaet);
+  if(gesamtFaellig > 0){
+    html += `<div class="fortschrittFaellig">🔁 ${gesamtFaellig} Lerneinheit${gesamtFaellig===1?'':'en'} heute fällig zum Wiederholen</div>`;
+  }
   html += fortschrittZeileHTML('Gesamt', gesamtSitzt, gesamt, true);
   Object.keys(gruppen).sort().forEach(key=>{
     html += fortschrittZeileHTML(key, gruppen[key].sitzt, gruppen[key].gesamt, false);
@@ -1422,9 +1520,8 @@ function renderUebersicht(area){
   fachKarten.forEach(k=>{
     const key = k.gruppe || null;
     const label = k.gruppe || 'Sonstige Fachinhalte';
-    if(!gruppenMap[label]) gruppenMap[label] = { key, gesamt:0, sitzt:0 };
-    gruppenMap[label].gesamt++;
-    if(k.geuebt) gruppenMap[label].sitzt++;
+    if(!gruppenMap[label]) gruppenMap[label] = { key, karten: [] };
+    gruppenMap[label].karten.push(k);
   });
   const reflexionKarten = karten.filter(k=>k.typ==='reflexion');
   const ablaufKarten = karten.filter(k=>k.typ==='ablauf');
@@ -1434,20 +1531,24 @@ function renderUebersicht(area){
 
   Object.keys(gruppenMap).sort().forEach(label=>{
     const g = gruppenMap[label];
-    const pct = g.gesamt ? Math.round((g.sitzt/g.gesamt)*100) : 0;
+    const elemente = alleLernelemente(g.karten);
+    const sitzt = elemente.filter(e=>e.geuebt).length;
+    const gesamt = elemente.length;
+    const pct = gesamt ? Math.round((sitzt/gesamt)*100) : 0;
     const kachel = document.createElement('div');
     kachel.className = 'kachel';
     kachel.onclick = () => waehleGruppe('fach', g.key);
     kachel.innerHTML = `
       <div class="kachelTitel">${escapeHTML(label)}</div>
-      <div class="kachelMeta">${g.gesamt} Karte${g.gesamt===1?'':'n'} · ${pct}% sitzen</div>
+      <div class="kachelMeta">${g.karten.length} Karte${g.karten.length===1?'':'n'} · ${pct}% sitzen</div>
       <div class="kachelBar"><div style="width:${pct}%"></div></div>`;
     grid.appendChild(kachel);
   });
 
   if(reflexionKarten.length){
-    const sitzt = reflexionKarten.filter(k=>k.geuebt).length;
-    const pct = Math.round((sitzt/reflexionKarten.length)*100);
+    const elemente = alleLernelemente(reflexionKarten);
+    const sitzt = elemente.filter(e=>e.geuebt).length;
+    const pct = elemente.length ? Math.round((sitzt/elemente.length)*100) : 0;
     const kachel = document.createElement('div');
     kachel.className = 'kachel reflexion';
     kachel.onclick = () => waehleGruppe('reflexion', null);
@@ -1502,11 +1603,18 @@ function renderVisuell(area, liste){
     badge.className = 'badge';
     badge.textContent = TYP_LABEL[k.typ];
     div.appendChild(badge);
-    if(k.geuebt){
+    const lf = kartenLernfortschritt(k);
+    if(lf.gesamt > 0 && lf.sitzt === lf.gesamt){
       const marke = document.createElement('div');
       marke.className = 'geuebtMarke';
       marke.textContent = '✓';
       marke.title = 'Sitzt schon';
+      div.appendChild(marke);
+    }else if(lf.sitzt > 0){
+      const marke = document.createElement('div');
+      marke.className = 'geuebtMarke teilweise';
+      marke.textContent = lf.sitzt + '/' + lf.gesamt;
+      marke.title = 'Teilweise gelernt';
       div.appendChild(marke);
     }
     if(k.gruppe){
@@ -1574,13 +1682,13 @@ function openDetail(id){
       const ol = document.createElement('ol');
       zeilen.forEach(z=>{
         const li = document.createElement('li');
-        li.textContent = z.replace(/^\d+\.\s*/, '');
+        li.innerHTML = formatiereMitLernmarkern(z.replace(/^\d+\.\s*/, ''));
         ol.appendChild(li);
       });
       bod.appendChild(ol);
     }else{
       bod.className = 'detailBody';
-      bod.textContent = a.inhalt;
+      bod.innerHTML = formatiereMitLernmarkern(a.inhalt);
     }
     sec.appendChild(bod);
     body.appendChild(sec);
@@ -1646,7 +1754,7 @@ function renderAuditiv(area, liste){
 /* ---------- Text-to-Speech ---------- */
 function vorlesenEinzeln(k, btn){
   stopVorlesen();
-  const utter = new SpeechSynthesisUtterance((k.titel + '. ' + k.text).replace(/\n/g,'. '));
+  const utter = new SpeechSynthesisUtterance((k.titel + '. ' + klartext(k.text)).replace(/\n/g,'. '));
   utter.lang = 'de-DE';
   if(btn){
     utter.onstart = () => btn.classList.add('playing');
@@ -1664,7 +1772,7 @@ function alleVorlesen(liste){
 function vorleseNaechste(){
   if(speakIdx >= speakList.length) return;
   const k = speakList[speakIdx];
-  const utter = new SpeechSynthesisUtterance((k.titel + '. ' + k.text).replace(/\n/g,'. '));
+  const utter = new SpeechSynthesisUtterance((k.titel + '. ' + klartext(k.text)).replace(/\n/g,'. '));
   utter.lang = 'de-DE';
   utter.onend = () => { speakIdx++; vorleseNaechste(); };
   speechSynthesis.speak(utter);
@@ -1675,6 +1783,41 @@ function stopVorlesen(){
 }
 
 /* ---------- Karten CRUD ---------- */
+/* ---------- Text im Editor markieren/entmarkieren ---------- */
+function markiereAuswahlAlsLernkarte(){
+  const ta = document.getElementById('kText');
+  const start = ta.selectionStart, ende = ta.selectionEnd;
+  if(start === ende){ zeigeToast('Erst Text im Feld markieren (antippen und ziehen), dann Button drücken'); return; }
+  const wert = ta.value;
+  let auswahl = wert.slice(start, ende);
+  const vornWeg = auswahl.match(/^\s*/)[0].length;
+  const hintenWeg = auswahl.match(/\s*$/)[0].length;
+  const kernStart = start + vornWeg;
+  const kernEnde = ende - hintenWeg;
+  const kern = wert.slice(kernStart, kernEnde);
+  if(!kern){ zeigeToast('Auswahl enthält keinen Text'); return; }
+  const neuerWert = wert.slice(0, kernStart) + '==' + kern + '==' + wert.slice(kernEnde);
+  ta.value = neuerWert;
+  const neuePos = kernEnde + 4;
+  ta.focus();
+  ta.setSelectionRange(kernStart, neuePos);
+  zeigeToast('Als Lernkarte markiert ✨');
+}
+
+function entferneMarkierungInAuswahl(){
+  const ta = document.getElementById('kText');
+  const start = ta.selectionStart, ende = ta.selectionEnd;
+  const wert = ta.value;
+  const suchStart = Math.max(0, start - 2);
+  const suchEnde = Math.min(wert.length, ende + 2);
+  const bereich = wert.slice(suchStart, suchEnde);
+  const bereinigt = bereich.replace(/==/g, '');
+  if(bereich === bereinigt){ zeigeToast('Keine Markierung in der Auswahl gefunden'); return; }
+  ta.value = wert.slice(0, suchStart) + bereinigt + wert.slice(suchEnde);
+  ta.focus();
+  zeigeToast('Markierung entfernt');
+}
+
 function openKartenModal(id){
   editKarteId = id || null;
   const dlg = document.getElementById('kartenDialog');
@@ -1738,11 +1881,11 @@ async function deleteKarte(){
 
 /* ---------- Export / Import ---------- */
 function exportJSON(){
-  const data = { seminare, kartenProSeminar:{} };
-  seminare.forEach(async s=>{});
+  const data = { seminare, kartenProSeminar:{}, lernstandProSeminar:{} };
   (async ()=>{
     for(const s of seminare){
       data.kartenProSeminar[s.id] = (s.id === aktuellesSeminarId) ? karten : (await storeGet('karten_'+s.id)) || [];
+      data.lernstandProSeminar[s.id] = (s.id === aktuellesSeminarId) ? lernstand : (await storeGet('lernstand_'+s.id)) || {};
     }
     const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
     const url = URL.createObjectURL(blob);
@@ -1767,9 +1910,13 @@ function importJSON(evt){
       for(const sid in (data.kartenProSeminar || {})){
         await storeSet('karten_' + sid, data.kartenProSeminar[sid]);
       }
+      for(const sid in (data.lernstandProSeminar || {})){
+        await storeSet('lernstand_' + sid, data.lernstandProSeminar[sid]);
+      }
       if(seminare.length){
         aktuellesSeminarId = seminare[0].id;
         karten = data.kartenProSeminar[aktuellesSeminarId] || [];
+        await ladeLernstand(aktuellesSeminarId);
         await storeSet('letztesSeminar', aktuellesSeminarId);
       }
       currentView = 'uebersicht';
@@ -1824,6 +1971,8 @@ async function loadTemplate(key){
   await storeSet('letztesSeminar', id);
   karten = t.cards.map((c,i) => ({ id: 'k_' + Date.now() + '_' + i, typ:c.typ, titel:c.titel, gruppe:c.gruppe||'', text:c.text, ord:c.ord||1 }));
   await speichereKartenListe();
+  lernstand = {};
+  await speichereLernstandListe();
   currentView = 'uebersicht';
   renderSeminarTabs();
   renderBoard();
@@ -1835,14 +1984,138 @@ let uebungListe = [];
 let uebungIdx = 0;
 let uebungOffen = false;
 
+/* ---------- Spaced Repetition (Leitner-System, 5 Boxen) ---------- */
+const SRS_INTERVALLE = [0, 1, 3, 7, 16]; // Tage bis zur nächsten Fälligkeit je Box (Index = Box-Nr.)
+
+function heuteISO(){
+  return new Date().toISOString().slice(0,10);
+}
+
+function istFaellig(k){
+  if(!k.srsFaellig) return true; // noch nie geübt -> sofort fällig
+  return k.srsFaellig <= heuteISO();
+}
+
+function srsBewerten(k, gut){
+  const box = typeof k.srsBox === 'number' ? k.srsBox : 0;
+  const neueBox = gut ? Math.min(box + 1, SRS_INTERVALLE.length - 1) : 0;
+  const tage = SRS_INTERVALLE[neueBox];
+  const faellig = new Date();
+  faellig.setDate(faellig.getDate() + tage);
+  k.srsBox = neueBox;
+  k.srsFaellig = faellig.toISOString().slice(0,10);
+  k.geuebt = neueBox >= 3; // für Fortschrittsanzeige/Häkchen: ab Box 3 gilt eine Karte als "sitzt"
+}
+
+/* ---------- Lernstand je einzelner Lerneinheit (nicht mehr nur je ganzer Karte) ---------- */
+let lernstand = {}; // { [elementId]: {srsBox, srsFaellig, geuebt} }
+
+async function ladeLernstand(seminarId){
+  lernstand = seminarId ? ((await storeGet('lernstand_' + seminarId)) || {}) : {};
+}
+async function speichereLernstandListe(){
+  if(!aktuellesSeminarId) return;
+  await storeSet('lernstand_' + aktuellesSeminarId, lernstand);
+}
+
+function holeElementStand(elementId, fallbackKarte){
+  if(lernstand[elementId]) return lernstand[elementId];
+  // Migration: eine "ganze Karte"-Lerneinheit ohne eigenen Lernstand übernimmt
+  // den alten, direkt auf der Karte gespeicherten Fortschritt (Rückwärtskompatibilität).
+  if(fallbackKarte && typeof fallbackKarte.srsBox === 'number'){
+    return { srsBox: fallbackKarte.srsBox, srsFaellig: fallbackKarte.srsFaellig, geuebt: !!fallbackKarte.geuebt };
+  }
+  return { srsBox: 0, srsFaellig: undefined, geuebt: false };
+}
+
+async function bewerteLernelement(el, gut){
+  const stand = { srsBox: el.srsBox, srsFaellig: el.srsFaellig, geuebt: el.geuebt };
+  srsBewerten(stand, gut);
+  lernstand[el.id] = stand;
+  el.srsBox = stand.srsBox; el.srsFaellig = stand.srsFaellig; el.geuebt = stand.geuebt;
+  await speichereLernstandListe();
+  markiereAktivitaetHeute();
+}
+
+/* Alle übbaren Lerneinheiten für eine Kartenliste, inkl. aktuellem Lernstand */
+function alleLernelemente(kartenListe){
+  const ergebnis = [];
+  kartenListe.forEach(karte => {
+    extrahiereLernelemente(karte).forEach(el => {
+      const stand = holeElementStand(el.id, el.ganzeKarte ? karte : null);
+      ergebnis.push({ ...el, karte, srsBox: stand.srsBox, srsFaellig: stand.srsFaellig, geuebt: stand.geuebt });
+    });
+  });
+  return ergebnis;
+}
+
+/* Lernfortschritt einer einzelnen Karte (für Board-Häkchen & Übersicht), unabhängig
+   davon ob sie eine "ganze Karte"-Einheit oder mehrere markierte Lerneinheiten hat. */
+function kartenLernfortschritt(karte){
+  const elemente = extrahiereLernelemente(karte).map(el => holeElementStand(el.id, el.ganzeKarte ? karte : null));
+  const sitzt = elemente.filter(e => e.geuebt).length;
+  return { sitzt, gesamt: elemente.length };
+}
+
+function faelligeZuerst(liste){
+  const faellig = liste.filter(istFaellig);
+  const spaeter = liste.filter(k => !istFaellig(k));
+  if(faellig.length > 0) return { pool: faellig, nurFaellig: true, gesamt: liste.length };
+  return { pool: liste, nurFaellig: false, gesamt: liste.length };
+}
+
+/* ---------- Aktivität & Streak (geräteweit, über alle Seminare hinweg) ---------- */
+async function markiereAktivitaetHeute(){
+  const map = (await storeGet('aktivitaet')) || {};
+  const heute = heuteISO();
+  if(!map[heute]){
+    map[heute] = true;
+    await storeSet('aktivitaet', map);
+  }
+}
+
+function berechneStreak(map){
+  const tag = new Date();
+  const heute = heuteISO();
+  if(!map[heute]) tag.setDate(tag.getDate() - 1); // heute noch nichts geübt -> bei gestern anfangen zu zählen
+  let streak = 0;
+  while(true){
+    const iso = tag.toISOString().slice(0,10);
+    if(map[iso]){ streak++; tag.setDate(tag.getDate() - 1); }
+    else break;
+  }
+  return streak;
+}
+
+function aktivitaetsStreifenHTML(map){
+  const tage = [];
+  const heute = new Date();
+  for(let i = 29; i >= 0; i--){
+    const d = new Date(heute);
+    d.setDate(d.getDate() - i);
+    const iso = d.toISOString().slice(0,10);
+    tage.push({ iso, aktiv: !!map[iso] });
+  }
+  return `<div class="aktivitaetStreifen">` +
+    tage.map(t => `<span class="aktivitaetTag${t.aktiv ? ' aktiv' : ''}" title="${t.iso}"></span>`).join('') +
+    `</div>`;
+}
+
 function starteUebung(){
   const liste = suchbegriff.trim() ? sucheGefiltert() : (currentView === 'uebersicht' ? karten.filter(k=>k.typ==='fach') : gefilterteKarten());
   if(!liste.length){ zeigeToast('Keine Karten in der aktuellen Auswahl'); return; }
-  uebungListe = [...liste];
+  const elemente = alleLernelemente(liste);
+  const { pool, nurFaellig, gesamt } = faelligeZuerst(elemente);
+  uebungListe = [...pool];
   uebungIdx = 0;
   uebungOffen = true;
   document.getElementById('uebungOverlay').style.display = 'flex';
   renderUebungKarte();
+  if(nurFaellig && pool.length < gesamt){
+    zeigeToast(`${pool.length} von ${gesamt} Lerneinheiten sind heute fällig`);
+  }else if(!nurFaellig){
+    zeigeToast('Nichts aktuell fällig – komplette Auswahl wird geübt');
+  }
 }
 
 function beendeUebung(){
@@ -1853,12 +2126,28 @@ function beendeUebung(){
 }
 
 function mischeUebung(){
-  for(let i = uebungListe.length - 1; i > 0; i--){
-    const j = Math.floor(Math.random() * (i + 1));
-    [uebungListe[i], uebungListe[j]] = [uebungListe[j], uebungListe[i]];
-  }
+  uebungListe = mischeGewichtet(uebungListe);
   uebungIdx = 0;
   renderUebungKarte();
+}
+
+/* Findet den Abschnitt einer Karte, der eine bestimmte markierte Textstelle enthält */
+function findeAbschnittFuerSnippet(karte, snippetText){
+  const abschnitte = parseAbschnitte(karte.text);
+  return abschnitte.find(a => a.inhalt.includes(snippetText)) || { label: null, inhalt: snippetText };
+}
+
+function klartext(text){
+  return (text || '').replace(/==(.+?)==/gs, '$1');
+}
+
+function maskierteVorschauHTML(abschnitt, snippetText){
+  const klar = klartext(abschnitt.inhalt);
+  const escInhalt = escapeHTML(klar);
+  const escSnippet = escapeHTML(snippetText);
+  const maskeLaenge = Math.min(Math.max(snippetText.length, 4), 24);
+  const maske = `<span class="lernLuecke">${'▓'.repeat(maskeLaenge)}</span>`;
+  return escInhalt.split(escSnippet).join(maske);
 }
 
 function renderUebungKarte(){
@@ -1871,16 +2160,25 @@ function renderUebungKarte(){
       </div>
       <div class="uebungEnde">
         <h2>Durchlauf fertig 🎉</h2>
-        <p>${sitzt} von ${uebungListe.length} Karten sitzen.</p>
+        <p>${sitzt} von ${uebungListe.length} Lerneinheiten sitzen.</p>
         <button class="iconBtn" onclick="uebungNurOffene()">🔁 Nur die restlichen wiederholen</button><br>
         <button class="iconBtn" onclick="mischeUebung()">🔀 Nochmal von vorn (gemischt)</button><br>
         <button class="iconBtn" onclick="beendeUebung()">Zurück zum Board</button>
       </div>`;
     return;
   }
-  const k = uebungListe[uebungIdx];
+  const el = uebungListe[uebungIdx];
+  const k = el.karte;
   stopVorlesen();
   const fortschritt = Math.round((uebungIdx / uebungListe.length) * 100);
+  let vorschauHTML = '';
+  if(!el.ganzeKarte){
+    const abschnitt = findeAbschnittFuerSnippet(k, el.text);
+    if(abschnitt.label){
+      vorschauHTML += `<div class="detailLabel">${escapeHTML(abschnitt.label)}</div>`;
+    }
+    vorschauHTML += `<div class="detailBody">${maskierteVorschauHTML(abschnitt, el.text)}</div>`;
+  }
   ov.innerHTML = `
     <div class="uebungTop">
       <button class="uebungCloseBtn" onclick="beendeUebung()">✕</button>
@@ -1891,6 +2189,7 @@ function renderUebungKarte(){
       <div class="uebungKarte">
         <span class="uebungTypBadge" style="background:${k.typ==='fach'?'var(--gelb)':k.typ==='ablauf'?'var(--blau)':'var(--gruen)'}">${TYP_LABEL[k.typ]}${k.gruppe ? ' · ' + k.gruppe : ''}</span>
         <h3 class="uebungTitel">${escapeHTML((k.typ==='ablauf' && k.ord ? k.ord+'. ' : '') + k.titel)}</h3>
+        ${vorschauHTML ? `<div class="uebungVorschau">${vorschauHTML}</div>` : ''}
         <div class="uebungHinweis">Versuch dich zu erinnern, bevor du die Antwort aufdeckst.</div>
         <div id="uebungAntwort">
           <button class="uebungAntwortBtn" onclick="uebungAntwortZeigen()">👁️ Antwort zeigen</button>
@@ -1906,23 +2205,32 @@ function escapeHTML(s){
 }
 
 function uebungAntwortZeigen(){
-  const k = uebungListe[uebungIdx];
+  const el = uebungListe[uebungIdx];
+  const k = el.karte;
   const box = document.getElementById('uebungAntwort');
-  const abschnitte = parseAbschnitte(k.text);
   let html = '';
-  abschnitte.forEach(a=>{
+  if(el.ganzeKarte){
+    const abschnitte = parseAbschnitte(k.text);
+    abschnitte.forEach(a=>{
+      html += '<div class="detailSection">';
+      if(a.label) html += `<div class="detailLabel">${escapeHTML(a.label)}</div>`;
+      const zeilen = a.inhalt.split('\n').filter(z=>z.trim());
+      const istListe = zeilen.length > 1 && zeilen.every(z => /^\d+\.\s/.test(z.trim()));
+      if(istListe){
+        html += '<div class="detailBody strategie"><ol>' + zeilen.map(z=>`<li>${formatiereMitLernmarkern(z.replace(/^\d+\.\s*/,''))}</li>`).join('') + '</ol></div>';
+      }else{
+        html += `<div class="detailBody">${formatiereMitLernmarkern(a.inhalt)}</div>`;
+      }
+      html += '</div>';
+    });
+  }else{
+    const abschnitt = findeAbschnittFuerSnippet(k, el.text);
     html += '<div class="detailSection">';
-    if(a.label) html += `<div class="detailLabel">${escapeHTML(a.label)}</div>`;
-    const zeilen = a.inhalt.split('\n').filter(z=>z.trim());
-    const istListe = zeilen.length > 1 && zeilen.every(z => /^\d+\.\s/.test(z.trim()));
-    if(istListe){
-      html += '<div class="detailBody strategie"><ol>' + zeilen.map(z=>`<li>${escapeHTML(z.replace(/^\d+\.\s*/,''))}</li>`).join('') + '</ol></div>';
-    }else{
-      html += `<div class="detailBody">${escapeHTML(a.inhalt)}</div>`;
-    }
+    if(abschnitt.label) html += `<div class="detailLabel">${escapeHTML(abschnitt.label)}</div>`;
+    html += `<div class="detailBody">${formatiereMitLernmarkern(abschnitt.inhalt)}</div>`;
     html += '</div>';
-  });
-  html += `<button class="uebungAntwortBtn" style="background:#6fa8cc;" onclick="vorlesenEinzeln(uebungListe[${uebungIdx}], null)">🔊 Vorlesen</button>
+  }
+  html += `<button class="uebungAntwortBtn" style="background:#6fa8cc;" onclick="vorlesenLernelement(uebungListe[${uebungIdx}])">🔊 Vorlesen</button>
     <div class="uebungBewertung">
       <button class="btnNochmal" onclick="uebungBewerten(false)">🔁 Nochmal üben</button>
       <button class="btnSitzt" onclick="uebungBewerten(true)">✅ Sitzt</button>
@@ -1931,20 +2239,27 @@ function uebungAntwortZeigen(){
   document.querySelector('.uebungAntwortBtn[onclick*="uebungAntwortZeigen"]')?.remove();
 }
 
-function uebungBewerten(gut){
-  const k = karten.find(x => x.id === uebungListe[uebungIdx].id);
-  if(k){ k.geuebt = gut; speichereKartenListe(); }
+function vorlesenLernelement(el){
+  const text = el.ganzeKarte ? (el.karte.titel + '. ' + el.karte.text) : (el.karte.titel + '. ' + el.text);
+  vorlesenEinzeln({ titel: '', text }, null);
+}
+
+async function uebungBewerten(gut){
+  const el = uebungListe[uebungIdx];
+  await bewerteLernelement(el, gut);
+  // Legacy-Kartenfeld für "ganze Karte"-Einheiten weiter mitpflegen (Board-Häkchen ohne Zusatzabfrage synchron halten)
+  if(el.ganzeKarte){
+    const k = karten.find(x => x.id === el.karteId);
+    if(k){ k.srsBox = el.srsBox; k.srsFaellig = el.srsFaellig; k.geuebt = el.geuebt; speichereKartenListe(); }
+  }
   uebungIdx++;
   renderUebungKarte();
 }
 
 function uebungNurOffene(){
-  uebungListe = uebungListe.filter(k=>{
-    const akt = karten.find(x=>x.id===k.id);
-    return akt && !akt.geuebt;
-  });
+  uebungListe = uebungListe.filter(el => !el.geuebt);
   uebungIdx = 0;
-  if(!uebungListe.length){ zeigeToast('Alle Karten sitzen 🎉'); beendeUebung(); return; }
+  if(!uebungListe.length){ zeigeToast('Alles sitzt 🎉'); beendeUebung(); return; }
   renderUebungKarte();
 }
 
@@ -1965,14 +2280,34 @@ function mische(arr){
   return a;
 }
 
+/* Gewichtete Zufallsreihenfolge: Karten mit niedriger Box (= schwächer sitzend)
+   kommen im Schnitt früher dran, bleibt aber jedes Mal unterschiedlich gemischt
+   (Efraimidis-Spirakis-Verfahren für gewichtetes Sampling ohne Zurücklegen). */
+function mischeGewichtet(liste){
+  return liste
+    .map(k => {
+      const box = typeof k.srsBox === 'number' ? k.srsBox : 0;
+      const gewicht = 6 - box; // Box 0 -> Gewicht 6, Box 4 -> Gewicht 2
+      const schluessel = Math.pow(Math.random(), 1 / gewicht);
+      return { k, schluessel };
+    })
+    .sort((a, b) => b.schluessel - a.schluessel)
+    .map(x => x.k);
+}
+
 function starteQuiz(){
   const liste = suchbegriff.trim() ? sucheGefiltert() : (currentView === 'uebersicht' ? karten.filter(k=>k.typ==='fach') : gefilterteKarten());
   if(liste.length < 2){ zeigeToast('Mindestens 2 Karten nötig für ein Quiz'); return; }
-  quizListe = mische(liste);
+  const { pool, nurFaellig, gesamt } = faelligeZuerst(liste);
+  if(pool.length < 2){ zeigeToast('Mindestens 2 fällige Karten nötig – ganze Auswahl wird genutzt'); quizListe = mischeGewichtet(liste); }
+  else quizListe = mischeGewichtet(pool);
   quizIdx = 0;
   quizRichtig = 0;
   document.getElementById('uebungOverlay').style.display = 'flex';
   renderQuizFrage();
+  if(nurFaellig && pool.length < gesamt && pool.length >= 2){
+    zeigeToast(`${pool.length} von ${gesamt} Karten sind heute fällig`);
+  }
 }
 
 function beendeQuiz(){
@@ -2071,7 +2406,7 @@ function quizAntworten(i){
   const richtig = i === frage.richtig;
   if(richtig) quizRichtig++;
   const k = karten.find(x=>x.id===frage.karte.id);
-  if(k){ k.geuebt = richtig; speichereKartenListe(); }
+  if(k){ srsBewerten(k, richtig); speichereKartenListe(); markiereAktivitaetHeute(); }
   document.querySelectorAll('#quizOptionen .quizOption').forEach((btn,idx)=>{
     btn.disabled = true;
     if(idx === frage.richtig) btn.classList.add('richtig');
@@ -2087,7 +2422,7 @@ function starteQuizWiederholung(){
     return akt && !akt.geuebt;
   });
   if(!falsche.length){ zeigeToast('Alles richtig beantwortet 🎉'); beendeQuiz(); return; }
-  quizListe = mische(falsche);
+  quizListe = mischeGewichtet(falsche);
   quizIdx = 0;
   quizRichtig = 0;
   renderQuizFrage();
