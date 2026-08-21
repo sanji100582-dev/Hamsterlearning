@@ -697,7 +697,8 @@
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); openKartenModal();">➕ Neue Karte anlegen</button>
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); document.getElementById('scanInput').click();">📷 Dokument/Flipchart scannen</button>
       <input type="file" id="scanInput" accept="image/*" capture="environment" style="display:none" onchange="scanFotoAusgewaehlt(event)">
-      <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); document.getElementById('seminarDialog').showModal();">📁 Neues Seminar</button>
+      <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); openNeuesSeminarDialog();">📁 Neues Seminar</button>
+      <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); openSeminarBearbeiten();">✏️ Aktuelles Seminar bearbeiten</button>
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); loescheAktuellesSeminar();">🗑 Aktuelles Seminar löschen</button>
       <button class="mehrItem" onclick="loadTemplate('verhandeln_pm'); document.getElementById('mehrDialog').close();">⤓ Vorlage „Verhandeln im PM-Alltag" laden</button>
       <button class="mehrItem" onclick="zufallskarte(); document.getElementById('mehrDialog').close();">🎲 Zufallskarte</button>
@@ -817,7 +818,7 @@
 
 <dialog id="seminarDialog">
   <div class="modalInner">
-    <h2>Neues Seminar</h2>
+    <h2 id="sDialogTitel">Neues Seminar</h2>
     <div class="field">
       <label>Titel</label>
       <input type="text" id="sTitel" placeholder="z. B. Kommunikation im Team">
@@ -828,7 +829,7 @@
     </div>
     <div class="modal-actions">
       <button class="cancel" onclick="document.getElementById('seminarDialog').close()">Abbrechen</button>
-      <button class="save" onclick="saveSeminar()">Anlegen</button>
+      <button class="save" id="sDialogSpeichernBtn" onclick="saveSeminar()">Anlegen</button>
     </div>
   </div>
 </dialog>
@@ -1228,7 +1229,7 @@ function renderSeminarTabs(){
   const addBtn = document.createElement('button');
   addBtn.className = 'tab add';
   addBtn.textContent = '+ Seminar';
-  addBtn.onclick = () => document.getElementById('seminarDialog').showModal();
+  addBtn.onclick = () => openNeuesSeminarDialog();
   row.appendChild(addBtn);
 
   const tplBtn = document.createElement('button');
@@ -1254,10 +1255,44 @@ async function wechsleSeminar(id){
   renderBoard();
 }
 
+let editSeminarId = null;
+
+function openNeuesSeminarDialog(){
+  editSeminarId = null;
+  document.getElementById('sDialogTitel').textContent = 'Neues Seminar';
+  document.getElementById('sDialogSpeichernBtn').textContent = 'Anlegen';
+  document.getElementById('sTitel').value = '';
+  document.getElementById('sDatum').value = '';
+  document.getElementById('seminarDialog').showModal();
+}
+
+function openSeminarBearbeiten(){
+  if(!aktuellesSeminarId){ zeigeToast('Kein Seminar ausgewählt'); return; }
+  const sem = seminare.find(s=>s.id===aktuellesSeminarId);
+  if(!sem) return;
+  editSeminarId = sem.id;
+  document.getElementById('sDialogTitel').textContent = 'Seminar bearbeiten';
+  document.getElementById('sDialogSpeichernBtn').textContent = 'Speichern';
+  document.getElementById('sTitel').value = sem.titel;
+  document.getElementById('sDatum').value = sem.datum || '';
+  document.getElementById('seminarDialog').showModal();
+}
+
 async function saveSeminar(){
   const titel = document.getElementById('sTitel').value.trim();
   const datum = document.getElementById('sDatum').value;
   if(!titel){ zeigeToast('Bitte einen Titel eingeben'); return; }
+  if(editSeminarId){
+    const sem = seminare.find(s=>s.id===editSeminarId);
+    if(sem){ sem.titel = titel; sem.datum = datum; }
+    await storeSet('seminare', seminare);
+    editSeminarId = null;
+    document.getElementById('seminarDialog').close();
+    renderSeminarTabs();
+    renderBoard();
+    zeigeToast('Seminar aktualisiert');
+    return;
+  }
   const id = 's_' + Date.now();
   seminare.push({ id, titel, datum });
   await storeSet('seminare', seminare);
