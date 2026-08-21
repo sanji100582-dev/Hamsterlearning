@@ -283,6 +283,17 @@
     display:inline-block; min-width:70px; border-bottom:2.5px solid var(--gelb-dk);
     height:1.1em; vertical-align:text-bottom; margin:0 2px;
   }
+  .luecktextInput{
+    width:100%; padding:13px 14px; border-radius:10px; border:1.5px solid rgba(0,0,0,0.15);
+    background:#fffdf8; color:var(--text-main); font-size:1rem; font-family:var(--schrift-sans);
+    margin-bottom:10px; box-sizing:border-box;
+  }
+  .luecktextInput:focus{border-color:var(--gelb-dk); outline:none;}
+  .luecktextFeedback{
+    padding:10px 12px; border-radius:8px; font-size:0.88rem; margin-bottom:12px; line-height:1.4;
+  }
+  .luecktextFeedback.richtig{background:#d6efdb; color:#1f5c34;}
+  .luecktextFeedback.falsch{background:#f7ded3; color:#8a3520;}
   .uebungAntwortBtn{
     display:block; width:100%; padding:14px; border-radius:10px; border:none;
     background:#3f8a58; color:#fff; font-size:1rem; font-weight:600; cursor:pointer; margin-top:10px;
@@ -2194,10 +2205,20 @@ function renderUebungKarte(){
         <div class="uebungHinweis">${aufgabenHinweis}</div>
         ${vorschauHTML ? `<div class="uebungVorschau">${vorschauHTML}</div>` : ''}
         <div id="uebungAntwort">
-          <button class="uebungAntwortBtn" onclick="uebungAntwortZeigen()">👁️ Antwort zeigen</button>
+          ${el.ganzeKarte
+            ? `<button class="uebungAntwortBtn" onclick="uebungAntwortZeigen()">👁️ Antwort zeigen</button>`
+            : `<input type="text" id="luecktextEingabe" class="luecktextInput" placeholder="Deine Antwort..." autocomplete="off" autocapitalize="off" autocorrect="off">
+               <button class="uebungAntwortBtn" onclick="uebungLueckeAbfragen()">✓ Prüfen</button>
+               <button class="uebungAntwortBtn" style="background:transparent;color:#8a7f6a;box-shadow:none;padding:6px;" onclick="uebungAntwortZeigen()">Ich passe – Antwort einfach zeigen</button>`
+          }
         </div>
       </div>
     </div>`;
+  const eingabefeld = document.getElementById('luecktextEingabe');
+  if(eingabefeld){
+    eingabefeld.focus();
+    eingabefeld.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') uebungLueckeAbfragen(); });
+  }
 }
 
 function escapeHTML(s){
@@ -2206,11 +2227,34 @@ function escapeHTML(s){
   return d.innerHTML;
 }
 
-function uebungAntwortZeigen(){
+function normalisiere(s){
+  return (s || '').toLowerCase().trim().replace(/\s+/g,' ').replace(/[.,;:!?"'„"]/g,'');
+}
+
+function uebungLueckeAbfragen(){
+  const el = uebungListe[uebungIdx];
+  const eingabeFeld = document.getElementById('luecktextEingabe');
+  const eingabe = eingabeFeld ? eingabeFeld.value : '';
+  const normEingabe = normalisiere(eingabe);
+  const normRichtig = normalisiere(el.text);
+  const trifftZu = normEingabe.length > 0 && (normEingabe === normRichtig || (normEingabe.length >= 3 && normRichtig.includes(normEingabe)) || (normRichtig.length >= 3 && normEingabe.includes(normRichtig)));
+  uebungAntwortZeigen(eingabe, trifftZu);
+}
+
+function uebungAntwortZeigen(eingegebeneAntwort, trifftZu){
   const el = uebungListe[uebungIdx];
   const k = el.karte;
   const box = document.getElementById('uebungAntwort');
   let html = '';
+  if(typeof eingegebeneAntwort === 'string'){
+    if(eingegebeneAntwort.trim()){
+      html += `<div class="luecktextFeedback ${trifftZu ? 'richtig' : 'falsch'}">
+        Deine Antwort: „${escapeHTML(eingegebeneAntwort.trim())}" ${trifftZu ? '– passt gut! ✅' : '– vergleiche mit der richtigen Antwort unten'}
+      </div>`;
+    }else{
+      html += `<div class="luecktextFeedback falsch">Keine Antwort eingegeben – hier die richtige:</div>`;
+    }
+  }
   if(el.ganzeKarte){
     const abschnitte = parseAbschnitte(k.text);
     abschnitte.forEach(a=>{
