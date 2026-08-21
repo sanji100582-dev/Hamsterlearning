@@ -27,7 +27,7 @@
     --text-main:#3b332a;
     --text-muted:#6b5f49;
     --pin-metall:#d9d9d9;
-    --schrift-hand: 'Segoe Print','Bradley Hand','Comic Sans MS', cursive;
+    --schrift-hand: -apple-system, BlinkMacSystemFont, 'SF Pro Rounded', 'Segoe UI Rounded', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     --schrift-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
@@ -53,7 +53,7 @@
     padding:10px 12px 8px;
   }
   h1{
-    font-family:var(--schrift-hand);
+    font-family:var(--schrift-hand); font-weight:700;
     font-size:1.5rem;
     margin:2px 4px 8px;
     letter-spacing:0.5px;
@@ -88,7 +88,7 @@
     animation:splashPop .5s ease;
   }
   .splashTitel{
-    font-family:var(--schrift-hand); font-size:1.8rem; color:#7a5c2e; margin:0 0 8px;
+    font-family:var(--schrift-hand); font-weight:700; font-size:1.8rem; color:#7a5c2e; margin:0 0 8px;
     text-shadow:0 1px 0 rgba(255,255,255,0.6);
   }
   .splashSlogan{
@@ -148,7 +148,7 @@
   .listenBlock.reflexion{border-left-color:var(--gruen-dk);}
   .listenBlockKopf{margin-bottom:10px;}
   .listenBlockKopf h3{
-    font-family:var(--schrift-hand); font-size:1.15rem; margin:0 0 6px; color:var(--text-main);
+    font-family:var(--schrift-hand); font-weight:700; font-size:1.15rem; margin:0 0 6px; color:var(--text-main);
   }
   .listenBlockMeta{display:flex; gap:6px; flex-wrap:wrap;}
   .listenBlockBody{padding-top:2px;}
@@ -169,7 +169,7 @@
     box-shadow:0 3px 4px rgba(0,0,0,0.5);
   }
   .karte h3{
-    font-family:var(--schrift-hand);
+    font-family:var(--schrift-hand); font-weight:700;
     font-size:1.15rem; margin:0 0 8px; line-height:1.2;
   }
   .karte p{
@@ -178,7 +178,7 @@
     display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
   }
   .karte .badge{
-    position:absolute; top:10px; right:12px; font-family:var(--schrift-hand);
+    position:absolute; top:10px; right:12px; font-family:var(--schrift-hand); font-weight:700;
     font-size:0.75rem; opacity:0.8; font-weight:600;
   }
   .karte .gruppeTag{
@@ -221,7 +221,7 @@
   .audioRow.ablauf{border-color:var(--blau-dk);}
   .audioRow.reflexion{border-color:var(--gruen-dk);}
   .audioRow .info{flex:1; min-width:0;}
-  .audioRow h4{margin:0 0 3px; font-family:var(--schrift-hand); font-size:1.05rem; color:var(--text-main);}
+  .audioRow h4{margin:0 0 3px; font-family:var(--schrift-hand); font-weight:700; font-size:1.05rem; color:var(--text-main);}
   .audioRow .typLbl{font-size:0.7rem; opacity:0.85; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); font-weight:600;}
   .audioRow .txtPrev{font-size:0.8rem; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
   .playBtn{
@@ -234,7 +234,7 @@
     background:rgba(0,0,0,0.03); border-radius:10px;
   }
 
-  .leer{text-align:center; padding:60px 20px; color:var(--text-muted); font-family:var(--schrift-hand); font-size:1.2rem;}
+  .leer{text-align:center; padding:60px 20px; color:var(--text-muted); font-family:var(--schrift-hand); font-weight:700; font-size:1.2rem;}
 
   /* ---------- Gruppen-Filter ---------- */
   .gruppeRow{display:flex; gap:6px; overflow-x:auto; padding:8px 0 2px; scrollbar-width:thin;}
@@ -247,7 +247,7 @@
   /* ---------- Detailansicht ---------- */
   .detailDialog{width:min(560px,94vw); max-height:85vh; overflow-y:auto;}
   .detailHeader{display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:4px;}
-  .detailHeader h2{font-family:var(--schrift-hand); font-size:1.4rem; margin:0; line-height:1.25;}
+  .detailHeader h2{font-family:var(--schrift-hand); font-weight:700; font-size:1.4rem; margin:0; line-height:1.25;}
   .detailMeta{display:flex; gap:8px; align-items:center; margin-bottom:14px; flex-wrap:wrap;}
   .detailBadge{
     font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.4px;
@@ -279,6 +279,30 @@
   .sprachPlayer{display:flex; align-items:center; gap:8px; width:100%;}
   .sprachPlayer audio{flex:1; height:36px;}
   @keyframes pulsieren{ 0%,100%{opacity:1;} 50%{opacity:0.6;} }
+
+  /* ---------- Reflexion & Tagebuch ---------- */
+  .reflexionBox{
+    background:rgba(255,255,255,0.6); border-radius:10px; padding:14px; margin-top:20px; text-align:left;
+  }
+  .reflexionLabel{font-size:0.82rem; font-weight:700; color:#5c4413; margin-bottom:8px;}
+  .reflexionTextarea{
+    width:100%; min-height:70px; padding:10px; border-radius:8px; border:1.5px solid rgba(0,0,0,0.12);
+    background:#fffdf8; color:var(--text-main); font-size:0.88rem; font-family:var(--schrift-sans);
+    box-sizing:border-box; margin-bottom:8px; resize:vertical;
+  }
+  .reflexionGespeichert{
+    text-align:center; font-size:0.9rem; font-weight:600; color:#1f5c34; padding:10px;
+  }
+  .tagebuchEintrag{
+    background:#fffdf8; border:1px solid rgba(0,0,0,0.08); border-radius:10px;
+    padding:12px 14px; margin-bottom:10px;
+  }
+  .tagebuchKopf{
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:0.74rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-bottom:6px;
+  }
+  .tagebuchLoeschen{background:transparent; border:none; color:#c4593a; font-size:0.9rem; cursor:pointer;}
+  .tagebuchText{font-size:0.9rem; line-height:1.4; color:var(--text-main); white-space:pre-wrap;}
   .lernmarkerBtn{
     background:#fff6dd; border:1px solid var(--gelb-dk); color:#5c4413;
     border-radius:8px; padding:7px 11px; font-size:0.78rem; cursor:pointer; font-family:var(--schrift-sans);
@@ -304,7 +328,7 @@
     box-shadow:0 10px 24px rgba(90,70,40,0.2);
   }
   .uebungTypBadge{font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:3px 10px; border-radius:999px; color:#20241e; display:inline-block; margin-bottom:10px;}
-  .uebungTitel{font-family:var(--schrift-hand); font-size:1.4rem; margin:0 0 6px;}
+  .uebungTitel{font-family:var(--schrift-hand); font-weight:700; font-size:1.4rem; margin:0 0 6px;}
   .uebungHinweis{font-size:0.82rem; color:#6b5c3f; margin-bottom:18px;}
   .uebungVorschau{
     background:#f4efe0; border-radius:10px; padding:12px 14px; margin-bottom:14px;
@@ -354,7 +378,7 @@
   .btnNochmal{background:#f7ded3; color:#8a3520;}
   .btnSitzt{background:#d6efdb; color:#1f5c34;}
   .uebungEnde{text-align:center; padding:30px 10px;}
-  .uebungEnde h2{font-family:var(--schrift-hand); font-size:1.6rem; color:#7a5c2e; margin-bottom:10px;}
+  .uebungEnde h2{font-family:var(--schrift-hand); font-weight:700; font-size:1.6rem; color:#7a5c2e; margin-bottom:10px;}
   .uebungEnde p{color:var(--text-muted); margin-bottom:20px;}
   .uebungEnde .iconBtn{margin:4px;}
 
@@ -368,7 +392,7 @@
     padding:14px 16px; background:linear-gradient(180deg, rgba(247,241,227,0.98), rgba(247,241,227,0.9));
     backdrop-filter:blur(4px); border-bottom:1px solid rgba(0,0,0,0.06);
   }
-  .kursTop h2{flex:1; font-family:var(--schrift-hand); font-size:1.2rem; margin:0; color:#7a5c2e;}
+  .kursTop h2{flex:1; font-family:var(--schrift-hand); font-weight:700; font-size:1.2rem; margin:0; color:#7a5c2e;}
   .kursBody{padding:16px 16px 40px; max-width:640px; margin:0 auto; width:100%;}
   .kursTrack{display:flex; gap:6px; overflow-x:auto; padding-bottom:14px; scrollbar-width:thin;}
   .kursDot{
@@ -379,7 +403,7 @@
   .kursDot.done{background:#2b6b45; border-color:#2b6b45; color:#fff;}
   .kursDot.active{border-color:var(--gelb-dk); box-shadow:0 0 0 3px rgba(224,184,74,0.25); color:var(--text-main);}
   .kursEyebrow{font-size:0.72rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); font-weight:600; margin:0 0 4px;}
-  .kursTitel{font-family:var(--schrift-hand); font-size:1.5rem; margin:0 0 14px; color:var(--text-main);}
+  .kursTitel{font-family:var(--schrift-hand); font-weight:700; font-size:1.5rem; margin:0 0 14px; color:var(--text-main);}
   .kursCard{
     background:#fffdf8; border:1px solid rgba(0,0,0,0.08); border-radius:12px;
     padding:16px 18px; margin-bottom:16px; box-shadow:0 4px 10px rgba(90,70,40,0.1);
@@ -483,7 +507,7 @@
     background:var(--gelb); color:var(--tinte);
   }
   .kachel.reflexion{background:var(--gruen);}
-  .kachel .kachelTitel{font-family:var(--schrift-hand); font-size:1.1rem; margin:0 0 6px; line-height:1.2;}
+  .kachel .kachelTitel{font-family:var(--schrift-hand); font-weight:700; font-size:1.1rem; margin:0 0 6px; line-height:1.2;}
   .kachel .kachelMeta{font-size:0.76rem; opacity:0.85; margin-bottom:8px; font-weight:500;}
   .kachel .kachelBar{height:6px; border-radius:999px; background:rgba(0,0,0,0.12); overflow:hidden;}
   .kachel .kachelBar > div{height:100%; background:#3f8a58;}
@@ -504,7 +528,7 @@
     border-radius:8px; padding:7px 12px; font-size:0.85rem; cursor:pointer; font-family:var(--schrift-sans);
   }
   .boardHeader h2{
-    flex:1; font-family:var(--schrift-hand); font-size:1.25rem; margin:0; color:#7a5c2e;
+    flex:1; font-family:var(--schrift-hand); font-weight:700; font-size:1.25rem; margin:0; color:#7a5c2e;
   }
   .boardHeader .addBtn{
     background:var(--gelb); color:#5c4413; border:none; border-radius:8px;
@@ -555,7 +579,7 @@
   }
   dialog::backdrop{background:rgba(0,0,0,0.6);}
   .modalInner{padding:20px;}
-  .modalInner h2{font-family:var(--schrift-hand); margin:0 0 14px; font-size:1.3rem;}
+  .modalInner h2{font-family:var(--schrift-hand); font-weight:700; margin:0 0 14px; font-size:1.3rem;}
   .field{margin-bottom:12px;}
   .field label{display:block; font-size:0.78rem; font-weight:600; margin-bottom:4px; color:#4a4a3a;}
   .field input, .field select, .field textarea{
@@ -725,6 +749,7 @@
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); openNeuesSeminarDialog();">📁 Neues Seminar</button>
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); openSeminarBearbeiten();">✏️ Aktuelles Seminar bearbeiten</button>
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); oeffneSeminarWechsel();">🔀 Seminar wechseln</button>
+      <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); zeigeTagebuch();">📔 Lerntagebuch</button>
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); loescheAktuellesSeminar();">🗑 Aktuelles Seminar löschen</button>
       <button class="mehrItem" onclick="loadTemplate('verhandeln_pm'); document.getElementById('mehrDialog').close();">⤓ Vorlage „Verhandeln im PM-Alltag" laden</button>
       <button class="mehrItem" onclick="zufallskarte(); document.getElementById('mehrDialog').close();">🎲 Zufallskarte</button>
@@ -735,6 +760,19 @@
     </div>
     <div class="modal-actions">
       <button class="cancel" onclick="document.getElementById('mehrDialog').close()">Schließen</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="tagebuchDialog" class="detailDialog">
+  <div class="modalInner">
+    <div class="detailHeader">
+      <h2>📔 Lerntagebuch</h2>
+      <button class="iconBtn" onclick="document.getElementById('tagebuchDialog').close()" style="background:#e6dfc4;color:#4a4a3a;">✕</button>
+    </div>
+    <div id="tagebuchBody"></div>
+    <div class="modal-actions">
+      <button class="cancel" onclick="document.getElementById('tagebuchDialog').close()">Schließen</button>
     </div>
   </div>
 </dialog>
@@ -1278,6 +1316,7 @@ async function init(){
     karten = (await storeGet('karten_' + aktuellesSeminarId)) || [];
     await ladeLernstand(aktuellesSeminarId);
     await ladeSpielstand(aktuellesSeminarId);
+    await ladeTagebuch(aktuellesSeminarId);
   }
   const letzterBereich = await storeGet('letzterBereich');
   if(letzterBereich === 'seminare'){
@@ -1449,6 +1488,7 @@ async function wechsleSeminar(id){
   karten = (await storeGet('karten_' + id)) || [];
   await ladeLernstand(id);
   await ladeSpielstand(id);
+  await ladeTagebuch(id);
   renderSeminarTabs();
   renderBoard();
 }
@@ -1512,12 +1552,14 @@ async function loescheAktuellesSeminar(){
   window.localStorage.removeItem(LS_PREFIX + 'karten_' + zuLoeschenId);
   window.localStorage.removeItem(LS_PREFIX + 'lernstand_' + zuLoeschenId);
   window.localStorage.removeItem(LS_PREFIX + 'spielstand_' + zuLoeschenId);
+  window.localStorage.removeItem(LS_PREFIX + 'tagebuch_' + zuLoeschenId);
   await fotosFuerSeminarLoeschen(zuLoeschenId);
   await audiosFuerSeminarLoeschen(zuLoeschenId);
   aktuellesSeminarId = seminare.length ? seminare[0].id : null;
   karten = aktuellesSeminarId ? ((await storeGet('karten_' + aktuellesSeminarId)) || []) : [];
   await ladeLernstand(aktuellesSeminarId);
     await ladeSpielstand(aktuellesSeminarId);
+    await ladeTagebuch(aktuellesSeminarId);
   await storeSet('letztesSeminar', aktuellesSeminarId);
   currentView = 'uebersicht';
   renderSeminarTabs();
@@ -2470,6 +2512,7 @@ function importJSON(evt){
         karten = data.kartenProSeminar[aktuellesSeminarId] || [];
         await ladeLernstand(aktuellesSeminarId);
         await ladeSpielstand(aktuellesSeminarId);
+    await ladeTagebuch(aktuellesSeminarId);
         await storeSet('letztesSeminar', aktuellesSeminarId);
       }
       currentView = 'uebersicht';
@@ -2696,6 +2739,59 @@ async function markiereAktivitaetHeute(){
   }
 }
 
+/* ---------- Reflexions-Tagebuch (je Seminar/Kurs) ---------- */
+let tagebuch = [];
+
+async function ladeTagebuch(seminarId){
+  tagebuch = seminarId ? ((await storeGet('tagebuch_' + seminarId)) || []) : [];
+}
+async function speichereTagebuchListe(){
+  if(!aktuellesSeminarId) return;
+  await storeSet('tagebuch_' + aktuellesSeminarId, tagebuch);
+}
+
+async function speichereReflexion(feldId, kontext, containerId){
+  const feld = document.getElementById(feldId);
+  const text = feld ? feld.value.trim() : '';
+  if(!text) return;
+  tagebuch.unshift({ datum: heuteISO(), zeit: new Date().toISOString(), kontext, text });
+  await speichereTagebuchListe();
+  zeigeToast('📔 Eintrag gespeichert');
+  const feldWrap = document.getElementById(containerId);
+  if(feldWrap) feldWrap.innerHTML = '<div class="reflexionGespeichert">📔 Danke, notiert!</div>';
+}
+
+function reflexionsFeldHTML(feldId, containerId, kontext){
+  return `<div id="${containerId}" class="reflexionBox">
+    <div class="reflexionLabel">📔 Kurze Reflexion (optional)</div>
+    <textarea id="${feldId}" class="reflexionTextarea" placeholder="Was lief gut? Was noch nicht?"></textarea>
+    <button class="iconBtn" onclick="speichereReflexion('${feldId}','${kontext}','${containerId}')">💾 Eintrag speichern</button>
+  </div>`;
+}
+
+function zeigeTagebuch(){
+  const body = document.getElementById('tagebuchBody');
+  if(!tagebuch.length){
+    body.innerHTML = '<div class="leer" style="padding:30px 10px;font-size:1rem;">Noch keine Einträge.<br>Nach dem Üben kannst du kurz reflektieren.</div>';
+  }else{
+    body.innerHTML = tagebuch.map((e,i) => `
+      <div class="tagebuchEintrag">
+        <div class="tagebuchKopf">
+          <span>${escapeHTML(e.datum)} · ${e.kontext === 'quiz' ? '❓ Quiz' : e.kontext === 'zuordnen' ? '🔗 Zuordnen' : '🗂 Karteikarten'}</span>
+          <button class="tagebuchLoeschen" onclick="loescheTagebuchEintrag(${i})">✕</button>
+        </div>
+        <div class="tagebuchText">${escapeHTML(e.text)}</div>
+      </div>`).join('');
+  }
+  document.getElementById('tagebuchDialog').showModal();
+}
+
+async function loescheTagebuchEintrag(idx){
+  tagebuch.splice(idx, 1);
+  await speichereTagebuchListe();
+  zeigeTagebuch();
+}
+
 function berechneStreak(map){
   const tag = new Date();
   const heute = heuteISO();
@@ -2789,6 +2885,7 @@ function renderUebungKarte(){
         <button class="iconBtn" onclick="uebungNurOffene()">🔁 Nur die restlichen wiederholen</button><br>
         <button class="iconBtn" onclick="mischeUebung()">🔀 Nochmal von vorn (gemischt)</button><br>
         <button class="iconBtn" onclick="beendeUebung()">Zurück zum Board</button>
+        ${reflexionsFeldHTML('reflexionUebung','reflexionUebungBox','uebung')}
       </div>`;
     return;
   }
@@ -3038,6 +3135,7 @@ function renderQuizFrage(){
         <button class="iconBtn" onclick="starteQuizWiederholung()">🔁 Nur die falschen wiederholen</button><br>
         <button class="iconBtn" onclick="starteQuiz()">🔀 Neues Quiz (gemischt)</button><br>
         <button class="iconBtn" onclick="beendeQuiz()">Zurück zum Board</button>
+        ${reflexionsFeldHTML('reflexionQuiz','reflexionQuizBox','quiz')}
       </div>`;
     return;
   }
@@ -3135,6 +3233,7 @@ function renderZuordnen(){
         <p>${zuordnenPaare.length} Paare richtig verbunden.</p>
         <button class="iconBtn" onclick="starteZuordnen()">🔀 Neue Runde</button><br>
         <button class="iconBtn" onclick="beendeZuordnen()">Zurück zum Board</button>
+        ${reflexionsFeldHTML('reflexionZuordnen','reflexionZuordnenBox','zuordnen')}
       </div>`;
     return;
   }
