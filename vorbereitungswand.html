@@ -304,6 +304,12 @@
   .sprachPlayer{display:flex; align-items:center; gap:8px; width:100%;}
   .sprachPlayer audio{flex:1; height:36px;}
   @keyframes pulsieren{ 0%,100%{opacity:1;} 50%{opacity:0.6;} }
+  .referenzToggle{display:flex; align-items:flex-start; gap:8px; font-size:0.8rem; color:#4a4a3a; cursor:pointer; font-weight:400;}
+  .referenzToggle input{margin-top:3px; flex:0 0 auto;}
+  .karte.referenzKarte{opacity:0.6;}
+  .karte .referenzBadge{
+    position:absolute; bottom:10px; right:12px; font-size:0.85rem; opacity:0.7;
+  }
 
   /* ---------- Reflexion & Tagebuch ---------- */
   .reflexionBox{
@@ -438,7 +444,7 @@
     backdrop-filter:blur(4px); border-bottom:1px solid rgba(0,0,0,0.06);
   }
   .kursTop h2{flex:1; font-family:var(--schrift-hand); font-weight:700; font-size:1.2rem; margin:0; color:#7a5c2e;}
-  .kursBody{padding:16px 16px 40px; max-width:640px; margin:0 auto; width:100%;}
+  .kursBody{padding:16px 16px 90px; max-width:640px; margin:0 auto; width:100%;}
   .kursTrack{display:flex; gap:6px; overflow-x:auto; padding-bottom:14px; scrollbar-width:thin;}
   .kursDot{
     flex:0 0 auto; width:30px; height:30px; border-radius:50%; display:flex; align-items:center;
@@ -774,9 +780,10 @@
   <div class="modalInner">
     <h2>Wie möchtest du üben?</h2>
     <div class="mehrList">
-      <button class="mehrItem" onclick="document.getElementById('uebenWahlDialog').close(); starteUebung();">🗂 Karteikarten<br><span style="font-weight:400;font-size:0.8rem;color:var(--text-muted);">Selbst erinnern, dann Antwort aufdecken</span></button>
+      <button class="mehrItem" onclick="document.getElementById('uebenWahlDialog').close(); sprechModusAktiv=false; starteUebung();">🗂 Karteikarten<br><span style="font-weight:400;font-size:0.8rem;color:var(--text-muted);">Selbst erinnern, dann Antwort aufdecken</span></button>
       <button class="mehrItem" onclick="document.getElementById('uebenWahlDialog').close(); starteQuiz();">❓ Quiz<br><span style="font-weight:400;font-size:0.8rem;color:var(--text-muted);">Multiple-Choice-Fragen, automatisch erstellt</span></button>
       <button class="mehrItem" onclick="document.getElementById('uebenWahlDialog').close(); starteZuordnen();">🔗 Zuordnen<br><span style="font-weight:400;font-size:0.8rem;color:var(--text-muted);">Titel und Inhalte per Antippen einander zuordnen</span></button>
+      <button class="mehrItem" onclick="document.getElementById('uebenWahlDialog').close(); starteSprechtraining();">🗣️ Sprechtraining<br><span style="font-weight:400;font-size:0.8rem;color:var(--text-muted);">Text frei sprechen, aufnehmen, anhören, selbst bewerten</span></button>
     </div>
     <div class="modal-actions">
       <button class="cancel" onclick="document.getElementById('uebenWahlDialog').close()">Abbrechen</button>
@@ -795,17 +802,30 @@
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); openSeminarBearbeiten();">✏️ Aktuelles Seminar bearbeiten</button>
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); oeffneSeminarWechsel();">🔀 Seminar wechseln</button>
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); zeigeTagebuch();">📔 Lerntagebuch</button>
-      <button class="mehrItem" id="darkModeBtn" onclick="toggleDarkMode()">🌙 Dark Mode</button>
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); loescheAktuellesSeminar();">🗑 Aktuelles Seminar löschen</button>
       <button class="mehrItem" onclick="loadTemplate('verhandeln_pm'); document.getElementById('mehrDialog').close();">⤓ Vorlage „Verhandeln im PM-Alltag" laden</button>
       <button class="mehrItem" onclick="zufallskarte(); document.getElementById('mehrDialog').close();">🎲 Zufallskarte</button>
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); oeffneFokusTimerDialog();">⏱ Fokus-Timer starten</button>
-      <button class="mehrItem" onclick="exportJSON()">💾 Sichern (Backup exportieren)</button>
-      <button class="mehrItem" onclick="document.getElementById('importInput').click()">📂 Laden (Backup importieren)</button>
+      <button class="mehrItem" onclick="exportJSON()">💾 Nur dieses Seminar sichern</button>
+      <button class="mehrItem" onclick="document.getElementById('importInput').click()">📂 Nur dieses Seminar laden</button>
       <input type="file" id="importInput" accept="application/json" style="display:none" onchange="importJSON(event)">
     </div>
     <div class="modal-actions">
       <button class="cancel" onclick="document.getElementById('mehrDialog').close()">Schließen</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="kursMehrDialog">
+  <div class="modalInner">
+    <h2>Mehr</h2>
+    <div class="mehrList">
+      <button class="mehrItem" onclick="document.getElementById('kursMehrDialog').close(); kursReset();">🔄 Kursfortschritt zurücksetzen</button>
+      <button class="mehrItem" onclick="document.getElementById('kursMehrDialog').close(); oeffneFokusTimerDialog();">⏱ Fokus-Timer starten</button>
+      <button class="mehrItem" id="darkModeBtnKurs" onclick="toggleDarkMode()">🌙 Dark Mode</button>
+    </div>
+    <div class="modal-actions">
+      <button class="cancel" onclick="document.getElementById('kursMehrDialog').close()">Schließen</button>
     </div>
   </div>
 </dialog>
@@ -943,8 +963,9 @@
       <button class="iconBtn" onclick="document.getElementById('einstellungenDialog').close()" style="background:#e6dfc4;color:#4a4a3a;">✕</button>
     </div>
     <div class="mehrList">
-      <button class="mehrItem" onclick="gesamtExportJSON()">💾 Gesamt-Backup sichern</button>
-      <button class="mehrItem" onclick="document.getElementById('gesamtImportInput').click()">📂 Gesamt-Backup laden</button>
+      <button class="mehrItem" id="darkModeBtn" onclick="toggleDarkMode()">🌙 Dark Mode</button>
+      <button class="mehrItem" onclick="gesamtExportJSON()">💾 Alles sichern (Gesamt-Backup)</button>
+      <button class="mehrItem" onclick="document.getElementById('gesamtImportInput').click()">📂 Alles laden (Gesamt-Backup)</button>
       <input type="file" id="gesamtImportInput" accept="application/json" style="display:none" onchange="gesamtImportJSON(event)">
     </div>
     <p style="font-size:0.8rem; color:var(--text-muted); margin-top:14px;">Sichert alle Seminare und den Fortschritt aller Lernkurse in einer Datei.</p>
@@ -1019,6 +1040,12 @@
     <div class="field">
       <label>Sprachnotiz (optional)</label>
       <div id="sprachnotizBereich"></div>
+    </div>
+    <div class="field">
+      <label class="referenzToggle">
+        <input type="checkbox" id="kReferenzNur">
+        <span>📎 Nur Referenz – wird nie im Üben/Quiz abgefragt, bleibt aber sichtbar (weiter unten einsortiert)</span>
+      </label>
     </div>
     <div class="modal-actions">
       <button class="danger" id="kDeleteBtn" style="display:none;" onclick="deleteKarte()">Löschen</button>
@@ -1356,13 +1383,13 @@ function hashRotation(id){
 async function init(){
   const splashStart = Date.now();
   await ladeDarkMode();
+  await ladeSpielstand();
   seminare = (await storeGet('seminare')) || [];
   const last = await storeGet('letztesSeminar');
   if(seminare.length){
     aktuellesSeminarId = (last && seminare.find(s=>s.id===last)) ? last : seminare[0].id;
     karten = (await storeGet('karten_' + aktuellesSeminarId)) || [];
     await ladeLernstand(aktuellesSeminarId);
-    await ladeSpielstand(aktuellesSeminarId);
     await ladeTagebuch(aktuellesSeminarId);
   }
   const letzterBereich = await storeGet('letzterBereich');
@@ -1424,9 +1451,11 @@ async function renderStartKacheln(){
 }
 
 async function gesamtExportJSON(){
-  const data = { seminare, kartenProSeminar:{}, kurse:{} };
+  const data = { seminare, kartenProSeminar:{}, lernstandProSeminar:{}, tagebuchProSeminar:{}, kurse:{} };
   for(const s of seminare){
     data.kartenProSeminar[s.id] = (s.id === aktuellesSeminarId) ? karten : (await storeGet('karten_'+s.id)) || [];
+    data.lernstandProSeminar[s.id] = (s.id === aktuellesSeminarId) ? lernstand : (await storeGet('lernstand_'+s.id)) || {};
+    data.tagebuchProSeminar[s.id] = (s.id === aktuellesSeminarId) ? tagebuch : (await storeGet('tagebuch_'+s.id)) || [];
   }
   for(const kursId in LERNKURSE){
     let fortschritt = await storeGet('kursFortschritt_' + kursId);
@@ -1436,6 +1465,8 @@ async function gesamtExportJSON(){
     }
     data.kurse[kursId] = fortschritt || { completed:[], current:0 };
   }
+  data.spielstand = (await storeGet('spielstand_global')) || spielstand;
+  data.aktivitaet = (await storeGet('aktivitaet')) || {};
   const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -1458,12 +1489,23 @@ function gesamtImportJSON(evt){
       for(const sid in (data.kartenProSeminar || {})){
         await storeSet('karten_' + sid, data.kartenProSeminar[sid]);
       }
+      for(const sid in (data.lernstandProSeminar || {})){
+        await storeSet('lernstand_' + sid, data.lernstandProSeminar[sid]);
+      }
+      for(const sid in (data.tagebuchProSeminar || {})){
+        await storeSet('tagebuch_' + sid, data.tagebuchProSeminar[sid]);
+      }
       for(const kursId in (data.kurse || {})){
         await storeSet('kursFortschritt_' + kursId, data.kurse[kursId]);
       }
+      if(data.spielstand) await storeSet('spielstand_global', data.spielstand);
+      if(data.aktivitaet) await storeSet('aktivitaet', data.aktivitaet);
+      await ladeSpielstand();
       if(seminare.length){
         aktuellesSeminarId = seminare[0].id;
         karten = data.kartenProSeminar[aktuellesSeminarId] || [];
+        await ladeLernstand(aktuellesSeminarId);
+        await ladeTagebuch(aktuellesSeminarId);
         await storeSet('letztesSeminar', aktuellesSeminarId);
       }
       kursLoadedIds = new Set();
@@ -1534,7 +1576,7 @@ async function wechsleSeminar(id){
   await storeSet('letztesSeminar', id);
   karten = (await storeGet('karten_' + id)) || [];
   await ladeLernstand(id);
-  await ladeSpielstand(id);
+  await ladeSpielstand();
   await ladeTagebuch(id);
   renderSeminarTabs();
   renderBoard();
@@ -1598,14 +1640,13 @@ async function loescheAktuellesSeminar(){
   await storeSet('seminare', seminare);
   window.localStorage.removeItem(LS_PREFIX + 'karten_' + zuLoeschenId);
   window.localStorage.removeItem(LS_PREFIX + 'lernstand_' + zuLoeschenId);
-  window.localStorage.removeItem(LS_PREFIX + 'spielstand_' + zuLoeschenId);
   window.localStorage.removeItem(LS_PREFIX + 'tagebuch_' + zuLoeschenId);
   await fotosFuerSeminarLoeschen(zuLoeschenId);
   await audiosFuerSeminarLoeschen(zuLoeschenId);
   aktuellesSeminarId = seminare.length ? seminare[0].id : null;
   karten = aktuellesSeminarId ? ((await storeGet('karten_' + aktuellesSeminarId)) || []) : [];
   await ladeLernstand(aktuellesSeminarId);
-    await ladeSpielstand(aktuellesSeminarId);
+    await ladeSpielstand();
     await ladeTagebuch(aktuellesSeminarId);
   await storeSet('letztesSeminar', aktuellesSeminarId);
   currentView = 'uebersicht';
@@ -1647,7 +1688,14 @@ function gefilterteKarten(){
   if(boardTyp === 'fach'){
     liste = liste.filter(k => boardGruppe === null ? !k.gruppe : k.gruppe === boardGruppe);
   }
-  return liste.sort((a,b)=> (a.ord||9999) - (b.ord||9999));
+  return liste.sort((a,b)=> {
+    if(!!a.referenzNur !== !!b.referenzNur) return a.referenzNur ? 1 : -1;
+    return (a.ord||9999) - (b.ord||9999);
+  });
+}
+
+function nurLernrelevante(liste){
+  return liste.filter(k => !k.referenzNur);
 }
 
 function sucheGefiltert(){
@@ -1679,7 +1727,7 @@ function zufallskarte(){
 async function zeigeFortschritt(){
   if(!aktuellesSeminarId || !karten.length){ zeigeToast('Keine Karten in diesem Seminar'); return; }
   const body = document.getElementById('fortschrittBody');
-  const alleElemente = alleLernelemente(karten);
+  const alleElemente = alleLernelemente(nurLernrelevante(karten));
   const gesamt = alleElemente.length;
   const gesamtSitzt = alleElemente.filter(e=>e.geuebt).length;
   const gesamtFaellig = alleElemente.filter(istFaellig).length;
@@ -1995,7 +2043,7 @@ function renderUebersicht(area){
 
   Object.keys(gruppenMap).sort().forEach(label=>{
     const g = gruppenMap[label];
-    const elemente = alleLernelemente(g.karten);
+    const elemente = alleLernelemente(nurLernrelevante(g.karten));
     const sitzt = elemente.filter(e=>e.geuebt).length;
     const gesamt = elemente.length;
     const pct = gesamt ? Math.round((sitzt/gesamt)*100) : 0;
@@ -2010,7 +2058,7 @@ function renderUebersicht(area){
   });
 
   if(reflexionKarten.length){
-    const elemente = alleLernelemente(reflexionKarten);
+    const elemente = alleLernelemente(nurLernrelevante(reflexionKarten));
     const sitzt = elemente.filter(e=>e.geuebt).length;
     const pct = elemente.length ? Math.round((sitzt/elemente.length)*100) : 0;
     const kachel = document.createElement('div');
@@ -2107,7 +2155,7 @@ function renderVisuell(area, liste){
   board.className = 'board';
   liste.forEach(k=>{
     const div = document.createElement('div');
-    div.className = 'karte ' + k.typ;
+    div.className = 'karte ' + k.typ + (k.referenzNur ? ' referenzKarte' : '');
     div.style.transform = `rotate(${hashRotation(k.id)})`;
     div.onclick = () => openDetail(k.id);
     const pin = document.createElement('div');
@@ -2123,14 +2171,21 @@ function renderVisuell(area, liste){
     badge.className = 'badge';
     badge.textContent = TYP_LABEL[k.typ];
     div.appendChild(badge);
+    if(k.referenzNur){
+      const refBadge = document.createElement('div');
+      refBadge.className = 'referenzBadge';
+      refBadge.textContent = '📎';
+      refBadge.title = 'Nur Referenz';
+      div.appendChild(refBadge);
+    }
     const lf = kartenLernfortschritt(k);
-    if(lf.gesamt > 0 && lf.sitzt === lf.gesamt){
+    if(!k.referenzNur && lf.gesamt > 0 && lf.sitzt === lf.gesamt){
       const marke = document.createElement('div');
       marke.className = 'geuebtMarke';
       marke.textContent = '✓';
       marke.title = 'Sitzt schon';
       div.appendChild(marke);
-    }else if(lf.sitzt > 0){
+    }else if(!k.referenzNur && lf.sitzt > 0){
       const marke = document.createElement('div');
       marke.className = 'geuebtMarke teilweise';
       marke.textContent = lf.sitzt + '/' + lf.gesamt;
@@ -2368,6 +2423,7 @@ function openKartenModal(id){
     document.getElementById('kOrd').value = k.ord || 1;
     delBtn.style.display = 'inline-block';
     sprachnotizBestehendId = k.audioId || null;
+    document.getElementById('kReferenzNur').checked = !!k.referenzNur;
   }else{
     document.getElementById('kDialogTitel').textContent = 'Neue Karte';
     const vorTyp = (currentView === 'board') ? boardTyp : 'fach';
@@ -2378,6 +2434,7 @@ function openKartenModal(id){
     document.getElementById('kOrd').value = karten.filter(k=>k.typ==='ablauf').length + 1;
     delBtn.style.display = 'none';
     sprachnotizBestehendId = null;
+    document.getElementById('kReferenzNur').checked = false;
   }
   renderSprachnotizBereich();
   updateOrdFieldVisibility();
@@ -2486,6 +2543,7 @@ async function saveKarte(){
   const gruppe = document.getElementById('kGruppe').value.trim();
   const text = document.getElementById('kText').value.trim();
   const ord = parseInt(document.getElementById('kOrd').value) || 1;
+  const referenzNur = document.getElementById('kReferenzNur').checked;
   if(!titel){ zeigeToast('Bitte einen Titel eingeben'); return; }
 
   let audioId = sprachnotizGeloescht ? null : sprachnotizBestehendId;
@@ -2499,9 +2557,9 @@ async function saveKarte(){
 
   if(editKarteId){
     const k = karten.find(x=>x.id===editKarteId);
-    k.typ = typ; k.titel = titel; k.gruppe = gruppe; k.text = text; k.ord = ord; k.audioId = audioId || undefined;
+    k.typ = typ; k.titel = titel; k.gruppe = gruppe; k.text = text; k.ord = ord; k.audioId = audioId || undefined; k.referenzNur = referenzNur;
   }else{
-    karten.push({ id:'k_'+Date.now(), typ, titel, gruppe, text, ord, audioId: audioId || undefined });
+    karten.push({ id:'k_'+Date.now(), typ, titel, gruppe, text, ord, audioId: audioId || undefined, referenzNur });
   }
   await speichereKartenListe();
   document.getElementById('kartenDialog').close();
@@ -2521,12 +2579,11 @@ async function deleteKarte(){
 
 /* ---------- Export / Import ---------- */
 function exportJSON(){
-  const data = { seminare, kartenProSeminar:{}, lernstandProSeminar:{}, spielstandProSeminar:{} };
+  const data = { seminare, kartenProSeminar:{}, lernstandProSeminar:{} };
   (async ()=>{
     for(const s of seminare){
       data.kartenProSeminar[s.id] = (s.id === aktuellesSeminarId) ? karten : (await storeGet('karten_'+s.id)) || [];
       data.lernstandProSeminar[s.id] = (s.id === aktuellesSeminarId) ? lernstand : (await storeGet('lernstand_'+s.id)) || {};
-      data.spielstandProSeminar[s.id] = (s.id === aktuellesSeminarId) ? spielstand : (await storeGet('spielstand_'+s.id)) || {};
     }
     const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
     const url = URL.createObjectURL(blob);
@@ -2554,15 +2611,11 @@ function importJSON(evt){
       for(const sid in (data.lernstandProSeminar || {})){
         await storeSet('lernstand_' + sid, data.lernstandProSeminar[sid]);
       }
-      for(const sid in (data.spielstandProSeminar || {})){
-        await storeSet('spielstand_' + sid, data.spielstandProSeminar[sid]);
-      }
       if(seminare.length){
         aktuellesSeminarId = seminare[0].id;
         karten = data.kartenProSeminar[aktuellesSeminarId] || [];
         await ladeLernstand(aktuellesSeminarId);
-        await ladeSpielstand(aktuellesSeminarId);
-    await ladeTagebuch(aktuellesSeminarId);
+        await ladeTagebuch(aktuellesSeminarId);
         await storeSet('letztesSeminar', aktuellesSeminarId);
       }
       currentView = 'uebersicht';
@@ -2631,6 +2684,7 @@ async function loadTemplate(key){
 let uebungListe = [];
 let uebungIdx = 0;
 let uebungOffen = false;
+let sprechModusAktiv = false;
 
 /* ---------- Spaced Repetition (Leitner-System, 5 Boxen) ---------- */
 const SRS_INTERVALLE = [0, 1, 3, 7, 16]; // Tage bis zur nächsten Fälligkeit je Box (Index = Box-Nr.)
@@ -2653,8 +2707,11 @@ async function toggleDarkMode(){
 }
 function setDarkModeUI(an){
   document.documentElement.setAttribute('data-theme', an ? 'dark' : 'light');
+  const label = an ? '☀️ Light Mode' : '🌙 Dark Mode';
   const btn = document.getElementById('darkModeBtn');
-  if(btn) btn.textContent = an ? '☀️ Light Mode' : '🌙 Dark Mode';
+  if(btn) btn.textContent = label;
+  const btnKurs = document.getElementById('darkModeBtnKurs');
+  if(btnKurs) btnKurs.textContent = label;
 }
 
 /* ---------- Spielelemente: Punkte, Level, Abzeichen, Tagesziel (je Seminar/Kurs getrennt) ---------- */
@@ -2683,15 +2740,14 @@ function berechneLevel(punkte){
   return { level, aktuelleSchwelle, naechsteSchwelle, progress };
 }
 
-async function ladeSpielstand(seminarId){
+async function ladeSpielstand(){
   const leer = { punkte:0, richtigGesamt:0, antwortenGesamt:0, abzeichen:[], tagesPunkte:{} };
-  spielstand = seminarId ? ((await storeGet('spielstand_' + seminarId)) || leer) : leer;
+  spielstand = (await storeGet('spielstand_global')) || leer;
   if(!spielstand.abzeichen) spielstand.abzeichen = [];
   if(!spielstand.tagesPunkte) spielstand.tagesPunkte = {};
 }
 async function speichereSpielstand(){
-  if(!aktuellesSeminarId) return;
-  await storeSet('spielstand_' + aktuellesSeminarId, spielstand);
+  await storeSet('spielstand_global', spielstand);
 }
 
 async function vergebePunkte(anzahl, warRichtig){
@@ -2907,9 +2963,14 @@ function aktivitaetsStreifenHTML(map){
     `</div>`;
 }
 
+function starteSprechtraining(){
+  sprechModusAktiv = true;
+  starteUebung();
+}
+
 function starteUebung(){
-  const liste = suchbegriff.trim() ? sucheGefiltert() : (currentView === 'uebersicht' ? karten.filter(k=>k.typ==='fach') : gefilterteKarten());
-  if(!liste.length){ zeigeToast('Keine Karten in der aktuellen Auswahl'); return; }
+  const liste = nurLernrelevante(suchbegriff.trim() ? sucheGefiltert() : (currentView === 'uebersicht' ? karten.filter(k=>k.typ==='fach') : gefilterteKarten()));
+  if(!liste.length){ zeigeToast('Keine lernrelevanten Karten in der aktuellen Auswahl'); return; }
   const nutzeCram = cramModusAktiv;
   cramModusAktiv = false;
   const elemente = alleLernelemente(liste);
@@ -2930,6 +2991,7 @@ function starteUebung(){
 
 function beendeUebung(){
   uebungOffen = false;
+  sprechModusAktiv = false;
   document.getElementById('uebungOverlay').style.display = 'none';
   stopVorlesen();
   renderBoard();
@@ -2982,6 +3044,10 @@ function renderUebungKarte(){
   const k = el.karte;
   stopVorlesen();
   const fortschritt = Math.round((uebungIdx / uebungListe.length) * 100);
+  if(sprechModusAktiv){
+    renderSprechUebungKarte(ov, el, k, fortschritt);
+    return;
+  }
   let vorschauHTML = '';
   let aufgabenHinweis = 'Versuch dich zu erinnern, bevor du die Antwort aufdeckst.';
   if(!el.ganzeKarte){
@@ -3133,6 +3199,86 @@ function aktiviereKartenSwipe(){
   karte.addEventListener('pointercancel', onUp);
 }
 
+/* ---------- Sprechtraining (Text frei sprechen, aufnehmen, anhören, selbst bewerten) ---------- */
+function renderSprechUebungKarte(ov, el, k, fortschritt){
+  const inhalt = el.ganzeKarte ? k.text : findeAbschnittFuerSnippet(k, el.text).inhalt;
+  ov.innerHTML = `
+    <div class="uebungTop">
+      <button class="uebungCloseBtn" onclick="beendeUebung()">✕</button>
+      <div class="uebungProgress"><div style="width:${fortschritt}%"></div></div>
+      <div class="uebungCount">${uebungIdx+1} / ${uebungListe.length}</div>
+    </div>
+    <div class="uebungCardWrap">
+      <div class="uebungKarte">
+        <span class="uebungTypBadge" style="background:${k.typ==='fach'?'var(--gelb)':k.typ==='ablauf'?'var(--blau)':'var(--gruen)'}">${TYP_LABEL[k.typ]}${k.gruppe ? ' · ' + k.gruppe : ''}</span>
+        <h3 class="uebungTitel">${escapeHTML((k.typ==='ablauf' && k.ord ? k.ord+'. ' : '') + k.titel)}</h3>
+        <div class="uebungHinweis">🗣️ Sprich das frei in eigenen Worten, dann nimm dich dabei auf.</div>
+        <div class="uebungVorschau"><div class="detailBody">${formatiereMitLernmarkern(inhalt)}</div></div>
+        <div id="sprechAufnahmeBereich">
+          <button class="uebungAntwortBtn" onclick="sprechAufnahmeStarten()">🎙️ Aufnehmen</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+let sprechRecorder = null;
+let sprechChunks = [];
+let sprechStartzeit = null;
+let sprechTimerId = null;
+
+async function sprechAufnahmeStarten(){
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    zeigeToast('Aufnahme wird von diesem Browser nicht unterstützt');
+    return;
+  }
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    sprechChunks = [];
+    const mimeKandidaten = ['audio/mp4', 'audio/webm', 'audio/webm;codecs=opus'];
+    const mime = mimeKandidaten.find(m => window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(m));
+    sprechRecorder = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
+    sprechRecorder.ondataavailable = (e) => { if(e.data.size > 0) sprechChunks.push(e.data); };
+    sprechRecorder.onstop = () => {
+      const blob = new Blob(sprechChunks, { type: sprechRecorder.mimeType || 'audio/webm' });
+      stream.getTracks().forEach(t => t.stop());
+      sprechAufnahmeFertig(blob);
+    };
+    sprechRecorder.start();
+    sprechStartzeit = Date.now();
+    const bereich = document.getElementById('sprechAufnahmeBereich');
+    bereich.innerHTML = `
+      <button class="sprachBtn aufnahme" onclick="sprechAufnahmeStoppen()">⏹ Stopp</button>
+      <span class="sprachZeit" id="sprechZeit">0:00</span>`;
+    sprechTimerId = setInterval(()=>{
+      const sek = Math.floor((Date.now() - sprechStartzeit)/1000);
+      const anzeige = document.getElementById('sprechZeit');
+      if(anzeige) anzeige.textContent = Math.floor(sek/60) + ':' + (sek%60).toString().padStart(2,'0');
+    }, 500);
+  }catch(e){
+    console.error(e);
+    zeigeToast('Zugriff aufs Mikrofon nicht möglich – bitte Berechtigung prüfen');
+  }
+}
+
+function sprechAufnahmeStoppen(){
+  clearInterval(sprechTimerId);
+  if(sprechRecorder && sprechRecorder.state !== 'inactive'){
+    sprechRecorder.stop();
+  }
+}
+
+function sprechAufnahmeFertig(blob){
+  const url = URL.createObjectURL(blob);
+  const bereich = document.getElementById('sprechAufnahmeBereich');
+  bereich.innerHTML = `
+    <div class="sprachPlayer"><audio controls autoplay src="${url}"></audio></div>
+    <div class="uebungBewertung">
+      <button class="btnNochmal" onclick="uebungBewerten(false)">🔁 Nochmal üben</button>
+      <button class="btnSitzt" onclick="uebungBewerten(true)">✅ Flüssig genug</button>
+    </div>`;
+  aktiviereKartenSwipe();
+}
+
 function vorlesenLernelement(el){
   const text = el.ganzeKarte ? (el.karte.titel + '. ' + el.karte.text) : (el.karte.titel + '. ' + el.text);
   vorlesenEinzeln({ titel: '', text }, null);
@@ -3191,8 +3337,8 @@ function mischeGewichtet(liste){
 }
 
 function starteQuiz(){
-  const liste = suchbegriff.trim() ? sucheGefiltert() : (currentView === 'uebersicht' ? karten.filter(k=>k.typ==='fach') : gefilterteKarten());
-  if(liste.length < 2){ zeigeToast('Mindestens 2 Karten nötig für ein Quiz'); return; }
+  const liste = nurLernrelevante(suchbegriff.trim() ? sucheGefiltert() : (currentView === 'uebersicht' ? karten.filter(k=>k.typ==='fach') : gefilterteKarten()));
+  if(liste.length < 2){ zeigeToast('Mindestens 2 lernrelevante Karten nötig für ein Quiz'); return; }
   const nutzeCram = cramModusAktiv;
   cramModusAktiv = false;
   const { pool, nurFaellig, gesamt } = nutzeCram ? { pool: liste, nurFaellig:false, gesamt: liste.length } : faelligeZuerst(liste);
@@ -3342,8 +3488,8 @@ function kurzTeaser(text, laenge){
 }
 
 function starteZuordnen(){
-  const liste = suchbegriff.trim() ? sucheGefiltert() : (currentView === 'uebersicht' ? karten.filter(k=>k.typ==='fach') : gefilterteKarten());
-  if(liste.length < 3){ zeigeToast('Mindestens 3 Karten nötig zum Zuordnen'); return; }
+  const liste = nurLernrelevante(suchbegriff.trim() ? sucheGefiltert() : (currentView === 'uebersicht' ? karten.filter(k=>k.typ==='fach') : gefilterteKarten()));
+  if(liste.length < 3){ zeigeToast('Mindestens 3 lernrelevante Karten nötig zum Zuordnen'); return; }
   const auswahl = mische(liste).slice(0, Math.min(6, liste.length));
   zuordnenPaare = auswahl.map((k, i) => ({ id: 'p' + i, titel: k.titel, inhalt: kurzTeaser(k.text) }));
   zuordnenLinks = zuordnenPaare.map(p => ({ pairId: p.id, text: p.titel }));
@@ -3810,7 +3956,53 @@ function kursRenderAll(){
         <button class="kursNavBtn" onclick="kursVorheriges()" ${kursState.current===0?'disabled':''}>← Zurück</button>
         <button class="kursNavBtn primary" onclick="kursNaechstes()">${kursState.current===aktiveLessons().length-1?'Fertig':'Weiter →'}</button>
       </div>
+    </div>
+    <nav class="bottomNav">
+      <button class="navBtn active" onclick="schliesseKurs()"><span>🏠</span>Übersicht</button>
+      <button class="navBtn" onclick="kursVorleseErklaerung()"><span>🔊</span>Vorlesen</button>
+      <button class="navBtn" onclick="kursSpringeZuUebung()"><span>🧠</span>Üben</button>
+      <button class="navBtn" onclick="zeigeFortschrittKurs()"><span>📊</span>Fortschritt</button>
+      <button class="navBtn" onclick="document.getElementById('kursMehrDialog').showModal()"><span>⋯</span>Mehr</button>
+    </nav>`;
+}
+
+function kursSpringeZuUebung(){
+  const feld = document.getElementById('kursUebungInput');
+  if(feld){ feld.scrollIntoView({behavior:'smooth', block:'center'}); feld.focus(); }
+}
+
+function zeigeFortschrittKurs(){
+  const body = document.getElementById('fortschrittBody');
+  const lvl = berechneLevel(spielstand.punkte || 0);
+  const heute = heuteISO();
+  const punkteHeute = (spielstand.tagesPunkte && spielstand.tagesPunkte[heute]) || 0;
+  const tageszielPct = Math.min(100, Math.round((punkteHeute / TAGESZIEL_PUNKTE) * 100));
+  storeGet('aktivitaet').then(akt=>{
+    const aktivitaet = akt || {};
+    const streak = berechneStreak(aktivitaet);
+    const freigeschaltet = ABZEICHEN_DEFS.filter(d => (spielstand.abzeichen||[]).includes(d.id));
+    let html = '';
+    html += `<div class="levelZeile">
+      <div class="levelKopf"><span>🏆 Level ${lvl.level}</span><span>${spielstand.punkte || 0} Punkte</span></div>
+      <div class="fortschrittBar"><div style="width:${Math.round(lvl.progress*100)}%; background:#c9a521;"></div></div>
     </div>`;
+    html += `<div class="levelZeile">
+      <div class="levelKopf"><span>🎯 Tagesziel</span><span>${punkteHeute}/${TAGESZIEL_PUNKTE} Punkte</span></div>
+      <div class="fortschrittBar"><div style="width:${tageszielPct}%; background:#3f8a58;"></div></div>
+    </div>`;
+    html += `<div class="abzeichenReihe">` +
+      ABZEICHEN_DEFS.map(d => {
+        const frei = (spielstand.abzeichen||[]).includes(d.id);
+        return `<div class="abzeichenChip${frei ? '' : ' gesperrt'}" title="${escapeHTML(d.titel)}">${d.icon}</div>`;
+      }).join('') +
+      `</div>
+    <div class="abzeichenLabel">${freigeschaltet.length}/${ABZEICHEN_DEFS.length} Abzeichen freigeschaltet</div>`;
+    html += `<div class="streakZeile">🔥 <strong>${streak}</strong> Tag${streak===1?'':'e'} in Folge geübt</div>`;
+    html += aktivitaetsStreifenHTML(aktivitaet);
+    html += fortschrittZeileHTML('Kurs-Module', kursState.completed.length, aktiveLessons().length, true);
+    body.innerHTML = html;
+    document.getElementById('fortschrittDialog').showModal();
+  });
 }
 
 function kursSprich(text){
@@ -3861,6 +4053,8 @@ async function kursUebungPruefen(){
   if(check.ok && !kursState.completed.includes(kursState.current)){
     kursState.completed.push(kursState.current);
     await kursSpeichern();
+    await vergebePunkte(15, true);
+    markiereAktivitaetHeute();
     document.querySelector('.kursTrack').innerHTML = aktiveLessons().map((m,i)=>{
       const cls = 'kursDot' + (kursState.completed.includes(i)?' done':'') + (i===kursState.current?' active':'');
       return `<div class="${cls}" onclick="kursWaehleModul(${i})">${kursState.completed.includes(i)?'✓':(i+1)}</div>`;
@@ -3873,7 +4067,8 @@ function kursQuizAntworten(i){
   const buttons = document.querySelectorAll('#kursQuizOptionen .kursQuizOpt');
   buttons.forEach(b=>b.disabled = true);
   const fb = document.getElementById('kursQuizFeedback');
-  if(i === l.quiz.richtig){
+  const richtig = (i === l.quiz.richtig);
+  if(richtig){
     buttons[i].classList.add('richtig');
     fb.className = 'kursFeedback ok';
     fb.textContent = 'Richtig.';
@@ -3883,6 +4078,8 @@ function kursQuizAntworten(i){
     fb.className = 'kursFeedback bad';
     fb.textContent = 'Nicht ganz – die richtige Antwort ist markiert.';
   }
+  vergebePunkte(richtig ? 10 : 2, richtig);
+  markiereAktivitaetHeute();
 }
 
 async function kursVorheriges(){
