@@ -496,6 +496,20 @@
   .kursQuizOpt.falsch{background:#f7ded3; border-color:#c4593a; font-weight:700;}
   .kursQuizOpt[disabled]{cursor:default;}
   .kursNavRow{display:flex; justify-content:space-between; margin-top:22px;}
+  .kursUebersichtListe{display:flex; flex-direction:column; gap:10px;}
+  .kursUebersichtZeile{
+    display:flex; align-items:center; gap:14px; background:#fffdf8; border:1px solid rgba(0,0,0,0.08);
+    border-radius:12px; padding:14px 16px; cursor:pointer;
+  }
+  .kursUebersichtZeile.aktuell{border-color:var(--gelb-dk); box-shadow:0 0 0 2px rgba(224,184,74,0.25);}
+  .kursUebersichtZeile.done{background:#f4faf6;}
+  .kursUebersichtNr{
+    width:32px; height:32px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
+    background:#e6dfc4; color:var(--text-main); font-weight:700; font-size:0.85rem;
+  }
+  .kursUebersichtZeile.done .kursUebersichtNr{background:#2b6b45; color:#fff;}
+  .kursUebersichtTitel{font-weight:600; font-size:0.95rem; color:var(--text-main);}
+  .kursUebersichtKonzept{font-size:0.76rem; color:var(--text-muted); margin-top:2px;}
   .kursNavBtn{
     font-family:var(--schrift-sans); font-size:0.82rem; font-weight:600; padding:10px 16px;
     border-radius:8px; border:1px solid rgba(0,0,0,0.12); background:var(--karte-bg); color:var(--text-main); cursor:pointer;
@@ -812,6 +826,16 @@
     </div>
     <div class="modal-actions">
       <button class="cancel" onclick="document.getElementById('mehrDialog').close()">Schließen</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="kursUebenWahlDialog">
+  <div class="modalInner">
+    <h2>Wohin möchtest du?</h2>
+    <div class="mehrList" id="kursUebenWahlListe"></div>
+    <div class="modal-actions">
+      <button class="cancel" onclick="document.getElementById('kursUebenWahlDialog').close()">Abbrechen</button>
     </div>
   </div>
 </dialog>
@@ -3873,6 +3897,7 @@ async function oeffneKurs(kursId, speichern=true){
 }
 
 function schliesseKurs(){
+  kursVorlesenAktiv = false;
   zeigeStartbildschirm();
 }
 
@@ -3882,7 +3907,45 @@ async function kursSpeichern(){
 
 function kursWaehleModul(i){
   kursState.current = i;
-  kursRenderAll();
+  kursRender();
+}
+
+function kursRender(){
+  if(kursVorlesenAktiv) kursRenderVorlesenModus();
+  else kursRenderAll();
+}
+
+function kursZeigeUebersicht(){
+  kursVorlesenAktiv = false;
+  const ov = document.getElementById('kursOverlay');
+  const rows = aktiveLessons().map((m,i) => {
+    const fertig = kursState.completed.includes(i);
+    const aktuell = i === kursState.current;
+    const cls = 'kursUebersichtZeile' + (fertig ? ' done' : '') + (aktuell ? ' aktuell' : '');
+    return `<div class="${cls}" onclick="kursWaehleModul(${i})">
+      <span class="kursUebersichtNr">${fertig ? '✓' : (i+1)}</span>
+      <div class="kursUebersichtInfo">
+        <div class="kursUebersichtTitel">${escapeHTML(m.title)}</div>
+        <div class="kursUebersichtKonzept">${escapeHTML(m.konzept)}</div>
+      </div>
+    </div>`;
+  }).join('');
+  ov.innerHTML = `
+    <div class="kursTop">
+      <img src="icon-180.png" alt="" class="h1Icon" onclick="schliesseKurs()" style="cursor:pointer;">
+      <h2>${aktiverKurs().icon} ${escapeHTML(aktiverKurs().titel)}</h2>
+    </div>
+    <div class="kursBody">
+      <div class="kursEyebrow">${kursState.completed.length} von ${aktiveLessons().length} Modulen abgeschlossen</div>
+      <div class="kursUebersichtListe">${rows}</div>
+    </div>
+    <nav class="bottomNav">
+      <button class="navBtn active" onclick="kursZeigeUebersicht()"><img src="nav_home_tempel.png" class="navIcon">Übersicht</button>
+      <button class="navBtn" onclick="kursToggleVorlesen()"><img src="nav_audio_welle.png" class="navIcon">Vorlesen</button>
+      <button class="navBtn" onclick="kursOeffneUebenWahl()"><img src="nav_gehirn_gruen.png" class="navIcon">Üben</button>
+      <button class="navBtn" onclick="zeigeFortschrittKurs()"><img src="nav_fortschritt_chart.png" class="navIcon">Fortschritt</button>
+      <button class="navBtn" onclick="document.getElementById('kursMehrDialog').showModal()"><span>⋯</span>Mehr</button>
+    </nav>`;
 }
 
 function kursReset(){
@@ -3897,11 +3960,6 @@ function kursReset(){
 function kursRenderAll(){
   const ov = document.getElementById('kursOverlay');
   const l = aktiveLessons()[kursState.current];
-  const trackHTML = aktiveLessons().map((m,i)=>{
-    const cls = 'kursDot' + (kursState.completed.includes(i)?' done':'') + (i===kursState.current?' active':'');
-    return `<div class="${cls}" onclick="kursWaehleModul(${i})">${kursState.completed.includes(i)?'✓':(i+1)}</div>`;
-  }).join('');
-
   const quizHTML = l.quiz ? `
     <div class="kursLabel">Kurzcheck</div>
     <div class="kursCard">
@@ -3914,13 +3972,12 @@ function kursRenderAll(){
 
   ov.innerHTML = `
     <div class="kursTop">
-      <button class="uebungCloseBtn" onclick="schliesseKurs()">✕</button>
+      <img src="icon-180.png" alt="" class="h1Icon" onclick="schliesseKurs()" style="cursor:pointer;">
       <h2>${aktiverKurs().icon} ${escapeHTML(aktiverKurs().titel)}</h2>
       <button class="iconBtn" onclick="stopVorlesen()" style="background:transparent;border:none;font-size:0.9rem;" title="Vorlesen stoppen">⏹</button>
       <button class="iconBtn" onclick="kursReset()" style="background:transparent;border:none;font-size:0.75rem;color:var(--text-muted);">Zurücksetzen</button>
     </div>
     <div class="kursBody">
-      <div class="kursTrack">${trackHTML}</div>
       <div class="kursEyebrow">Modul ${kursState.current+1} von ${aktiveLessons().length} · ${escapeHTML(l.konzept)}</div>
       <div class="kursTitel">${escapeHTML(l.title)}</div>
       <div class="kursCard">
@@ -3958,17 +4015,88 @@ function kursRenderAll(){
       </div>
     </div>
     <nav class="bottomNav">
-      <button class="navBtn active" onclick="schliesseKurs()"><span>🏠</span>Übersicht</button>
-      <button class="navBtn" onclick="kursVorleseErklaerung()"><span>🔊</span>Vorlesen</button>
-      <button class="navBtn" onclick="kursSpringeZuUebung()"><span>🧠</span>Üben</button>
-      <button class="navBtn" onclick="zeigeFortschrittKurs()"><span>📊</span>Fortschritt</button>
+      <button class="navBtn" onclick="kursZeigeUebersicht()"><img src="nav_home_tempel.png" class="navIcon">Übersicht</button>
+      <button class="navBtn" onclick="kursToggleVorlesen()"><img src="nav_audio_welle.png" class="navIcon">Vorlesen</button>
+      <button class="navBtn" onclick="kursOeffneUebenWahl()"><img src="nav_gehirn_gruen.png" class="navIcon">Üben</button>
+      <button class="navBtn" onclick="zeigeFortschrittKurs()"><img src="nav_fortschritt_chart.png" class="navIcon">Fortschritt</button>
       <button class="navBtn" onclick="document.getElementById('kursMehrDialog').showModal()"><span>⋯</span>Mehr</button>
     </nav>`;
+}
+
+function kursOeffneUebenWahl(){
+  const l = aktiveLessons()[kursState.current];
+  const box = document.getElementById('kursUebenWahlListe');
+  let html = `<button class="mehrItem" onclick="document.getElementById('kursUebenWahlDialog').close(); kursSpringeZuUebung();">✏️ Zur Code-Übung dieses Moduls</button>`;
+  if(l.quiz){
+    html += `<button class="mehrItem" onclick="document.getElementById('kursUebenWahlDialog').close(); kursSpringeZuQuiz();">❓ Zum Kurzcheck-Quiz dieses Moduls</button>`;
+  }
+  box.innerHTML = html;
+  document.getElementById('kursUebenWahlDialog').showModal();
 }
 
 function kursSpringeZuUebung(){
   const feld = document.getElementById('kursUebungInput');
   if(feld){ feld.scrollIntoView({behavior:'smooth', block:'center'}); feld.focus(); }
+}
+
+function kursSpringeZuQuiz(){
+  const feld = document.getElementById('kursQuizOptionen');
+  if(feld) feld.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+/* ---------- Vorlesen-Modus im Kurs (analog zum Seminar: Liste einzeln abspielbarer Abschnitte) ---------- */
+let kursVorlesenAktiv = false;
+
+function kursToggleVorlesen(){
+  kursVorlesenAktiv = !kursVorlesenAktiv;
+  if(kursVorlesenAktiv) kursRenderVorlesenModus();
+  else kursRenderAll();
+}
+
+function kursRenderVorlesenModus(){
+  const ov = document.getElementById('kursOverlay');
+  const l = aktiveLessons()[kursState.current];
+  const abschnitte = [
+    { label: 'Erklärung', typ: 'fach', text: l.erklaerung.join(' ') },
+    { label: 'Beispielcode', typ: 'ablauf', text: l.beispiel },
+    { label: 'Aufgabe', typ: 'reflexion', text: l.aufgabe },
+  ];
+  const zeilenHTML = abschnitte.map((a,i) => `
+    <div class="audioRow ${a.typ}">
+      <div class="info">
+        <h4>${escapeHTML(a.label)}</h4>
+        <div class="txtPrev">${escapeHTML(a.text.slice(0,90))}${a.text.length>90?'…':''}</div>
+      </div>
+      <button class="playBtn" onclick="kursSprich(${JSON.stringify(a.text)})">▶</button>
+    </div>`).join('');
+  ov.innerHTML = `
+    <div class="kursTop">
+      <img src="icon-180.png" alt="" class="h1Icon" onclick="schliesseKurs()" style="cursor:pointer;">
+      <h2>${aktiverKurs().icon} Vorlesen · Modul ${kursState.current+1}</h2>
+    </div>
+    <div class="kursBody">
+      <div class="allePlayBar">
+        <button class="iconBtn" onclick="kursAllesVorlesen()">▶ Alles vorlesen</button>
+        <button class="iconBtn" onclick="stopVorlesen()">■ Stopp</button>
+      </div>
+      <div class="audioList">${zeilenHTML}</div>
+    </div>
+    <nav class="bottomNav">
+      <button class="navBtn" onclick="kursZeigeUebersicht()"><img src="nav_home_tempel.png" class="navIcon">Übersicht</button>
+      <button class="navBtn active" onclick="kursToggleVorlesen()"><img src="nav_audio_welle.png" class="navIcon">Vorlesen</button>
+      <button class="navBtn" onclick="kursOeffneUebenWahl()"><img src="nav_gehirn_gruen.png" class="navIcon">Üben</button>
+      <button class="navBtn" onclick="zeigeFortschrittKurs()"><img src="nav_fortschritt_chart.png" class="navIcon">Fortschritt</button>
+      <button class="navBtn" onclick="document.getElementById('kursMehrDialog').showModal()"><span>⋯</span>Mehr</button>
+    </nav>`;
+}
+
+function kursAllesVorlesen(){
+  const l = aktiveLessons()[kursState.current];
+  alleVorlesen([
+    { titel: 'Erklärung', text: l.erklaerung.join(' ') },
+    { titel: 'Beispielcode', text: l.beispiel },
+    { titel: 'Aufgabe', text: l.aufgabe },
+  ]);
 }
 
 function zeigeFortschrittKurs(){
@@ -4055,10 +4183,6 @@ async function kursUebungPruefen(){
     await kursSpeichern();
     await vergebePunkte(15, true);
     markiereAktivitaetHeute();
-    document.querySelector('.kursTrack').innerHTML = aktiveLessons().map((m,i)=>{
-      const cls = 'kursDot' + (kursState.completed.includes(i)?' done':'') + (i===kursState.current?' active':'');
-      return `<div class="${cls}" onclick="kursWaehleModul(${i})">${kursState.completed.includes(i)?'✓':(i+1)}</div>`;
-    }).join('');
   }
 }
 
@@ -4083,10 +4207,10 @@ function kursQuizAntworten(i){
 }
 
 async function kursVorheriges(){
-  if(kursState.current>0){ kursState.current--; await kursSpeichern(); kursRenderAll(); }
+  if(kursState.current>0){ kursState.current--; await kursSpeichern(); kursRender(); }
 }
 async function kursNaechstes(){
-  if(kursState.current<aktiveLessons().length-1){ kursState.current++; await kursSpeichern(); kursRenderAll(); }
+  if(kursState.current<aktiveLessons().length-1){ kursState.current++; await kursSpeichern(); kursRender(); }
   else{ schliesseKurs(); }
 }
 
