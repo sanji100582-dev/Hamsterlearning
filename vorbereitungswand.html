@@ -288,6 +288,16 @@
     color:#6b551a; margin-bottom:4px;
   }
   .detailBody{font-size:0.95rem; line-height:1.5; white-space:pre-wrap; color:var(--dialog-text);}
+  .storyBlock{
+    background:#fdf3e0; border-left:4px solid var(--gelb-dk); border-radius:8px;
+    padding:12px 14px; margin:10px 0;
+  }
+  .storyBlock .detailLabel{color:#8a5a1f;}
+  .storyBlock .detailBody{font-style:italic;}
+  .storyBlock .detailBody::before{content:"„"; font-style:normal; font-weight:700; opacity:0.5;}
+  .storyBlock .detailBody::after{content:"“"; font-style:normal; font-weight:700; opacity:0.5;}
+  .sprachTranskript{margin-top:10px; padding-top:10px; border-top:1px dashed rgba(0,0,0,0.12);}
+  .sprachTranskriptLabel{font-size:0.76rem; font-weight:700; color:#6b551a; margin-bottom:6px;}
   .lernMarker{
     background:linear-gradient(180deg, transparent 55%, var(--gelb) 55%);
     padding:0 1px; border-radius:2px; font-weight:600;
@@ -1178,7 +1188,7 @@ let speakIdx = 0;
 let storageOk = true;
 
 /* ---------- Teaser & Abschnitte für Detailansicht ---------- */
-const LABEL_MUSTER = /^Setting|^Ziel für die Führungskraft|^Trainerhinweis|^Gesprächsstrategie|^Ziel\b/;
+const LABEL_MUSTER = /^Setting|^Ziel für die Führungskraft|^Trainerhinweis|^Gesprächsstrategie|^Ziel\b|^Story\b/;
 
 function teaserText(text){
   const bereinigt = klartext(text).replace(/^(Setting|Ziel für die Führungskraft|Trainerhinweis \(DISG\)|Gesprächsstrategie|Ziel):\s*/gm, '');
@@ -2234,11 +2244,11 @@ function renderListenansicht(area, liste){
     const abschnitte = parseAbschnitte(k.text);
     abschnitte.forEach(a=>{
       const sec = document.createElement('div');
-      sec.className = 'detailSection';
+      sec.className = 'detailSection' + (a.label === 'Story' ? ' storyBlock' : '');
       if(a.label){
         const lab = document.createElement('div');
         lab.className = 'detailLabel';
-        lab.textContent = a.label;
+        lab.textContent = a.label === 'Story' ? '🎭 Story' : a.label;
         sec.appendChild(lab);
       }
       const bod = document.createElement('div');
@@ -2372,11 +2382,11 @@ function openDetail(id){
   const abschnitte = parseAbschnitte(k.text);
   abschnitte.forEach(a=>{
     const sec = document.createElement('div');
-    sec.className = 'detailSection';
+    sec.className = 'detailSection' + (a.label === 'Story' ? ' storyBlock' : '');
     if(a.label){
       const lab = document.createElement('div');
       lab.className = 'detailLabel';
-      lab.textContent = a.label;
+      lab.textContent = a.label === 'Story' ? '🎭 Story' : a.label;
       sec.appendChild(lab);
     }
     const bod = document.createElement('div');
@@ -2570,16 +2580,25 @@ let sprachnotizBestehendId = null;
 let sprachnotizGeloescht = false;
 let sprachnotizStartzeit = null;
 let sprachnotizTimerId = null;
+let sprachnotizErkennung = null;
+let sprachnotizTranskript = '';
 
 function renderSprachnotizBereich(){
   const box = document.getElementById('sprachnotizBereich');
   if(sprachnotizNeuBlob){
     const url = URL.createObjectURL(sprachnotizNeuBlob);
+    const transkriptHTML = sprachnotizTranskript.trim() ? `
+      <div class="sprachTranskript">
+        <div class="sprachTranskriptLabel">📝 Erkannter Text</div>
+        <textarea id="sprachnotizTranskriptFeld" class="reflexionTextarea">${escapeHTML(sprachnotizTranskript.trim())}</textarea>
+        <button type="button" class="sprachBtn" onclick="storyAusTranskriptEinfuegen()">🎭 Als Story in den Text einfügen</button>
+      </div>` : '';
     box.innerHTML = `
       <div class="sprachPlayer">
         <audio controls src="${url}"></audio>
         <button type="button" class="sprachBtn" onclick="sprachnotizVerwerfen()">🗑</button>
-      </div>`;
+      </div>
+      ${transkriptHTML}`;
     return;
   }
   if(sprachnotizBestehendId && !sprachnotizGeloescht){
@@ -2608,6 +2627,16 @@ function sprachnotizVerwerfen(){
   renderSprachnotizBereich();
 }
 
+function storyAusTranskriptEinfuegen(){
+  const feld = document.getElementById('sprachnotizTranskriptFeld');
+  const text = feld ? feld.value.trim() : '';
+  if(!text){ zeigeToast('Kein Text zum Einfügen vorhanden'); return; }
+  const kText = document.getElementById('kText');
+  const neuerAbsatz = 'Story: ' + text;
+  kText.value = kText.value.trim() ? (kText.value.trim() + '\n\n' + neuerAbsatz) : neuerAbsatz;
+  zeigeToast('🎭 Story in den Text eingefügt – nicht vergessen zu speichern');
+}
+
 async function sprachnotizAufnahmeStarten(){
   if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
     zeigeToast('Aufnahme wird von diesem Browser nicht unterstützt');
@@ -2616,6 +2645,7 @@ async function sprachnotizAufnahmeStarten(){
   try{
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     sprachnotizChunks = [];
+    sprachnotizTranskript = '';
     const mimeKandidaten = ['audio/mp4', 'audio/webm', 'audio/webm;codecs=opus'];
     const mime = mimeKandidaten.find(m => window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(m));
     sprachnotizRecorder = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
@@ -2624,9 +2654,28 @@ async function sprachnotizAufnahmeStarten(){
       sprachnotizNeuBlob = new Blob(sprachnotizChunks, { type: sprachnotizRecorder.mimeType || 'audio/webm' });
       sprachnotizGeloescht = false;
       stream.getTracks().forEach(t => t.stop());
+      if(sprachnotizErkennung){ try{ sprachnotizErkennung.stop(); }catch(e){} }
       renderSprachnotizBereich();
     };
     sprachnotizRecorder.start();
+
+    // Parallel dazu: Live-Spracherkennung (Browser-eigen, keine KI-Anbindung nötig)
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    sprachnotizErkennung = null;
+    if(SR){
+      sprachnotizErkennung = new SR();
+      sprachnotizErkennung.lang = 'de-DE';
+      sprachnotizErkennung.continuous = true;
+      sprachnotizErkennung.interimResults = false;
+      sprachnotizErkennung.onresult = (e) => {
+        for(let i = e.resultIndex; i < e.results.length; i++){
+          if(e.results[i].isFinal) sprachnotizTranskript += e.results[i][0].transcript + ' ';
+        }
+      };
+      sprachnotizErkennung.onerror = () => {};
+      try{ sprachnotizErkennung.start(); }catch(e){}
+    }
+
     sprachnotizStartzeit = Date.now();
     const box = document.getElementById('sprachnotizBereich');
     box.innerHTML = `
@@ -3240,8 +3289,8 @@ function uebungAntwortZeigen(eingegebeneAntwort, trifftZu){
   if(el.ganzeKarte){
     const abschnitte = parseAbschnitte(k.text);
     abschnitte.forEach(a=>{
-      html += '<div class="detailSection">';
-      if(a.label) html += `<div class="detailLabel">${escapeHTML(a.label)}</div>`;
+      html += `<div class="detailSection${a.label === 'Story' ? ' storyBlock' : ''}">`;
+      if(a.label) html += `<div class="detailLabel">${a.label === 'Story' ? '🎭 Story' : escapeHTML(a.label)}</div>`;
       const zeilen = a.inhalt.split('\n').filter(z=>z.trim());
       const istListe = zeilen.length > 1 && zeilen.every(z => /^\d+\.\s/.test(z.trim()));
       if(istListe){
