@@ -470,6 +470,9 @@
     border:1px solid rgba(0,0,0,0.15); border-radius:10px; padding:14px 16px; resize:vertical; outline:none;
   }
   .kursInput:focus{border-color:var(--gelb-dk);}
+  .kursReflexionInput{
+    background:var(--karte-bg); color:var(--text-main); font-family:var(--schrift-sans); font-size:0.9rem;
+  }
   .kursBtnRow{display:flex; gap:8px; margin:10px 0 4px; flex-wrap:wrap;}
   .kursRunBtn, .kursCheckBtn{
     font-size:0.78rem; font-weight:600; padding:8px 14px; border-radius:8px; border:none; cursor:pointer;
@@ -496,6 +499,9 @@
   .kursQuizOpt.falsch{background:#f7ded3; border-color:#c4593a; font-weight:700;}
   .kursQuizOpt[disabled]{cursor:default;}
   .kursNavRow{display:flex; justify-content:space-between; margin-top:22px;}
+  .kursZusammenfassung{margin:0; padding-left:20px;}
+  .kursZusammenfassung li{margin-bottom:6px; font-size:0.9rem; line-height:1.4;}
+  .kursQuelle{font-size:0.76rem; color:var(--text-muted); margin-top:12px; font-style:italic;}
   .kursUebersichtListe{display:flex; flex-direction:column; gap:10px;}
   .kursUebersichtZeile{
     display:flex; align-items:center; gap:14px; background:#fffdf8; border:1px solid rgba(0,0,0,0.08);
@@ -3723,7 +3729,9 @@ lessons: [
     pruefen:(out)=> out.length>0
       ? {ok:true,msg:"Erste Ausgabe steht – willkommen im Kurs."}
       : {ok:false,msg:'Noch keine Ausgabe. Nutze console.log("...");'},
-    quiz:{ frage:"Womit gibst du in JavaScript einen Wert aus?", optionen:["print()","console.log()","echo()","show()"], richtig:1 }
+    quiz:{ frage:"Womit gibst du in JavaScript einen Wert aus?", optionen:["print()","console.log()","echo()","show()"], richtig:1 },
+    zusammenfassung:["console.log() ist dein Fenster, um zu sehen, was der Code gerade tut.","Ohne Ausgabe arbeitest du im Blindflug.","Text in Anführungszeichen wird 1:1 ausgegeben."],
+    quelle:"MDN Web Docs: console.log()"
   },
   {
     id:"werte-merken", title:"Werte merken", konzept:"Warum Variablen?",
@@ -3738,7 +3746,9 @@ lessons: [
     pruefen:(out)=> out.length>=2
       ? {ok:true,msg:"Genau – zweimal dieselbe Rechnung. Im nächsten Modul lösen wir das mit einer Variable."}
       : {ok:false,msg:"Führ den Code aus, um das Ergebnis zu sehen."},
-    quiz:{ frage:"Warum reicht console.log() allein nicht, um einen Wert später wiederzuverwenden?", optionen:["Es gibt den Wert aus, merkt sich ihn aber nicht","console.log() funktioniert nur mit Zahlen","console.log() ist zu langsam","Es gibt keinen Grund dafür"], richtig:0 }
+    quiz:{ frage:"Warum reicht console.log() allein nicht, um einen Wert später wiederzuverwenden?", optionen:["Es gibt den Wert aus, merkt sich ihn aber nicht","console.log() funktioniert nur mit Zahlen","console.log() ist zu langsam","Es gibt keinen Grund dafür"], richtig:0 },
+    zusammenfassung:["console.log() gibt aus, speichert aber nichts.","Ohne Speicherung musst du jeden Wert bei Bedarf neu berechnen.","Variablen (nächstes Modul) lösen genau dieses Problem."],
+    quelle:null
   },
   {
     id:"variablen", title:"Variablen & Datentypen", konzept:"Werte speichern",
@@ -3757,7 +3767,9 @@ lessons: [
         ? {ok:true,msg:"Variable gesetzt und ausgegeben – genau so."}
         : {ok:false,msg:"Prüfe: Variable stadt angelegt und mit console.log() ausgegeben?"};
     },
-    quiz:{ frage:"Welcher Datentyp ist true oder false?", optionen:["String","Number","Boolean","Array"], richtig:2 }
+    quiz:{ frage:"Welcher Datentyp ist true oder false?", optionen:["String","Number","Boolean","Array"], richtig:2 },
+    zusammenfassung:["let/const legen eine benannte Variable an, die einen Wert speichert.","let kann sich ändern, const bleibt fest.","Die drei Grundtypen: String, Number, Boolean."],
+    quelle:"MDN Web Docs: let / const, Datentypen in JavaScript"
   },
   {
     id:"operatoren", title:"Operatoren & Rechnen", konzept:"Werte verknüpfen",
@@ -3772,7 +3784,9 @@ lessons: [
     pruefen:(out)=> out.join(' ').includes('48')
       ? {ok:true,msg:"48 – korrekt berechnet."}
       : {ok:false,msg:"Ergebnis 48 taucht noch nicht in der Ausgabe auf."},
-    quiz:{ frage:"Was ergibt 7 % 2?", optionen:["3","1","0","3.5"], richtig:1 }
+    quiz:{ frage:"Was ergibt 7 % 2?", optionen:["3","1","0","3.5"], richtig:1 },
+    zusammenfassung:["+, -, *, / rechnen mit Zahlen wie im Taschenrechner.","=== vergleicht Wert UND Typ auf Gleichheit.","% (Modulo) liefert den Rest einer Division."],
+    quelle:"MDN Web Docs: Arithmetische Operatoren"
   },
   {
     id:"bedingungen", title:"Bedingungen", konzept:"if / else",
@@ -3790,7 +3804,9 @@ lessons: [
         ? {ok:true,msg:"Die Bedingung greift – sauber gelöst."}
         : {ok:false,msg:'Noch keine Ausgabe "gerade"/"ungerade" erkannt.'};
     },
-    quiz:{ frage:"Welches Symbol prüft auf Gleichheit von Wert und Typ?", optionen:["=","==","===","!=="], richtig:2 }
+    quiz:{ frage:"Welches Symbol prüft auf Gleichheit von Wert und Typ?", optionen:["=","==","===","!=="], richtig:2 },
+    zusammenfassung:["if/else lässt den Code je nach Bedingung unterschiedlich reagieren.","Die Bedingung in Klammern muss zu wahr oder falsch auswerten.","=== prüft strikt (Wert und Typ), == ist ungenauer und wird seltener empfohlen."],
+    quelle:"MDN Web Docs: if...else, Vergleichsoperatoren"
   },
   {
     id:"schleifen", title:"Schleifen", konzept:"for-Loop",
@@ -3805,7 +3821,9 @@ lessons: [
     pruefen:(out)=> (out.length>=5 && out.includes('1') && out.includes('5'))
       ? {ok:true,msg:"5 Durchläufe, Start und Ende stimmen."}
       : {ok:false,msg:"Erwartet: 5 Ausgaben, von 1 bis 5."},
-    quiz:{ frage:"Wie oft läuft for(let i=0; i<3; i++) durch?", optionen:["2 mal","3 mal","4 mal","unendlich"], richtig:1 }
+    quiz:{ frage:"Wie oft läuft for(let i=0; i<3; i++) durch?", optionen:["2 mal","3 mal","4 mal","unendlich"], richtig:1 },
+    zusammenfassung:["for-Schleifen wiederholen Code, solange die Bedingung wahr ist.","i ist der Zähler, i++ zählt ihn nach jedem Durchlauf hoch.","Ohne i++ (oder ähnliches) würde die Schleife nie enden."],
+    quelle:"MDN Web Docs: for-Schleife"
   },
   {
     id:"funktionen", title:"Funktionen", konzept:"Code bündeln",
@@ -3820,7 +3838,9 @@ lessons: [
     pruefen:(out)=> out.join(' ').includes('10')
       ? {ok:true,msg:"10 – die Funktion liefert das richtige Ergebnis."}
       : {ok:false,msg:"Ergebnis 10 taucht noch nicht auf."},
-    quiz:{ frage:"Womit gibt eine Funktion einen Wert an den Aufrufer zurück?", optionen:["return","output","console.log","give"], richtig:0 }
+    quiz:{ frage:"Womit gibt eine Funktion einen Wert an den Aufrufer zurück?", optionen:["return","output","console.log","give"], richtig:0 },
+    zusammenfassung:["Funktionen bündeln Code, den du wiederverwenden willst.","Parameter sind die \"Zutaten\", die du beim Aufruf reinreichst.","return gibt einen Wert zurück, ohne selbst etwas auszugeben."],
+    quelle:"MDN Web Docs: Funktionen"
   },
   {
     id:"arrays", title:"Arrays", konzept:"Listen von Werten",
@@ -3835,7 +3855,9 @@ lessons: [
     pruefen:(out,code)=> (code.includes('[') && out.length>0)
       ? {ok:true,msg:"Array angelegt und Element ausgegeben."}
       : {ok:false,msg:"Noch kein Array-Zugriff mit Ausgabe erkennbar."},
-    quiz:{ frage:"Welchen Index hat das erste Element eines Arrays?", optionen:["0","1","-1","erstes"], richtig:0 }
+    quiz:{ frage:"Welchen Index hat das erste Element eines Arrays?", optionen:["0","1","-1","erstes"], richtig:0 },
+    zusammenfassung:["Arrays speichern mehrere Werte in einer nummerierten Liste.","Der Zugriff erfolgt über den Index, beginnend bei 0.","obst[0] ist das erste, obst[1] das zweite Element."],
+    quelle:"MDN Web Docs: Array"
   },
   {
     id:"objekte", title:"Objekte", konzept:"Eigenschaften bündeln",
@@ -3850,7 +3872,9 @@ lessons: [
     pruefen:(out,code)=> (/\{[\s\S]*\}/.test(code) && out.length>0)
       ? {ok:true,msg:"Objekt erstellt, Eigenschaft ausgegeben."}
       : {ok:false,msg:"Noch kein Objekt mit Ausgabe erkennbar."},
-    quiz:{ frage:"Wie greift man auf eine Objekt-Eigenschaft zu?", optionen:["objekt->eigenschaft","objekt[eigenschaft:0]","objekt.eigenschaft","eigenschaft(objekt)"], richtig:2 }
+    quiz:{ frage:"Wie greift man auf eine Objekt-Eigenschaft zu?", optionen:["objekt->eigenschaft","objekt[eigenschaft:0]","objekt.eigenschaft","eigenschaft(objekt)"], richtig:2 },
+    zusammenfassung:["Objekte bündeln zusammengehörige Werte unter benannten Eigenschaften.","Zugriff erfolgt über den Punkt: objekt.eigenschaft.","Im Unterschied zum Array sind die Felder benannt, nicht nummeriert."],
+    quelle:"MDN Web Docs: Object-Grundlagen"
   },
   {
     id:"mini-projekt", title:"Mini-Projekt", konzept:"Alles kombiniert",
@@ -3864,7 +3888,142 @@ lessons: [
     pruefen:(out)=> out.length>=3
       ? {ok:true,msg:"Alle drei Bausteine greifen ineinander – geschafft."}
       : {ok:false,msg:"Noch weniger als 3 Ausgaben – jede Person sollte eine Zeile bekommen."},
+    zusammenfassung:["Echte Programme kombinieren meist mehrere Bausteine (Array, Funktion, Schleife) zusammen.","Eine Funktion pro Aufgabe, eine Schleife für die Wiederholung – das Muster begegnet dir ständig wieder."],
+    quelle:null,
     quiz:null
+  }
+]
+},
+hundetraining: {
+titel: 'Georgie gelassener machen',
+icon: '🐾',
+kursTyp: 'wissen',
+lessons: [
+  {
+    id: "koerpersprache",
+    title: "Hundekommunikation verstehen",
+    konzept: "Körpersprache lesen",
+    erklaerung: [
+      "Warum das wichtig ist: Je früher du erkennst, dass Georgie unter Druck gerät, desto mehr Möglichkeiten hast du noch, gegenzusteuern – bevor er eskaliert. Wer erst reagiert, wenn der Hund schon bellt und zieht, kommt fast immer zu spät.",
+      "Die Tierärztin Kendal Shepherd hat dafür ein konkretes Stufenmodell entwickelt, die \"Ladder of Aggression\" (Eskalationsleiter). Sie zeigt: Aggression ist meist der LETZTE Schritt einer langen Kette, nicht der erste. Die Stufen (vereinfacht, von ruhig zu eskaliert): Gähnen/Blinzeln → Nase lecken → Kopf wegdrehen → sich abwenden/weggehen wollen → Erstarren (steif werden) → Fixieren/starren → Knurren → Schnappen → Beißen.",
+      "Der entscheidende Punkt: Je weiter unten auf dieser Leiter du eingreifst, desto leichter lässt sich die Situation entschärfen. Wer erst bei \"Knurren\" reagiert, arbeitet schon mit einem Hund, der mehrere ruhigere Signale zuvor ausprobiert hat – und die haben nicht funktioniert.",
+      "Konkret bei Georgie: Nase lecken oder Kopf wegdrehen sind früheste Anzeichen. Ein steifer, hoch aufgerichteter Körper, eine starre Rute, ein fixierender Blick und aufgestelltes Fell entlang des Rückens zeigen: er ist schon deutlich weiter oben auf der Leiter.",
+      "Übersprungshandlungen wirken oft verwirrend – plötzliches Kratzen, Schütteln wie nach dem Baden, intensives Bodenschnüffeln mitten in einer aufgeladenen Situation. Das ist keine Ablenkung, sondern ein Versuch, mit innerem Druck umzugehen."
+    ],
+    praxisschritt: "Häng dir die Ladder of Aggression (z. B. als Bild-Suche \"Kendal Shepherd Ladder of Aggression\") irgendwo auf, wo du sie öfter siehst. Ziel: die untersten 2-3 Stufen bei Georgie im Alltag bewusst wahrnehmen, auch wenn gerade kein Hund in der Nähe ist.",
+    reflexion: "Denk an die letzte Begegnung mit einem anderen Rüden zurück: Welche Stufe der Ladder of Aggression hast du bei Georgie zuerst gesehen – auch wenn dir das im Moment nicht bewusst aufgefallen ist?",
+    zusammenfassung: [
+      "Aggression ist meist der letzte Schritt einer Kette, nicht der erste (Ladder of Aggression, Kendal Shepherd).",
+      "Je früher (weiter unten auf der Leiter) du eingreifst, desto leichter lässt sich die Situation entschärfen.",
+      "Nase lecken, Kopf wegdrehen = früheste Signale. Starrer Körper, fixierender Blick = schon deutlich weiter oben.",
+      "Übersprungshandlungen (Kratzen, Schütteln, Bodenschnüffeln) sind Bewältigungsversuche, keine Ablenkung."
+    ],
+    quelle: "Kendal Shepherd, \"Ladder of Aggression\" (Behaviour Problems in Small Animals, 2009); Turid Rugaas, Calming Signals.",
+    quiz: { frage: "Auf der Ladder of Aggression: Was bedeutet es, wenn Aggression (Knurren/Schnappen) erst spät auftritt?", optionen: ["Der Hund ist besonders aggressiv veranlagt", "Vorherige, ruhigere Signale haben nicht funktioniert oder wurden übersehen", "Das Modell gilt nicht für Rüden", "Aggression tritt immer zuerst auf"], richtig: 1 }
+  },
+  {
+    id: "warum-reagiert-er",
+    title: "Warum reagiert Georgie so?",
+    konzept: "Unkastriert, Rüden-Dynamik, Übererregung",
+    erklaerung: [
+      "Warum das wichtig ist: Wenn du verstehst, WAS in Georgie gerade passiert, hörst du auf, das Verhalten als \"Ungehorsam\" zu deuten – und kannst gezielter reagieren statt nur zu hoffen, dass es aufhört.",
+      "Unkastrierte Rüden untereinander: Andere Rüden nehmen den Hormonstatus über Geruch wahr (u. a. Duftstoffe im Urin), und Begegnungen zwischen intakten Rüden sind statistisch häufiger von Rangdynamik und Konkurrenzverhalten geprägt als z. B. zwischen kastrierten Hunden oder Rüde und Hündin. Das erklärt nicht jede Reaktion, ist aber ein realer, in der Verhaltensforschung dokumentierter Faktor – nicht \"Georgies Schuld\" oder Erziehungsversagen.",
+      "Übererregung (Arousal) und Cortisol: Ist Georgie einmal richtig hochgefahren, dauert der vollständige Abbau des Stresshormons Cortisol im Körper häufig 24 bis 72 Stunden. Das heißt konkret: Auch am Tag NACH einer heftigen Begegnung kann er noch empfindlicher reagieren als sonst – nicht weil er \"nichts gelernt hat\", sondern weil sein Körper biologisch noch nicht auf Null zurück ist.",
+      "Trigger-Stacking: Mehrere kleine Belastungen addieren sich über den Tag – Baustellenlärm, ein hektischer Vormittag, wenig Schlaf. Trifft dann noch ein fremder Rüde dazu, ist das etwas anderes, als wenn der Rüde die einzige Herausforderung des Tages ist. Das \"Fass\" kann schon vorher fast voll gewesen sein."
+    ],
+    praxisschritt: "Führe für eine Woche eine ganz einfache Tages-Notiz: War Georgie an diesem Tag VOR der ersten Hundebegegnung schon erkennbar unruhiger als sonst? Das hilft dir, sein individuelles Trigger-Stacking-Muster zu erkennen.",
+    reflexion: "Fällt dir ein Tag ein, an dem Georgie schon VOR der eigentlichen Hundebegegnung spürbar angespannter war als sonst? Was war an diesem Tag anders?",
+    zusammenfassung: [
+      "Reaktionen zwischen unkastrierten Rüden sind hormonell/geruchlich mitbeeinflusst – ein realer Faktor, keine Charakterschwäche.",
+      "Cortisol-Abbau dauert oft 24-72 Stunden – Georgie kann am Folgetag noch empfindlicher sein.",
+      "Trigger-Stacking: mehrere kleine Stressoren am selben Tag summieren sich zu einer Reaktion, die isoliert nicht passiert wäre."
+    ],
+    quelle: "Zur Cortisol-Erholungszeit: u. a. Studien zu HPA-Achsen-Aktivierung bei Hunden (Beerda et al.); Konzept Trigger Stacking: verbreitet in der Reactive-Dog-Trainingsliteratur (u. a. Suzanne Clothier, Grisha Stewart).",
+    quiz: { frage: "Wie lange kann der Cortisol-Abbau nach starker Erregung beim Hund dauern?", optionen: ["Wenige Sekunden", "1-2 Minuten", "24-72 Stunden", "Cortisol baut sich nicht ab"], richtig: 2 }
+  },
+  {
+    id: "management-vs-training",
+    title: "Management vs. Training",
+    konzept: "Unterschied, wann was sinnvoll ist – und wann Profi-Hilfe nötig ist",
+    erklaerung: [
+      "Warum das wichtig ist: Viele Halter erwarten von \"Training\" sofortige Wirkung im Alltag – und sind frustriert, wenn's nicht klappt. Die Lösung ist fast immer beides gleichzeitig, nicht entweder-oder.",
+      "Management heißt: die Situation entschärfen, BEVOR sie zum Problem wird. Abstand vergrößern, Straßenseite wechseln, in einen Torbogen ausweichen. Das ändert nichts an Georgies grundsätzlicher Reaktion, verhindert aber akut Stress und Eskalation – und verhindert, dass er die Reaktion immer wieder \"einübt\".",
+      "Training heißt: tatsächlich an der Reaktion selbst arbeiten, damit sie sich über Wochen und Monate verändert. Das braucht systematische Wiederholung (siehe nächstes Modul) – dafür ist die Wirkung nachhaltiger.",
+      "Der häufigste Fehler: nur Management ohne Training (der Hund bleibt reaktiv, du wirst nur besser im Ausweichen) oder nur Training ohne Management (der Hund wird immer wieder überfordert und übt dadurch sogar die unerwünschte Reaktion weiter ein).",
+      "Wann professionelle Hilfe wichtig ist: Wenn es bereits zu echten Beißvorfällen kam (auch wenn \"nur\" gegen andere Hunde), wenn die Reaktion sich trotz konsequentem Vorgehen über Wochen verschlimmert statt verbessert, oder wenn du selbst dich in Begegnungssituationen unsicher/überfordert fühlst – dann ist eine qualifizierte Hundeverhaltensberatung vor Ort keine Schwäche, sondern der schnellste Weg zu echtem Fortschritt. Diese App kann Wissen vermitteln, aber keine Person vor Ort ersetzen, die Georgies Körpersprache in Echtzeit sieht."
+    ],
+    praxisschritt: "Leg für die kommende Woche eine feste Regel fest, z. B. \"bei Sichtkontakt unter 20 Metern wechsle ich aktiv die Seite\" – das ist reines Management, aber es verhindert, dass ihr beide in überforderte Situationen geratet, während ihr an Modul 4 arbeitet.",
+    reflexion: "Wenn du ehrlich bist: Betreibst du mit Georgie aktuell eher Management, eher Training, oder schon eine Mischung? Woran machst du das fest?",
+    zusammenfassung: [
+      "Management entschärft die aktuelle Situation, Training verändert das Verhalten langfristig – beides gehört zusammen.",
+      "Nur Ausweichen ohne Training verändert nichts; nur Training ohne Schutz vor Überforderung kann sogar schaden.",
+      "Bei Beißvorfällen, ausbleibendem Fortschritt oder eigener Überforderung: professionelle Hundeverhaltensberatung vor Ort dazuholen."
+    ],
+    quelle: null,
+    quiz: { frage: "Was ist der Hauptunterschied zwischen Management und Training?", optionen: ["Management ist teurer als Training", "Management entschärft die aktuelle Situation, Training verändert das Verhalten langfristig", "Es gibt keinen Unterschied", "Training funktioniert nur bei jungen Hunden"], richtig: 1 }
+  },
+  {
+    id: "methoden",
+    title: "Konkrete Methoden",
+    konzept: "Gegenkonditionierung, BAT, Look-at-That",
+    erklaerung: [
+      "Warum das wichtig ist: Ohne eine klare Methode wird Training schnell zu \"einfach öfter üben\" – das reicht bei echter Reaktivität selten. Hier sind drei bewährte, konkrete Ansätze, die sich auch kombinieren lassen.",
+      "Gegenkonditionierung (Counter-Conditioning): Sobald ein anderer Rüde in sicherem Abstand auftaucht (unterhalb der Reaktionsschwelle!), gibt's sofort etwas richtig Hochwertiges – Futter, das es sonst nirgends gibt. Ziel: \"anderer Rüde taucht auf\" wird mit \"jetzt passiert etwas Gutes\" verknüpft statt mit Bedrohung.",
+      "Das \"Look-at-That\"-Spiel (LAT), entwickelt von der Trainerin Leslie McDevitt: Du markierst (per Klick oder Wort \"Ja\") den Moment, in dem Georgie den anderen Hund SIEHT, aber noch ruhig ist – und belohnst genau das. Er lernt: \"Hinschauen und ruhig bleiben\" bringt eine Belohnung, statt dass Hinschauen automatisch in Anspannung kippt.",
+      "BAT (Behavior Adjustment Training, Grisha Stewart): Hier bestimmt Georgie selbst, wie nah er herangehen will, und wird für ruhiges, selbstbestimmtes Verhalten belohnt, indem er sich zurückziehen darf – Abstand wird zur Belohnung. Das stärkt sein Gefühl, die Situation selbst kontrollieren zu können, was Stress reduziert.",
+      "Die Reaktionsschwelle (Threshold) ist bei allen drei Methoden entscheidend: Reagiert Georgie schon, seid ihr zu nah dran – dann übt er nur die Reaktion, statt etwas Neues zu lernen. Bleibt knapp UNTERHALB der Schwelle und verringert den Abstand nur langsam, über mehrere Sitzungen."
+    ],
+    praxisschritt: "Probiere diese Woche einmal das Look-at-That-Spiel bei sicherem Abstand: Sobald Georgie einen anderen Hund erblickt und noch ruhig ist, sag \"Ja\" und gib sofort ein Leckerli. Wiederhole das mehrfach an verschiedenen Tagen, bevor du den Abstand verringerst.",
+    reflexion: "Bei welcher Entfernung zu einem fremden Rüden fängt Georgie erfahrungsgemäß an, angespannt zu reagieren? Diese Distanz ist praktisch deine aktuelle Arbeits-Schwelle.",
+    zusammenfassung: [
+      "Gegenkonditionierung: anderer Hund = sofort etwas richtig Gutes, unterhalb der Reaktionsschwelle.",
+      "Look-at-That (LAT): ruhiges Hinschauen wird belohnt, bevor Anspannung entsteht.",
+      "BAT: der Hund reguliert Abstand selbst, Rückzug wird zur Belohnung.",
+      "Immer unterhalb der Reaktionsschwelle bleiben – sonst wird nur die Reaktion selbst geübt."
+    ],
+    quelle: "Leslie McDevitt, \"Control Unleashed\" (Look-at-That); Grisha Stewart, \"Behavior Adjustment Training 2.0\".",
+    quiz: { frage: "Was passiert, wenn du mit Georgie zu nah an einen Trigger herangehst (über der Reaktionsschwelle)?", optionen: ["Das beschleunigt den Trainingserfolg", "Er lernt nichts Neues, sondern übt nur die Reaktion", "Das hat keinen Effekt", "Er gewöhnt sich dadurch automatisch daran"], richtig: 1 }
+  },
+  {
+    id: "eigenes-verhalten",
+    title: "Dein eigenes Verhalten als Halter",
+    konzept: "Ruhig bleiben, Leine, Vorausschau",
+    erklaerung: [
+      "Warum das wichtig ist: Georgie liest dich ständig mit – über die Leine, deine Anspannung, dein Tempo. Dein eigenes Verhalten ist oft der am leichtesten veränderbare Hebel, weil du ihn sofort selbst in der Hand hast.",
+      "Eine straffe, angespannte Leine überträgt sich direkt körperlich auf den Hund – noch bevor überhaupt ein anderer Hund in Sicht ist. Eine lockere Leine ist ein stilles Signal: \"Alles ruhig hier.\" Das ist keine Nebensache, sondern messbar wirksam – viele Trainer sehen die Leinenspannung als einen der stärksten unbewussten Halter-Einflüsse überhaupt.",
+      "Deine eigene Atmung und Körperhaltung wirken ähnlich. Ein angehaltener Atem, versteifte Schultern, ein plötzlich schnellerer Schritt – Georgie merkt das oft, bevor er den anderen Hund selbst wahrnimmt.",
+      "Vorausschauend statt reaktiv handeln heißt: Trigger früh erkennen (Modul 1) und schon reagieren, BEVOR Georgie reagiert – Abstand vergrößern, Aufmerksamkeit auf dich lenken, statt erst einzugreifen, wenn er schon zieht und bellt.",
+      "Wichtig auch: Bestrafung in der Reaktion (Leinenruck, Anschreien) verstärkt oft ungewollt die negative Verknüpfung mit anderen Hunden – der Hund lernt \"anderer Hund = ich werde auch noch angeschrien\", nicht \"ich soll ruhig bleiben\"."
+    ],
+    praxisschritt: "Achte beim nächsten Spaziergang bewusst NUR auf deine eigene Leinenhaltung und Atmung, sobald ihr einen anderen Hund in großer Entfernung seht – noch bevor Georgie reagiert. Notier dir danach, ob sich dadurch etwas verändert hat.",
+    reflexion: "Wie ist deine eigene Körperspannung, wenn du schon von Weitem einen anderen Rüden siehst – auch bevor Georgie reagiert? Was könntest du an deinem eigenen Verhalten in genau diesem Moment verändern?",
+    zusammenfassung: [
+      "Leinenspannung und Körperhaltung übertragen sich direkt auf den Hund, oft bevor der Trigger überhaupt sichtbar ist.",
+      "Vorausschauend handeln heißt: reagieren bevor Georgie reagiert, nicht erst danach.",
+      "Bestrafung während der Reaktion verstärkt häufig die negative Verknüpfung, statt sie aufzulösen."
+    ],
+    quelle: null,
+    quiz: { frage: "Was überträgt sich oft am direktesten von dir auf Georgie?", optionen: ["Deine Kleidung", "Spannung über die Leine und deine Körperhaltung", "Die Tageszeit", "Nichts überträgt sich"], richtig: 1 }
+  },
+  {
+    id: "trainingstagebuch",
+    title: "Trainingstagebuch führen",
+    konzept: "Beobachtungen strukturiert festhalten",
+    erklaerung: [
+      "Warum das wichtig ist: Fortschritt bei Reaktivität ist oft langsam und in Wellen – im Alltag merkt man ihn kaum. Erst mit Aufzeichnungen über Wochen wird ein Muster sichtbar, das dir sonst entgeht.",
+      "Ein guter Eintrag braucht nicht viel: Datum, Situation (Ort, geschätzte Entfernung, Anzahl Hunde), Georgies Reaktion (welche Stufe der Ladder of Aggression aus Modul 1?), und was du versucht hast.",
+      "Besonders wertvoll: Notiere auch, was GUT lief, nicht nur die schwierigen Momente. Das hilft dir zu erkennen, welche Bedingungen (Uhrzeit, Ort, Abstand) für Georgie leichter sind – und die kannst du gezielt öfter aufsuchen.",
+      "Nutze dafür das Lerntagebuch dieser App (unter ⋯ Mehr in der Seminarvorbereitung) oder die Reflexionsfragen hier in diesem Kurs – nach ein paar Wochen lohnt sich der Blick zurück auf die ersten Einträge, um Fortschritt überhaupt sichtbar zu machen."
+    ],
+    praxisschritt: "Leg dir für die nächsten zwei Wochen eine feste Routine an: nach jedem Spaziergang mit Hundekontakt ein bis zwei Sätze notieren, egal ob's gut oder schwierig lief.",
+    reflexion: "Schreib jetzt schon einen ersten Eintrag: Wie war die letzte Begegnung mit einem anderen Rüden – Ort, Abstand, Georgies Reaktion, was hast du gemacht?",
+    zusammenfassung: [
+      "Fortschritt bei Reaktivität ist oft nur über Wochen hinweg in Aufzeichnungen sichtbar, nicht im einzelnen Moment.",
+      "Guter Eintrag: Ort, Abstand, Reaktion, was du getan hast – auch die guten Momente festhalten.",
+      "Regelmäßigkeit schlägt Ausführlichkeit: lieber kurz und konsequent als lang und selten."
+    ],
+    quelle: null,
+    quiz: null
   }
 ]
 }
@@ -3999,6 +4158,7 @@ function kursReset(){
 function kursRenderAll(){
   const ov = document.getElementById('kursOverlay');
   const l = aktiveLessons()[kursState.current];
+  const istWissenskurs = aktiverKurs().kursTyp === 'wissen';
   const quizHTML = l.quiz ? `
     <div class="kursLabel">Kurzcheck</div>
     <div class="kursCard">
@@ -4009,21 +4169,34 @@ function kursRenderAll(){
       <div class="kursFeedback" id="kursQuizFeedback"></div>
     </div>` : '';
 
-  ov.innerHTML = `
-    <div class="kursTop">
-      <img src="icon-180.png" alt="" class="h1Icon" onclick="schliesseKurs()" style="cursor:pointer;">
-      <h2>${aktiverKurs().icon} ${escapeHTML(aktiverKurs().titel)}</h2>
-      <button class="iconBtn" onclick="stopVorlesen()" style="background:transparent;border:none;font-size:0.9rem;" title="Vorlesen stoppen">⏹</button>
-      <button class="iconBtn" onclick="kursReset()" style="background:transparent;border:none;font-size:0.75rem;color:var(--text-muted);">Zurücksetzen</button>
-    </div>
-    <div class="kursBody">
-      <div class="kursEyebrow">Modul ${kursState.current+1} von ${aktiveLessons().length} · ${escapeHTML(l.konzept)}</div>
-      <div class="kursTitel">${escapeHTML(l.title)}</div>
+  const praxisHTML = (istWissenskurs && l.praxisschritt) ? `
+      <div class="kursLabel" style="margin-top:18px;">Praxisschritt</div>
       <div class="kursCard">
-        ${l.erklaerung.map(p=>`<p>${escapeHTML(p)}</p>`).join('')}
-        <button class="kursRunBtn" style="margin-top:4px;" onclick="kursVorleseErklaerung()">🔊 Erklärung vorlesen</button>
-      </div>
+        <p>${escapeHTML(l.praxisschritt)}</p>
+      </div>` : '';
 
+  const zusammenfassungHTML = (l.zusammenfassung && l.zusammenfassung.length) ? `
+      <div class="kursLabel" style="margin-top:18px;">Zum Mitnehmen</div>
+      <div class="kursCard">
+        <ul class="kursZusammenfassung">
+          ${l.zusammenfassung.map(z=>`<li>${escapeHTML(z)}</li>`).join('')}
+        </ul>
+      </div>` : '';
+
+  const quelleHTML = l.quelle ? `<div class="kursQuelle">📚 ${escapeHTML(l.quelle)}</div>` : '';
+
+  const mittelteilHTML = istWissenskurs ? `
+      ${praxisHTML}
+      <div class="kursLabel" style="margin-top:18px;">Reflexion</div>
+      <div class="kursCard" style="padding-bottom:6px;">
+        <p>${escapeHTML(l.reflexion)}</p>
+        <button class="kursRunBtn" style="margin-bottom:10px;" onclick="kursVorleseReflexion()">🔊 Frage vorlesen</button>
+        <textarea class="kursInput kursReflexionInput" id="kursUebungInput" placeholder="Deine Beobachtung / Antwort..."></textarea>
+        <div class="kursBtnRow">
+          <button class="kursCheckBtn" onclick="kursReflexionPruefen()">Antwort speichern</button>
+        </div>
+        <div class="kursFeedback" id="kursUebungFeedback"></div>
+      </div>` : `
       <div class="kursLabel">Beispiel</div>
       <div class="kursCodeBox"><pre>${escapeHTML(l.beispiel)}</pre></div>
       <div class="kursBtnRow">
@@ -4044,9 +4217,29 @@ function kursRenderAll(){
         </div>
         <div class="kursConsole empty" id="kursUebungConsole">Noch keine Ausgabe.</div>
         <div class="kursFeedback" id="kursUebungFeedback"></div>
+      </div>`;
+
+  ov.innerHTML = `
+    <div class="kursTop">
+      <img src="icon-180.png" alt="" class="h1Icon" onclick="schliesseKurs()" style="cursor:pointer;">
+      <h2>${aktiverKurs().icon} ${escapeHTML(aktiverKurs().titel)}</h2>
+      <button class="iconBtn" onclick="stopVorlesen()" style="background:transparent;border:none;font-size:0.9rem;" title="Vorlesen stoppen">⏹</button>
+      <button class="iconBtn" onclick="kursReset()" style="background:transparent;border:none;font-size:0.75rem;color:var(--text-muted);">Zurücksetzen</button>
+    </div>
+    <div class="kursBody">
+      <div class="kursEyebrow">Modul ${kursState.current+1} von ${aktiveLessons().length} · ${escapeHTML(l.konzept)}</div>
+      <div class="kursTitel">${escapeHTML(l.title)}</div>
+      <div class="kursCard">
+        ${l.erklaerung.map(p=>`<p>${escapeHTML(p)}</p>`).join('')}
+        <button class="kursRunBtn" style="margin-top:4px;" onclick="kursVorleseErklaerung()">🔊 Erklärung vorlesen</button>
       </div>
 
+      ${mittelteilHTML}
+
       ${quizHTML}
+
+      ${zusammenfassungHTML}
+      ${quelleHTML}
 
       <div class="kursNavRow">
         <button class="kursNavBtn" onclick="kursVorheriges()" ${kursState.current===0?'disabled':''}>← Zurück</button>
@@ -4064,8 +4257,11 @@ function kursRenderAll(){
 
 function kursOeffneUebenWahl(){
   const l = aktiveLessons()[kursState.current];
+  const istWissenskurs = aktiverKurs().kursTyp === 'wissen';
   const box = document.getElementById('kursUebenWahlListe');
-  let html = `<button class="mehrItem" onclick="document.getElementById('kursUebenWahlDialog').close(); kursSpringeZuUebung();">✏️ Zur Code-Übung dieses Moduls</button>`;
+  let html = istWissenskurs
+    ? `<button class="mehrItem" onclick="document.getElementById('kursUebenWahlDialog').close(); kursSpringeZuUebung();">✍️ Zur Reflexionsfrage dieses Moduls</button>`
+    : `<button class="mehrItem" onclick="document.getElementById('kursUebenWahlDialog').close(); kursSpringeZuUebung();">✏️ Zur Code-Übung dieses Moduls</button>`;
   if(l.quiz){
     html += `<button class="mehrItem" onclick="document.getElementById('kursUebenWahlDialog').close(); kursSpringeZuQuiz();">❓ Zum Kurzcheck-Quiz dieses Moduls</button>`;
   }
@@ -4095,7 +4291,11 @@ function kursToggleVorlesen(){
 function kursRenderVorlesenModus(){
   const ov = document.getElementById('kursOverlay');
   const l = aktiveLessons()[kursState.current];
-  const abschnitte = [
+  const istWissenskurs = aktiverKurs().kursTyp === 'wissen';
+  const abschnitte = istWissenskurs ? [
+    { label: 'Erklärung', typ: 'fach', text: l.erklaerung.join(' ') },
+    { label: 'Reflexionsfrage', typ: 'reflexion', text: l.reflexion },
+  ] : [
     { label: 'Erklärung', typ: 'fach', text: l.erklaerung.join(' ') },
     { label: 'Beispielcode', typ: 'ablauf', text: l.beispiel },
     { label: 'Aufgabe', typ: 'reflexion', text: l.aufgabe },
@@ -4131,7 +4331,11 @@ function kursRenderVorlesenModus(){
 
 function kursAllesVorlesen(){
   const l = aktiveLessons()[kursState.current];
-  alleVorlesen([
+  const istWissenskurs = aktiverKurs().kursTyp === 'wissen';
+  alleVorlesen(istWissenskurs ? [
+    { titel: 'Erklärung', text: l.erklaerung.join(' ') },
+    { titel: 'Reflexionsfrage', text: l.reflexion },
+  ] : [
     { titel: 'Erklärung', text: l.erklaerung.join(' ') },
     { titel: 'Beispielcode', text: l.beispiel },
     { titel: 'Aufgabe', text: l.aufgabe },
@@ -4199,6 +4403,31 @@ function kursBeispielAusfuehren(){
 function kursUebungAusfuehren(){
   const code = document.getElementById('kursUebungInput').value;
   kursRenderConsole(document.getElementById('kursUebungConsole'), kursRunSandboxed(code));
+}
+
+async function kursReflexionPruefen(){
+  const feld = document.getElementById('kursUebungInput');
+  const antwort = feld.value.trim();
+  const fb = document.getElementById('kursUebungFeedback');
+  if(!antwort){
+    fb.className = 'kursFeedback bad';
+    fb.textContent = 'Schreib kurz auf, was dir dazu einfällt – auch ein Satz reicht.';
+    return;
+  }
+  fb.className = 'kursFeedback ok';
+  fb.textContent = 'Notiert – gut, dass du dir das bewusst machst.';
+  kursSprich('Notiert. Gut, dass du dir das bewusst machst.');
+  if(!kursState.completed.includes(kursAktuelleId())){
+    kursState.completed.push(kursAktuelleId());
+    await kursSpeichern();
+    await vergebePunkte(15, true);
+    markiereAktivitaetHeute();
+  }
+}
+
+function kursVorleseReflexion(){
+  const l = aktiveLessons()[kursState.current];
+  kursSprich(l.reflexion);
 }
 
 async function kursUebungPruefen(){
