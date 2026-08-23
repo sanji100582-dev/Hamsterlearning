@@ -610,13 +610,15 @@
   .uebersichtGrid{
     display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:6px;
   }
+  .uebersichtGrid.start-vertikal{grid-template-columns:1fr;}
   .kachel{
     border-radius:14px; padding:18px 14px; cursor:pointer; text-align:left;
     box-shadow:0 6px 14px rgba(90,70,40,0.15); border:1px solid rgba(0,0,0,0.06);
+    min-width:0; overflow-wrap:break-word;
     background:var(--gelb); color:var(--tinte);
   }
   .kachel.reflexion{background:var(--gruen);}
-  .kachel .kachelTitel{font-family:var(--schrift-hand); font-weight:700; font-size:1.1rem; margin:0 0 6px; line-height:1.2;}
+  .kachel .kachelTitel{font-family:var(--schrift-hand); font-weight:700; font-size:1.1rem; margin:0 0 6px; line-height:1.2; hyphens:auto;}
   .kachel .kachelMeta{font-size:0.76rem; opacity:0.85; margin-bottom:8px; font-weight:500;}
   .kachel .kachelBar{height:6px; border-radius:999px; background:rgba(0,0,0,0.12); overflow:hidden;}
   .kachel .kachelBar > div{height:100%; background:#3f8a58;}
@@ -799,7 +801,7 @@
   <div style="padding:18px 14px 30px; max-width:1200px; margin:0 auto;">
     <div id="startKopf"></div>
     <div style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.5px; color:#7a6f52; font-weight:600; margin:6px 4px 10px;">Bereich wählen</div>
-    <div class="uebersichtGrid" id="startKacheln"></div>
+    <div class="uebersichtGrid start-vertikal" id="startKacheln"></div>
   </div>
 </div>
 
