@@ -603,6 +603,10 @@
     background:#fdf8ec; font-size:1.3rem; display:flex; align-items:center; justify-content:center;
     cursor:pointer; margin-bottom:12px; box-shadow:0 2px 6px rgba(90,70,40,0.15);
   }
+  .startGruss{font-family:var(--schrift-hand); font-weight:700; font-size:1.15rem; color:#7a5c2e; margin:4px 4px 4px;}
+  .startFortschrittZeile{font-size:0.82rem; color:var(--text-muted); margin:0 4px 16px; font-weight:600;}
+  .kachel.start-blau{background:var(--blau);}
+  .kachel.start-gruen{background:var(--gruen);}
   .uebersichtGrid{
     display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:6px;
   }
@@ -793,6 +797,7 @@
     </h1>
   </header>
   <div style="padding:18px 14px 30px; max-width:1200px; margin:0 auto;">
+    <div id="startKopf"></div>
     <div style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.5px; color:#7a6f52; font-weight:600; margin:6px 4px 10px;">Bereich wählen</div>
     <div class="uebersichtGrid" id="startKacheln"></div>
   </div>
@@ -988,27 +993,35 @@
     </div>
     <div class="detailSection">
       <div class="detailLabel">Worum geht's</div>
-      <div class="detailBody">Diese App ist dein Lernbegleiter – der Hamster oben links bringt dich jederzeit zur Bereichsauswahl zurück: Seminarvorbereitung und deine Lernkurse (z. B. Programmieren).</div>
+      <div class="detailBody">Diese App ist dein Lernbegleiter – der Hamster oben links bringt dich jederzeit zur Bereichsauswahl zurück: Seminarvorbereitung und deine Lernkurse (z. B. Programmieren, Hundetraining).</div>
     </div>
     <div class="detailSection">
       <div class="detailLabel">Seminarvorbereitung</div>
-      <div class="detailBody">Wie eine digitale Pinnwand mit Metaplankarten. Jedes Seminar hat eine Übersicht mit Kacheln (z. B. „Konzepte", „Rollenspiele"). Antippen öffnet das Board mit den einzelnen Karten dieser Gruppe. Eine Karte antippen zeigt den vollen Inhalt strukturiert an.</div>
+      <div class="detailBody">Wie eine digitale Pinnwand mit Metaplankarten. Jedes Seminar hat eine Übersicht mit Kacheln (z. B. „Konzepte", „Rollenspiele"). Antippen öffnet das Board mit den einzelnen Karten dieser Gruppe. Beim Bearbeiten einer Karte kannst du einzelne Sätze als Lernkarte markieren (✨) – nur diese werden abgefragt, der Rest bleibt Lesetext. Karten lassen sich auch als „📎 Nur Referenz" kennzeichnen (z. B. Rollenspiel-Material), dann tauchen sie nie im Üben/Quiz auf.</div>
+    </div>
+    <div class="detailSection">
+      <div class="detailLabel">💻 🐾 Lernkurse</div>
+      <div class="detailBody">Schritt-für-Schritt-Module mit Erklärung, Beispiel/Reflexion, Kurzcheck-Quiz und Zusammenfassung. Programmieren-Kurse haben eine Code-Übung mit automatischer Prüfung, Wissenskurse (z. B. Hundetraining) eine Reflexionsfrage mit Praxisbeispiel. Beide haben dieselbe Bottom-Leiste wie die Seminarvorbereitung.</div>
     </div>
     <div class="detailSection">
       <div class="detailLabel">🧠 Üben</div>
-      <div class="detailBody">Zwei Modi: Karteikarten (selbst erinnern, dann Antwort aufdecken) oder Quiz (automatisch erstellte Multiple-Choice-Fragen aus deinen Karten). Die App merkt sich, was du gut kannst, und bringt dir Karten, die du oft falsch beantwortest, häufiger – Karten, die sicher sitzen, tauchen seltener auf. So übst du automatisch das, was noch nötig ist, statt immer alles gleich oft zu wiederholen.</div>
+      <div class="detailBody">Vier Modi zur Auswahl: 🗂 Karteikarten (selbst erinnern, dann Antwort aufdecken oder per Wisch-Geste bewerten), ❓ Quiz (automatische Multiple-Choice-Fragen), 🔗 Zuordnen (Titel und Inhalte per Antippen verbinden) und 🗣️ Sprechtraining (Text frei sprechen, aufnehmen, anhören). Die App merkt sich per Spaced Repetition, was du gut kannst, und bringt dir Karten, die du oft falsch beantwortest, häufiger.</div>
     </div>
     <div class="detailSection">
       <div class="detailLabel">🔊 Vorlesen</div>
-      <div class="detailBody">Liest dir die Karten laut vor – praktisch, wenn du dich lieber hörend vorbereitest, z. B. unterwegs.</div>
+      <div class="detailBody">Liest dir Karten bzw. Kurs-Abschnitte laut vor – praktisch, wenn du dich lieber hörend vorbereitest, z. B. unterwegs.</div>
     </div>
     <div class="detailSection">
       <div class="detailLabel">📊 Fortschritt</div>
-      <div class="detailBody">Zeigt, wie viel Prozent der Karten in jeder Gruppe schon „sitzen" – so siehst du auf einen Blick, wo noch Übung nötig ist.</div>
+      <div class="detailBody">Zeigt Level, Punkte, Tagesziel, Abzeichen und deinen Tage-Streak – all das gilt geräteweit über Seminare und Kurse hinweg. Darunter siehst du, wie viel Prozent in jeder Gruppe schon „sitzen".</div>
     </div>
     <div class="detailSection">
       <div class="detailLabel">⋯ Mehr</div>
-      <div class="detailBody">Hier legst du neue Karten und Seminare an, scannst Dokumente/Flipcharts (mit automatischer Texterkennung), und kannst ein Seminar samt Fotos wieder löschen.</div>
+      <div class="detailBody">Neue Karten/Seminare anlegen, Dokumente/Flipcharts scannen (automatische Texterkennung), Sprachnotizen aufnehmen, das Lerntagebuch einsehen, einen Fokus-Timer starten, und ein Seminar wieder löschen.</div>
+    </div>
+    <div class="detailSection">
+      <div class="detailLabel">⚙️ Einstellungen</div>
+      <div class="detailBody">Dark Mode umschalten, und das Gesamt-Backup (alle Seminare, Kurse, Punktestand, Streak) sichern oder laden.</div>
     </div>
     <div class="detailSection">
       <div class="detailLabel">💾 Backup nicht vergessen</div>
@@ -1493,10 +1506,31 @@ async function betreteSeminare(speichern=true){
 
 async function renderStartKacheln(){
   const cont = document.getElementById('startKacheln');
-  let html = `<div class="kachel" onclick="betreteSeminare()">
-    <div class="kachelTitel">Seminarvorbereitung</div>
-    <div class="kachelMeta">${seminare.length} Seminar${seminare.length===1?'':'e'}</div>
+
+  // Seminarvorbereitung: aggregierter Fortschritt über alle Seminare hinweg
+  let semSitzt = 0, semGesamt = 0;
+  for(const s of seminare){
+    const sKarten = (s.id === aktuellesSeminarId) ? karten : (await storeGet('karten_' + s.id)) || [];
+    const sLernstand = (s.id === aktuellesSeminarId) ? lernstand : (await storeGet('lernstand_' + s.id)) || {};
+    sKarten.filter(k=>!k.referenzNur).forEach(k=>{
+      extrahiereLernelemente(k).forEach(el=>{
+        semGesamt++;
+        const stand = sLernstand[el.id] || (el.ganzeKarte && typeof k.srsBox==='number' ? {geuebt:!!k.geuebt} : null);
+        if(stand && stand.geuebt) semSitzt++;
+      });
+    });
+  }
+  const semPct = semGesamt ? Math.round((semSitzt/semGesamt)*100) : 0;
+  const semMeta = seminare.length ? `${seminare.length} Seminar${seminare.length===1?'':'e'} · ${semPct}% sitzen` : 'Noch kein Seminar angelegt';
+
+  let html = `<div class="kachel start-seminar" onclick="betreteSeminare()">
+    <div class="kachelTitel">📌 Seminarvorbereitung</div>
+    <div class="kachelMeta">${semMeta}</div>
+    <div class="kachelBar"><div style="width:${semPct}%"></div></div>
   </div>`;
+
+  const kursFarben = ['start-blau', 'start-gruen', 'start-blau', 'start-gruen'];
+  let kursIdx = 0;
   for(const kursId in LERNKURSE){
     const kurs = LERNKURSE[kursId];
     let fortschritt = await storeGet('kursFortschritt_' + kursId);
@@ -1505,13 +1539,29 @@ async function renderStartKacheln(){
       if(alt && Array.isArray(alt.completed)) fortschritt = alt;
     }
     const fertig = (fortschritt && Array.isArray(fortschritt.completed)) ? fortschritt.completed.length : 0;
-    const meta = fertig > 0 ? `${fertig} von ${kurs.lessons.length} Modulen` : 'Noch nicht begonnen';
-    html += `<div class="kachel" onclick="oeffneKurs('${kursId}')">
+    const kursPct = kurs.lessons.length ? Math.round((fertig/kurs.lessons.length)*100) : 0;
+    const meta = fertig > 0 ? `${fertig} von ${kurs.lessons.length} Modulen · ${kursPct}%` : 'Noch nicht begonnen';
+    html += `<div class="kachel ${kursFarben[kursIdx % kursFarben.length]}" onclick="oeffneKurs('${kursId}')">
       <div class="kachelTitel">${kurs.icon} ${escapeHTML(kurs.titel)}</div>
       <div class="kachelMeta">${escapeHTML(meta)}</div>
+      <div class="kachelBar"><div style="width:${kursPct}%"></div></div>
     </div>`;
+    kursIdx++;
   }
   cont.innerHTML = html;
+
+  // Begrüßung + gemeinsamer Fortschritt oben
+  const stunde = new Date().getHours();
+  const gruss = stunde < 11 ? 'Guten Morgen' : stunde < 18 ? 'Guten Tag' : 'Guten Abend';
+  const aktivitaet = (await storeGet('aktivitaet')) || {};
+  const streak = berechneStreak(aktivitaet);
+  const lvl = berechneLevel(spielstand.punkte || 0);
+  const kopf = document.getElementById('startKopf');
+  if(kopf){
+    kopf.innerHTML = `
+      <div class="startGruss">${gruss}!</div>
+      <div class="startFortschrittZeile">🏆 Level ${lvl.level} · 🔥 ${streak} Tag${streak===1?'':'e'} in Folge</div>`;
+  }
 }
 
 async function gesamtExportJSON(){
@@ -3791,6 +3841,21 @@ lessons: [
       {titel:"let und const", text:"Mit let oder const legst du so eine Box an und gibst ihr einen Namen. let kann sich später ändern, const bleibt fest."},
       {titel:"Die drei Grundtypen", text:"Die drei Grundtypen: String (Text, in Anführungszeichen), Number (Zahl) und Boolean (true/false)."}
     ],
+    vergleich: {
+      titel: "let vs. const",
+      linksTitel: "let",
+      linksPunkte: [
+        "Wert kann sich später ändern",
+        "Sinnvoll bei Zählern, Ergebnissen, allem was sich verändert",
+        "let stadt = \"Berlin\"; stadt = \"München\"; funktioniert"
+      ],
+      rechtsTitel: "const",
+      rechtsPunkte: [
+        "Wert bleibt fest, keine Änderung möglich",
+        "Sinnvoll bei Werten, die konstant bleiben sollen",
+        "Erneute Zuweisung führt zu einem Fehler"
+      ]
+    },
     beispiel:'let name = "Sascha";\nlet alter = 40;\nconsole.log(name, alter);',
     aufgabe:"Erstelle eine Variable stadt mit deiner Stadt als Text und gib sie mit console.log() aus.",
     starter:'let stadt = "";\n// gib die Variable stadt aus\n',
@@ -3810,6 +3875,7 @@ lessons: [
     erklaerung:[
       {titel:"Warum wichtig", text:"Mit rohen Zahlen zu rechnen reicht selten – meistens willst du mit gespeicherten Werten weiterrechnen, so wie du im Kopf zwei Zutatenmengen addierst, bevor du einkaufen gehst."},
       {titel:"Rechenoperatoren", text:"Mit +, -, *, / rechnest du mit Zahlen. Mit === vergleichst du zwei Werte auf Gleichheit."},
+      {titel:"Vergleichsoperatoren", text:"Neben === gibt es die Vergleichsoperatoren >, <, >= und <=, die zwei Zahlen der Größe nach vergleichen. Sie liefern immer true oder false zurück – genau das brauchst du gleich im nächsten Modul, um echte Bedingungen zu schreiben (z. B. \"ist die Zahl größer als 10?\")."},
       {titel:"Der Modulo-Operator", text:"Der Modulo-Operator % liefert den Rest einer Division – praktisch, um z. B. gerade Zahlen zu erkennen."}
     ],
     beispiel:'console.log(5 + 3);\nconsole.log(10 / 2);',
@@ -3819,7 +3885,7 @@ lessons: [
       ? {ok:true,msg:"48 – korrekt berechnet."}
       : {ok:false,msg:"Ergebnis 48 taucht noch nicht in der Ausgabe auf."},
     quiz:{ frage:"Was ergibt 7 % 2?", optionen:["3","1","0","3.5"], richtig:1 },
-    zusammenfassung:["+, -, *, / rechnen mit Zahlen wie im Taschenrechner.","=== vergleicht Wert UND Typ auf Gleichheit.","% (Modulo) liefert den Rest einer Division."],
+    zusammenfassung:["+, -, *, / rechnen mit Zahlen wie im Taschenrechner.","=== vergleicht Wert UND Typ auf Gleichheit.",">, <, >=, <= vergleichen Zahlen der Größe nach – Grundlage für Bedingungen.","% (Modulo) liefert den Rest einer Division."],
     quelle:"MDN Web Docs: Arithmetische Operatoren"
   },
   {
@@ -3849,6 +3915,11 @@ lessons: [
       {titel:"Die for-Schleife", text:"Eine for-Schleife wiederholt Code, solange eine Bedingung wahr ist: for(let i=0; i<5; i++)."},
       {titel:"i++ erklärt", text:"i ist der Zähler, der bei 0 (oder wo du willst) startet. i<5 ist die Bedingung, die geprüft wird. i++ heißt \"zähl i nach jedem Durchlauf eins hoch\" – eine Kurzform für i = i + 1. Ohne dieses Hochzählen würde die Schleife nie enden."}
     ],
+    stufenmodell: {
+      titel: "Ablauf einer for-Schleife",
+      farbverlauf: false,
+      schritte: ["Start: i wird auf den Startwert gesetzt (z. B. i=0)", "Bedingung prüfen: ist i<5 wahr?", "Falls ja: Code im Schleifenkörper ausführen", "i++ : Zähler um 1 erhöhen", "Zurück zu Schritt 2 – bis die Bedingung falsch wird"]
+    },
     beispiel:'for (let i = 1; i <= 3; i++) {\n  console.log(i);\n}',
     aufgabe:"Schreib eine for-Schleife, die die Zahlen 1 bis 5 einzeln loggt.",
     starter:'// Schleife von 1 bis 5\n',
@@ -3866,6 +3937,11 @@ lessons: [
       {titel:"Funktionen bündeln Code", text:"Eine Funktion bündelt Code, den du wiederverwenden willst: function name(parameter) { return ...; }."},
       {titel:"return erklärt", text:"return gibt einen Wert an die Stelle zurück, von der die Funktion aufgerufen wurde."}
     ],
+    stufenmodell: {
+      titel: "Was passiert bei einem Funktionsaufruf?",
+      farbverlauf: false,
+      schritte: ["Aufruf: begruessung(\"Welt\") wird im Code erreicht", "Der Wert \"Welt\" wird als Parameter name übergeben", "Der Funktionskörper läuft mit diesem Wert durch", "return schickt das Ergebnis zurück an die Aufrufstelle", "console.log() gibt das zurückgegebene Ergebnis aus"]
+    },
     beispiel:'function begruessung(name) {\n  return "Hallo " + name;\n}\nconsole.log(begruessung("Welt"));',
     aufgabe:"Schreib eine Funktion verdoppeln(zahl), die die Zahl verdoppelt zurückgibt. Ruf sie mit 5 auf und logge das Ergebnis.",
     starter:'// function verdoppeln(zahl) { ... }\n\n',
@@ -3900,6 +3976,21 @@ lessons: [
       {titel:"Was ein Objekt ist", text:"Ein Objekt bündelt zusammengehörige Werte unter benannten Eigenschaften: { name: \"Sascha\", beruf: \"Trainer\" }."},
       {titel:"Zugriff über den Punkt", text:"Zugriff über den Punkt: person.name."}
     ],
+    vergleich: {
+      titel: "Array vs. Objekt",
+      linksTitel: "Array",
+      linksPunkte: [
+        "Nummerierte Liste, Reihenfolge zählt",
+        "Zugriff über Index: obst[0]",
+        "Passt für gleichartige Dinge (Liste von Namen, Zahlen)"
+      ],
+      rechtsTitel: "Objekt",
+      rechtsPunkte: [
+        "Benannte Eigenschaften, keine feste Reihenfolge nötig",
+        "Zugriff über den Namen: person.name",
+        "Passt für zusammengehörige, unterschiedliche Werte (ein Ding, viele Eigenschaften)"
+      ]
+    },
     beispiel:'let person = { name: "Sascha", beruf: "Trainer" };\nconsole.log(person.name);',
     aufgabe:"Erstelle ein Objekt training mit den Eigenschaften titel und dauer. Logge titel.",
     starter:'// let training = { titel: "...", dauer: ... }\n\n',
