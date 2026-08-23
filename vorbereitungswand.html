@@ -502,6 +502,40 @@
   .kursZusammenfassung{margin:0; padding-left:20px;}
   .kursZusammenfassung li{margin-bottom:6px; font-size:0.9rem; line-height:1.4;}
   .kursQuelle{font-size:0.76rem; color:var(--text-muted); margin-top:12px; font-style:italic;}
+  .stufenmodellCard{padding:14px 14px 16px;}
+  .stufenmodellSchritt{
+    display:flex; align-items:center; gap:12px; padding:8px 4px; border-left:4px solid #c9a521;
+    padding-left:12px; margin-bottom:2px;
+  }
+  .stufenmodellNr{
+    width:26px; height:26px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
+    color:#fff; font-weight:700; font-size:0.8rem;
+  }
+  .stufenmodellText{font-size:0.9rem; color:var(--text-main);}
+  .kursVergleich{display:flex; gap:10px;}
+  .kursVergleichSpalte{
+    flex:1; background:var(--karte-bg); border-radius:10px; padding:12px; border-top:4px solid;
+  }
+  .kursVergleichSpalte.links{border-top-color:var(--blau-dk);}
+  .kursVergleichSpalte.rechts{border-top-color:var(--gruen-dk);}
+  .kursVergleichKopf{
+    font-weight:700; text-align:center; padding-bottom:8px; margin-bottom:8px;
+    border-bottom:1px solid rgba(0,0,0,0.1); font-size:0.88rem; color:var(--text-main);
+  }
+  .kursVergleichSpalte ul{margin:0; padding-left:18px;}
+  .kursVergleichSpalte li{font-size:0.8rem; line-height:1.4; margin-bottom:6px; color:var(--text-main);}
+  .erklaerungChunk{border-bottom:1px solid rgba(0,0,0,0.08);}
+  .erklaerungChunk:last-child{border-bottom:none;}
+  .erklaerungKopf{
+    width:100%; display:flex; justify-content:space-between; align-items:center;
+    background:transparent; border:none; padding:12px 2px; cursor:pointer;
+    font-family:var(--schrift-sans); font-weight:700; font-size:0.88rem; color:var(--text-main); text-align:left;
+  }
+  .erklaerungPfeil{transition:transform .2s ease; color:var(--text-muted); font-size:0.8rem;}
+  .erklaerungChunk.offen .erklaerungPfeil{transform:rotate(180deg);}
+  .erklaerungInhalt{display:none; padding:0 2px 14px;}
+  .erklaerungChunk.offen .erklaerungInhalt{display:block;}
+  .erklaerungInhalt p{margin:0; font-size:0.92rem; line-height:1.5;}
   .kursUebersichtListe{display:flex; flex-direction:column; gap:10px;}
   .kursUebersichtZeile{
     display:flex; align-items:center; gap:14px; background:#fffdf8; border:1px solid rgba(0,0,0,0.08);
@@ -3719,9 +3753,9 @@ lessons: [
   {
     id:"ausgabe", title:"Was ist Programmieren?", konzept:"Grundidee",
     erklaerung:[
-      "Warum das wichtig ist: Bevor du irgendetwas Kompliziertes baust, brauchst du ein Fenster, durch das du sehen kannst, was dein Code gerade tut. Ohne das arbeitest du im Blindflug.",
-      "Programmieren heißt: Anweisungen aufschreiben, die der Computer Schritt für Schritt ausführt. Nichts Magisches – nur eine sehr genaue Art, Aufgaben zu beschreiben.",
-      "Unser wichtigstes Werkzeug hier ist console.log(). Es zeigt dir, was dein Code gerade produziert."
+      {titel:"Warum wichtig", text:"Bevor du irgendetwas Kompliziertes baust, brauchst du ein Fenster, durch das du sehen kannst, was dein Code gerade tut. Ohne das arbeitest du im Blindflug."},
+      {titel:"Was Programmieren ist", text:"Programmieren heißt: Anweisungen aufschreiben, die der Computer Schritt für Schritt ausführt. Nichts Magisches – nur eine sehr genaue Art, Aufgaben zu beschreiben."},
+      {titel:"console.log() als Werkzeug", text:"Unser wichtigstes Werkzeug hier ist console.log(). Es zeigt dir, was dein Code gerade produziert."}
     ],
     beispiel:'console.log("Hallo Welt!");',
     aufgabe:"Schreib eine Zeile Code, die deinen Namen mit console.log() ausgibt.",
@@ -3736,9 +3770,9 @@ lessons: [
   {
     id:"werte-merken", title:"Werte merken", konzept:"Warum Variablen?",
     erklaerung:[
-      "Warum das wichtig ist: Bisher hat dein Code Werte immer nur sofort ausgegeben und danach sofort wieder vergessen. Willst du einen Wert später nochmal benutzen, musst du ihn dir irgendwo notieren.",
-      "Eine Variable ist wie eine beschriftete Box: Du schreibst einen Namen drauf (z. B. \"Alter\") und legst einen Wert rein. Später schaust du einfach auf die Box, statt den Wert neu zu berechnen.",
-      "Im Beispiel unten siehst du das Problem, das eine Variable löst: die gleiche Rechnung taucht zweimal auf, weil der Computer sich das erste Ergebnis nicht gemerkt hat."
+      {titel:"Warum wichtig", text:"Bisher hat dein Code Werte immer nur sofort ausgegeben und danach sofort wieder vergessen. Willst du einen Wert später nochmal benutzen, musst du ihn dir irgendwo notieren."},
+      {titel:"Die Box-Analogie", text:"Eine Variable ist wie eine beschriftete Box: Du schreibst einen Namen drauf (z. B. \"Alter\") und legst einen Wert rein. Später schaust du einfach auf die Box, statt den Wert neu zu berechnen."},
+      {titel:"Das Problem im Beispiel", text:"Im Beispiel unten siehst du das Problem, das eine Variable löst: die gleiche Rechnung taucht zweimal auf, weil der Computer sich das erste Ergebnis nicht gemerkt hat."}
     ],
     beispiel:'console.log(5 + 3);\nconsole.log(5 + 3);',
     aufgabe:"Führ den Beispielcode aus. Du berechnest 5 + 3 zweimal – der Computer hat sich das erste Ergebnis nicht gemerkt, du musstest es erneut hinschreiben. Genau dieses Problem lösen Variablen, die du im nächsten Modul kennenlernst.",
@@ -3753,9 +3787,9 @@ lessons: [
   {
     id:"variablen", title:"Variablen & Datentypen", konzept:"Werte speichern",
     erklaerung:[
-      "Warum das wichtig ist: Im letzten Modul hast du das Problem gesehen – console.log() merkt sich nichts. Eine Variable ist die Lösung: deine beschriftete Box, in der ein Wert liegen bleibt, bis du ihn wieder brauchst.",
-      "Mit let oder const legst du so eine Box an und gibst ihr einen Namen. let kann sich später ändern, const bleibt fest.",
-      "Die drei Grundtypen: String (Text, in Anführungszeichen), Number (Zahl) und Boolean (true/false)."
+      {titel:"Warum wichtig", text:"Im letzten Modul hast du das Problem gesehen – console.log() merkt sich nichts. Eine Variable ist die Lösung: deine beschriftete Box, in der ein Wert liegen bleibt, bis du ihn wieder brauchst."},
+      {titel:"let und const", text:"Mit let oder const legst du so eine Box an und gibst ihr einen Namen. let kann sich später ändern, const bleibt fest."},
+      {titel:"Die drei Grundtypen", text:"Die drei Grundtypen: String (Text, in Anführungszeichen), Number (Zahl) und Boolean (true/false)."}
     ],
     beispiel:'let name = "Sascha";\nlet alter = 40;\nconsole.log(name, alter);',
     aufgabe:"Erstelle eine Variable stadt mit deiner Stadt als Text und gib sie mit console.log() aus.",
@@ -3774,9 +3808,9 @@ lessons: [
   {
     id:"operatoren", title:"Operatoren & Rechnen", konzept:"Werte verknüpfen",
     erklaerung:[
-      "Warum das wichtig ist: Mit rohen Zahlen zu rechnen reicht selten – meistens willst du mit gespeicherten Werten weiterrechnen, so wie du im Kopf zwei Zutatenmengen addierst, bevor du einkaufen gehst.",
-      "Mit +, -, *, / rechnest du mit Zahlen. Mit === vergleichst du zwei Werte auf Gleichheit.",
-      "Der Modulo-Operator % liefert den Rest einer Division – praktisch, um z. B. gerade Zahlen zu erkennen."
+      {titel:"Warum wichtig", text:"Mit rohen Zahlen zu rechnen reicht selten – meistens willst du mit gespeicherten Werten weiterrechnen, so wie du im Kopf zwei Zutatenmengen addierst, bevor du einkaufen gehst."},
+      {titel:"Rechenoperatoren", text:"Mit +, -, *, / rechnest du mit Zahlen. Mit === vergleichst du zwei Werte auf Gleichheit."},
+      {titel:"Der Modulo-Operator", text:"Der Modulo-Operator % liefert den Rest einer Division – praktisch, um z. B. gerade Zahlen zu erkennen."}
     ],
     beispiel:'console.log(5 + 3);\nconsole.log(10 / 2);',
     aufgabe:"Berechne 12 mal 4 und gib das Ergebnis aus.",
@@ -3791,9 +3825,9 @@ lessons: [
   {
     id:"bedingungen", title:"Bedingungen", konzept:"if / else",
     erklaerung:[
-      "Warum das wichtig ist: Programme, die immer exakt dasselbe tun, sind selten nützlich. Bedingungen sind wie eine Weiche im Zugverkehr: je nach Situation geht's links oder rechts weiter.",
-      "Mit if(...) { } else { } lässt du den Code unterschiedlich reagieren, je nachdem ob eine Bedingung wahr oder falsch ist.",
-      "Beispiel: if(alter >= 18) für eine Volljährigkeitsprüfung."
+      {titel:"Warum wichtig", text:"Programme, die immer exakt dasselbe tun, sind selten nützlich. Bedingungen sind wie eine Weiche im Zugverkehr: je nach Situation geht's links oder rechts weiter."},
+      {titel:"if / else", text:"Mit if(...) { } else { } lässt du den Code unterschiedlich reagieren, je nachdem ob eine Bedingung wahr oder falsch ist."},
+      {titel:"Ein Beispiel", text:"Beispiel: if(alter >= 18) für eine Volljährigkeitsprüfung."}
     ],
     beispiel:'let alter = 20;\nif (alter >= 18) {\n  console.log("volljährig");\n} else {\n  console.log("minderjährig");\n}',
     aufgabe:"Die Zahl num ist vorgegeben. Prüfe mit if/else, ob sie gerade ist (num % 2 === 0), und logge \"gerade\" oder \"ungerade\".",
@@ -3811,9 +3845,9 @@ lessons: [
   {
     id:"schleifen", title:"Schleifen", konzept:"for-Loop",
     erklaerung:[
-      "Warum das wichtig ist: Ohne Schleifen müsstest du jede Wiederholung einzeln hinschreiben – zehnmal dieselbe Zeile kopieren. Eine Schleife ist wie eine Ansage, die sich automatisch X-mal wiederholt, ohne dass du sie X-mal aufnimmst.",
-      "Eine for-Schleife wiederholt Code, solange eine Bedingung wahr ist: for(let i=0; i<5; i++).",
-      "Kurz zu i++: i ist der Zähler, der bei 0 (oder wo du willst) startet. i<5 ist die Bedingung, die geprüft wird. i++ heißt \"zähl i nach jedem Durchlauf eins hoch\" – eine Kurzform für i = i + 1. Ohne dieses Hochzählen würde die Schleife nie enden."
+      {titel:"Warum wichtig", text:"Ohne Schleifen müsstest du jede Wiederholung einzeln hinschreiben – zehnmal dieselbe Zeile kopieren. Eine Schleife ist wie eine Ansage, die sich automatisch X-mal wiederholt, ohne dass du sie X-mal aufnimmst."},
+      {titel:"Die for-Schleife", text:"Eine for-Schleife wiederholt Code, solange eine Bedingung wahr ist: for(let i=0; i<5; i++)."},
+      {titel:"i++ erklärt", text:"i ist der Zähler, der bei 0 (oder wo du willst) startet. i<5 ist die Bedingung, die geprüft wird. i++ heißt \"zähl i nach jedem Durchlauf eins hoch\" – eine Kurzform für i = i + 1. Ohne dieses Hochzählen würde die Schleife nie enden."}
     ],
     beispiel:'for (let i = 1; i <= 3; i++) {\n  console.log(i);\n}',
     aufgabe:"Schreib eine for-Schleife, die die Zahlen 1 bis 5 einzeln loggt.",
@@ -3828,9 +3862,9 @@ lessons: [
   {
     id:"funktionen", title:"Funktionen", konzept:"Code bündeln",
     erklaerung:[
-      "Warum das wichtig ist: Wiederholt sich derselbe Rechenschritt an mehreren Stellen im Code, willst du ihn nicht jedes Mal neu hinschreiben. Eine Funktion ist wie ein Rezept: einmal aufschreiben, beliebig oft nachkochen.",
-      "Eine Funktion bündelt Code, den du wiederverwenden willst: function name(parameter) { return ...; }.",
-      "return gibt einen Wert an die Stelle zurück, von der die Funktion aufgerufen wurde."
+      {titel:"Warum wichtig", text:"Wiederholt sich derselbe Rechenschritt an mehreren Stellen im Code, willst du ihn nicht jedes Mal neu hinschreiben. Eine Funktion ist wie ein Rezept: einmal aufschreiben, beliebig oft nachkochen."},
+      {titel:"Funktionen bündeln Code", text:"Eine Funktion bündelt Code, den du wiederverwenden willst: function name(parameter) { return ...; }."},
+      {titel:"return erklärt", text:"return gibt einen Wert an die Stelle zurück, von der die Funktion aufgerufen wurde."}
     ],
     beispiel:'function begruessung(name) {\n  return "Hallo " + name;\n}\nconsole.log(begruessung("Welt"));',
     aufgabe:"Schreib eine Funktion verdoppeln(zahl), die die Zahl verdoppelt zurückgibt. Ruf sie mit 5 auf und logge das Ergebnis.",
@@ -3845,9 +3879,9 @@ lessons: [
   {
     id:"arrays", title:"Arrays", konzept:"Listen von Werten",
     erklaerung:[
-      "Warum das wichtig ist: Für eine einzelne Zahl reicht eine Variable. Aber eine Einkaufsliste mit zehn Dingen? Dafür brauchst du eine nummerierte Liste, auf der alle Einträge zusammen an einem Ort liegen.",
-      "Ein Array ist genau das: let obst = [\"Apfel\", \"Birne\"]. Zugriff über Index, beginnend bei 0.",
-      "obst[0] ist also \"Apfel\", obst[1] ist \"Birne\"."
+      {titel:"Warum wichtig", text:"Für eine einzelne Zahl reicht eine Variable. Aber eine Einkaufsliste mit zehn Dingen? Dafür brauchst du eine nummerierte Liste, auf der alle Einträge zusammen an einem Ort liegen."},
+      {titel:"Was ein Array ist", text:"Ein Array ist genau das: let obst = [\"Apfel\", \"Birne\"]. Zugriff über Index, beginnend bei 0."},
+      {titel:"Zugriff über den Index", text:"obst[0] ist also \"Apfel\", obst[1] ist \"Birne\"."}
     ],
     beispiel:'let obst = ["Apfel", "Birne"];\nconsole.log(obst[0]);',
     aufgabe:"Erstelle ein Array mit drei Farben und logge das zweite Element (Index 1).",
@@ -3862,9 +3896,9 @@ lessons: [
   {
     id:"objekte", title:"Objekte", konzept:"Eigenschaften bündeln",
     erklaerung:[
-      "Warum das wichtig ist: Ein Array ist gut für gleichartige Dinge in einer Reihenfolge. Aber ein Werkzeug mit mehreren benannten Eigenschaften (Titel, Dauer, Ort) passt nicht in eine einfache Liste – dafür brauchst du ein ausgefülltes Formular mit benannten Feldern.",
-      "Ein Objekt bündelt zusammengehörige Werte unter benannten Eigenschaften: { name: \"Sascha\", beruf: \"Trainer\" }.",
-      "Zugriff über den Punkt: person.name."
+      {titel:"Warum wichtig", text:"Ein Array ist gut für gleichartige Dinge in einer Reihenfolge. Aber ein Werkzeug mit mehreren benannten Eigenschaften (Titel, Dauer, Ort) passt nicht in eine einfache Liste – dafür brauchst du ein ausgefülltes Formular mit benannten Feldern."},
+      {titel:"Was ein Objekt ist", text:"Ein Objekt bündelt zusammengehörige Werte unter benannten Eigenschaften: { name: \"Sascha\", beruf: \"Trainer\" }."},
+      {titel:"Zugriff über den Punkt", text:"Zugriff über den Punkt: person.name."}
     ],
     beispiel:'let person = { name: "Sascha", beruf: "Trainer" };\nconsole.log(person.name);',
     aufgabe:"Erstelle ein Objekt training mit den Eigenschaften titel und dauer. Logge titel.",
@@ -3879,8 +3913,8 @@ lessons: [
   {
     id:"mini-projekt", title:"Mini-Projekt", konzept:"Alles kombiniert",
     erklaerung:[
-      "Warum das wichtig ist: Echte Programme bestehen fast nie aus nur einem Baustein – meistens arbeiten Array, Schleife und Funktion zusammen. Das übst du jetzt einmal am Stück.",
-      "Aufgabe: eine Funktion, die für jeden Namen in einem Array eine Begrüßung ausgibt."
+      {titel:"Warum wichtig", text:"Echte Programme bestehen fast nie aus nur einem Baustein – meistens arbeiten Array, Schleife und Funktion zusammen. Das übst du jetzt einmal am Stück."},
+      {titel:"Die Aufgabe", text:"Aufgabe: eine Funktion, die für jeden Namen in einem Array eine Begrüßung ausgibt."}
     ],
     beispiel:'function begruessung(n){ return "Hallo " + n + "!"; }\nlet team = ["Julia","Christian"];\nfor (let i = 0; i < team.length; i++) {\n  console.log(begruessung(team[i]));\n}',
     aufgabe:"Erstelle ein Array mit 3 Namen, eine Funktion begruessung(name) und eine Schleife, die für jeden Namen eine Begrüßung loggt.",
@@ -3903,13 +3937,19 @@ lessons: [
     id: "koerpersprache",
     title: "Hundekommunikation verstehen",
     konzept: "Körpersprache lesen",
-    erklaerung: [
-      "Warum das wichtig ist: Je früher du erkennst, dass Georgie unter Druck gerät, desto mehr Möglichkeiten hast du noch, gegenzusteuern – bevor er eskaliert. Wer erst reagiert, wenn der Hund schon bellt und zieht, kommt fast immer zu spät.",
-      "Die Tierärztin Kendal Shepherd hat dafür ein konkretes Stufenmodell entwickelt, die \"Ladder of Aggression\" (Eskalationsleiter). Sie zeigt: Aggression ist meist der LETZTE Schritt einer langen Kette, nicht der erste. Die Stufen (vereinfacht, von ruhig zu eskaliert): Gähnen/Blinzeln → Nase lecken → Kopf wegdrehen → sich abwenden/weggehen wollen → Erstarren (steif werden) → Fixieren/starren → Knurren → Schnappen → Beißen.",
-      "Der entscheidende Punkt: Je weiter unten auf dieser Leiter du eingreifst, desto leichter lässt sich die Situation entschärfen. Wer erst bei \"Knurren\" reagiert, arbeitet schon mit einem Hund, der mehrere ruhigere Signale zuvor ausprobiert hat – und die haben nicht funktioniert.",
-      "Konkret bei Georgie: Nase lecken oder Kopf wegdrehen sind früheste Anzeichen. Ein steifer, hoch aufgerichteter Körper, eine starre Rute, ein fixierender Blick und aufgestelltes Fell entlang des Rückens zeigen: er ist schon deutlich weiter oben auf der Leiter.",
-      "Übersprungshandlungen wirken oft verwirrend – plötzliches Kratzen, Schütteln wie nach dem Baden, intensives Bodenschnüffeln mitten in einer aufgeladenen Situation. Das ist keine Ablenkung, sondern ein Versuch, mit innerem Druck umzugehen."
+    erklaerung:[
+      {titel:"Warum wichtig", text:"Je früher du erkennst, dass Georgie unter Druck gerät, desto mehr Möglichkeiten hast du noch, gegenzusteuern – bevor er eskaliert. Wer erst reagiert, wenn der Hund schon bellt und zieht, kommt fast immer zu spät."},
+      {titel:"Die Ladder of Aggression", text:"Die Tierärztin Kendal Shepherd hat dafür ein konkretes Stufenmodell entwickelt, die \"Ladder of Aggression\" (Eskalationsleiter). Sie zeigt: Aggression ist meist der LETZTE Schritt einer langen Kette, nicht der erste. Die Stufen siehst du weiter unten als Liste, von ruhig bis eskaliert."},
+      {titel:"Der entscheidende Punkt", text:"Je weiter unten auf dieser Leiter du eingreifst, desto leichter lässt sich die Situation entschärfen. Wer erst bei \"Knurren\" reagiert, arbeitet schon mit einem Hund, der mehrere ruhigere Signale zuvor ausprobiert hat – und die haben nicht funktioniert."},
+      {titel:"Konkret bei Georgie", text:"Nase lecken oder Kopf wegdrehen sind früheste Anzeichen. Ein steifer, hoch aufgerichteter Körper, eine starre Rute, ein fixierender Blick und aufgestelltes Fell entlang des Rückens zeigen: er ist schon deutlich weiter oben auf der Leiter."},
+      {titel:"Übersprungshandlungen", text:"Übersprungshandlungen wirken oft verwirrend – plötzliches Kratzen, Schütteln wie nach dem Baden, intensives Bodenschnüffeln mitten in einer aufgeladenen Situation. Das ist keine Ablenkung, sondern ein Versuch, mit innerem Druck umzugehen."}
     ],
+    stufenmodell: {
+      titel: "Ladder of Aggression (Kendal Shepherd)",
+      farbverlauf: true,
+      schritte: ["Gähnen / Blinzeln", "Nase lecken", "Kopf wegdrehen", "Sich abwenden / weggehen wollen", "Erstarren (steif werden)", "Fixieren / Starren", "Knurren", "Schnappen", "Beißen"]
+    },
+    beispielSzenario: "Auf dem Feldweg seht ihr einen Rüden 40 Meter entfernt. Georgie leckt sich kurz über die Nase und dreht den Kopf leicht weg – ein frühes Beschwichtigungssignal (Stufe 2-3). Reagierst du jetzt (mehr Abstand, ruhige Stimme), bleibt es dabei. Ignorierst du es, wird sein Körper 10 Sekunden später schon steifer – ihr seid dann schon eine Stufe weiter oben auf der Leiter.",
     praxisschritt: "Häng dir die Ladder of Aggression (z. B. als Bild-Suche \"Kendal Shepherd Ladder of Aggression\") irgendwo auf, wo du sie öfter siehst. Ziel: die untersten 2-3 Stufen bei Georgie im Alltag bewusst wahrnehmen, auch wenn gerade kein Hund in der Nähe ist.",
     reflexion: "Denk an die letzte Begegnung mit einem anderen Rüden zurück: Welche Stufe der Ladder of Aggression hast du bei Georgie zuerst gesehen – auch wenn dir das im Moment nicht bewusst aufgefallen ist?",
     zusammenfassung: [
@@ -3925,12 +3965,13 @@ lessons: [
     id: "warum-reagiert-er",
     title: "Warum reagiert Georgie so?",
     konzept: "Unkastriert, Rüden-Dynamik, Übererregung",
-    erklaerung: [
-      "Warum das wichtig ist: Wenn du verstehst, WAS in Georgie gerade passiert, hörst du auf, das Verhalten als \"Ungehorsam\" zu deuten – und kannst gezielter reagieren statt nur zu hoffen, dass es aufhört.",
-      "Unkastrierte Rüden untereinander: Andere Rüden nehmen den Hormonstatus über Geruch wahr (u. a. Duftstoffe im Urin), und Begegnungen zwischen intakten Rüden sind statistisch häufiger von Rangdynamik und Konkurrenzverhalten geprägt als z. B. zwischen kastrierten Hunden oder Rüde und Hündin. Das erklärt nicht jede Reaktion, ist aber ein realer, in der Verhaltensforschung dokumentierter Faktor – nicht \"Georgies Schuld\" oder Erziehungsversagen.",
-      "Übererregung (Arousal) und Cortisol: Ist Georgie einmal richtig hochgefahren, dauert der vollständige Abbau des Stresshormons Cortisol im Körper häufig 24 bis 72 Stunden. Das heißt konkret: Auch am Tag NACH einer heftigen Begegnung kann er noch empfindlicher reagieren als sonst – nicht weil er \"nichts gelernt hat\", sondern weil sein Körper biologisch noch nicht auf Null zurück ist.",
-      "Trigger-Stacking: Mehrere kleine Belastungen addieren sich über den Tag – Baustellenlärm, ein hektischer Vormittag, wenig Schlaf. Trifft dann noch ein fremder Rüde dazu, ist das etwas anderes, als wenn der Rüde die einzige Herausforderung des Tages ist. Das \"Fass\" kann schon vorher fast voll gewesen sein."
+    erklaerung:[
+      {titel:"Warum wichtig", text:"Wenn du verstehst, WAS in Georgie gerade passiert, hörst du auf, das Verhalten als \"Ungehorsam\" zu deuten – und kannst gezielter reagieren statt nur zu hoffen, dass es aufhört."},
+      {titel:"Unkastrierte Rüden untereinander", text:"Unkastrierte Rüden untereinander: Andere Rüden nehmen den Hormonstatus über Geruch wahr (u. a. Duftstoffe im Urin), und Begegnungen zwischen intakten Rüden sind statistisch häufiger von Rangdynamik und Konkurrenzverhalten geprägt als z. B. zwischen kastrierten Hunden oder Rüde und Hündin. Das erklärt nicht jede Reaktion, ist aber ein realer, in der Verhaltensforschung dokumentierter Faktor – nicht \"Georgies Schuld\" oder Erziehungsversagen."},
+      {titel:"Übererregung und Cortisol", text:"Übererregung (Arousal) und Cortisol: Ist Georgie einmal richtig hochgefahren, dauert der vollständige Abbau des Stresshormons Cortisol im Körper häufig 24 bis 72 Stunden. Das heißt konkret: Auch am Tag NACH einer heftigen Begegnung kann er noch empfindlicher reagieren als sonst – nicht weil er \"nichts gelernt hat\", sondern weil sein Körper biologisch noch nicht auf Null zurück ist."},
+      {titel:"Trigger-Stacking", text:"Trigger-Stacking: Mehrere kleine Belastungen addieren sich über den Tag – Baustellenlärm, ein hektischer Vormittag, wenig Schlaf. Trifft dann noch ein fremder Rüde dazu, ist das etwas anderes, als wenn der Rüde die einzige Herausforderung des Tages ist. Das \"Fass\" kann schon vorher fast voll gewesen sein."}
     ],
+    beispielSzenario: "Ein Montag: Georgie musste morgens länger allein bleiben, mittags war eine laute Baustelle auf dem Gehweg, nachmittags dann ein fremder Rüde beim Spaziergang – und er reagiert deutlich heftiger als sonst bei diesem Rüden. Am ruhigen Sonntag davor, gleicher Rüde, gleicher Abstand, war er entspannt. Der Unterschied lag nicht am Rüden, sondern am vollen \"Stress-Fass\" des Tages.",
     praxisschritt: "Führe für eine Woche eine ganz einfache Tages-Notiz: War Georgie an diesem Tag VOR der ersten Hundebegegnung schon erkennbar unruhiger als sonst? Das hilft dir, sein individuelles Trigger-Stacking-Muster zu erkennen.",
     reflexion: "Fällt dir ein Tag ein, an dem Georgie schon VOR der eigentlichen Hundebegegnung spürbar angespannter war als sonst? Was war an diesem Tag anders?",
     zusammenfassung: [
@@ -3945,13 +3986,29 @@ lessons: [
     id: "management-vs-training",
     title: "Management vs. Training",
     konzept: "Unterschied, wann was sinnvoll ist – und wann Profi-Hilfe nötig ist",
-    erklaerung: [
-      "Warum das wichtig ist: Viele Halter erwarten von \"Training\" sofortige Wirkung im Alltag – und sind frustriert, wenn's nicht klappt. Die Lösung ist fast immer beides gleichzeitig, nicht entweder-oder.",
-      "Management heißt: die Situation entschärfen, BEVOR sie zum Problem wird. Abstand vergrößern, Straßenseite wechseln, in einen Torbogen ausweichen. Das ändert nichts an Georgies grundsätzlicher Reaktion, verhindert aber akut Stress und Eskalation – und verhindert, dass er die Reaktion immer wieder \"einübt\".",
-      "Training heißt: tatsächlich an der Reaktion selbst arbeiten, damit sie sich über Wochen und Monate verändert. Das braucht systematische Wiederholung (siehe nächstes Modul) – dafür ist die Wirkung nachhaltiger.",
-      "Der häufigste Fehler: nur Management ohne Training (der Hund bleibt reaktiv, du wirst nur besser im Ausweichen) oder nur Training ohne Management (der Hund wird immer wieder überfordert und übt dadurch sogar die unerwünschte Reaktion weiter ein).",
-      "Wann professionelle Hilfe wichtig ist: Wenn es bereits zu echten Beißvorfällen kam (auch wenn \"nur\" gegen andere Hunde), wenn die Reaktion sich trotz konsequentem Vorgehen über Wochen verschlimmert statt verbessert, oder wenn du selbst dich in Begegnungssituationen unsicher/überfordert fühlst – dann ist eine qualifizierte Hundeverhaltensberatung vor Ort keine Schwäche, sondern der schnellste Weg zu echtem Fortschritt. Diese App kann Wissen vermitteln, aber keine Person vor Ort ersetzen, die Georgies Körpersprache in Echtzeit sieht."
+    erklaerung:[
+      {titel:"Warum wichtig", text:"Viele Halter erwarten von \"Training\" sofortige Wirkung im Alltag – und sind frustriert, wenn's nicht klappt. Die Lösung ist fast immer beides gleichzeitig, nicht entweder-oder. Die Gegenüberstellung unten zeigt dir den Unterschied auf einen Blick."},
+      {titel:"Der häufigste Fehler", text:"Der häufigste Fehler: nur Management ohne Training (der Hund bleibt reaktiv, du wirst nur besser im Ausweichen) oder nur Training ohne Management (der Hund wird immer wieder überfordert und übt dadurch sogar die unerwünschte Reaktion weiter ein)."},
+      {titel:"Wann professionelle Hilfe wichtig ist", text:"Wann professionelle Hilfe wichtig ist: Wenn es bereits zu echten Beißvorfällen kam (auch wenn \"nur\" gegen andere Hunde), wenn die Reaktion sich trotz konsequentem Vorgehen über Wochen verschlimmert statt verbessert, oder wenn du selbst dich in Begegnungssituationen unsicher/überfordert fühlst – dann ist eine qualifizierte Hundeverhaltensberatung vor Ort keine Schwäche, sondern der schnellste Weg zu echtem Fortschritt. Diese App kann Wissen vermitteln, aber keine Person vor Ort ersetzen, die Georgies Körpersprache in Echtzeit sieht."}
     ],
+    vergleich: {
+      titel: "Management vs. Training im Vergleich",
+      linksTitel: "🛡️ Management",
+      linksPunkte: [
+        "Entschärft die aktuelle Situation, sofort wirksam",
+        "Abstand vergrößern, Straßenseite wechseln, ausweichen",
+        "Ändert nichts an der grundsätzlichen Reaktion",
+        "Verhindert, dass die Reaktion immer wieder \"eingeübt\" wird"
+      ],
+      rechtsTitel: "🎯 Training",
+      rechtsPunkte: [
+        "Verändert das Verhalten selbst, langfristig",
+        "Braucht systematische Wiederholung über Wochen/Monate",
+        "Wirkung baut sich langsam auf, dafür nachhaltig",
+        "Funktioniert am besten unterhalb der Reaktionsschwelle (Modul 4)"
+      ]
+    },
+    beispielSzenario: "Ihr seht einen Rüden am anderen Ende der Straße. Management: Du wechselst sofort die Seite, bevor Georgie überhaupt reagiert – die Situation ist entschärft, aber er hat nichts Neues gelernt. Training: Ihr bleibt auf sicherer Distanz stehen, Georgie sieht den Rüden ruhig an, du belohnst genau das (siehe Modul 4) – hier verändert sich etwas an seiner Reaktion selbst.",
     praxisschritt: "Leg für die kommende Woche eine feste Regel fest, z. B. \"bei Sichtkontakt unter 20 Metern wechsle ich aktiv die Seite\" – das ist reines Management, aber es verhindert, dass ihr beide in überforderte Situationen geratet, während ihr an Modul 4 arbeitet.",
     reflexion: "Wenn du ehrlich bist: Betreibst du mit Georgie aktuell eher Management, eher Training, oder schon eine Mischung? Woran machst du das fest?",
     zusammenfassung: [
@@ -3966,13 +4023,14 @@ lessons: [
     id: "methoden",
     title: "Konkrete Methoden",
     konzept: "Gegenkonditionierung, BAT, Look-at-That",
-    erklaerung: [
-      "Warum das wichtig ist: Ohne eine klare Methode wird Training schnell zu \"einfach öfter üben\" – das reicht bei echter Reaktivität selten. Hier sind drei bewährte, konkrete Ansätze, die sich auch kombinieren lassen.",
-      "Gegenkonditionierung (Counter-Conditioning): Sobald ein anderer Rüde in sicherem Abstand auftaucht (unterhalb der Reaktionsschwelle!), gibt's sofort etwas richtig Hochwertiges – Futter, das es sonst nirgends gibt. Ziel: \"anderer Rüde taucht auf\" wird mit \"jetzt passiert etwas Gutes\" verknüpft statt mit Bedrohung.",
-      "Das \"Look-at-That\"-Spiel (LAT), entwickelt von der Trainerin Leslie McDevitt: Du markierst (per Klick oder Wort \"Ja\") den Moment, in dem Georgie den anderen Hund SIEHT, aber noch ruhig ist – und belohnst genau das. Er lernt: \"Hinschauen und ruhig bleiben\" bringt eine Belohnung, statt dass Hinschauen automatisch in Anspannung kippt.",
-      "BAT (Behavior Adjustment Training, Grisha Stewart): Hier bestimmt Georgie selbst, wie nah er herangehen will, und wird für ruhiges, selbstbestimmtes Verhalten belohnt, indem er sich zurückziehen darf – Abstand wird zur Belohnung. Das stärkt sein Gefühl, die Situation selbst kontrollieren zu können, was Stress reduziert.",
-      "Die Reaktionsschwelle (Threshold) ist bei allen drei Methoden entscheidend: Reagiert Georgie schon, seid ihr zu nah dran – dann übt er nur die Reaktion, statt etwas Neues zu lernen. Bleibt knapp UNTERHALB der Schwelle und verringert den Abstand nur langsam, über mehrere Sitzungen."
+    erklaerung:[
+      {titel:"Warum wichtig", text:"Ohne eine klare Methode wird Training schnell zu \"einfach öfter üben\" – das reicht bei echter Reaktivität selten. Hier sind drei bewährte, konkrete Ansätze, die sich auch kombinieren lassen."},
+      {titel:"Gegenkonditionierung", text:"Gegenkonditionierung (Counter-Conditioning): Sobald ein anderer Rüde in sicherem Abstand auftaucht (unterhalb der Reaktionsschwelle!), gibt's sofort etwas richtig Hochwertiges – Futter, das es sonst nirgends gibt. Ziel: \"anderer Rüde taucht auf\" wird mit \"jetzt passiert etwas Gutes\" verknüpft statt mit Bedrohung."},
+      {titel:"Das Look-at-That-Spiel", text:"Das \"Look-at-That\"-Spiel (LAT), entwickelt von der Trainerin Leslie McDevitt: Du markierst (per Klick oder Wort \"Ja\") den Moment, in dem Georgie den anderen Hund SIEHT, aber noch ruhig ist – und belohnst genau das. Er lernt: \"Hinschauen und ruhig bleiben\" bringt eine Belohnung, statt dass Hinschauen automatisch in Anspannung kippt."},
+      {titel:"BAT", text:"BAT (Behavior Adjustment Training, Grisha Stewart): Hier bestimmt Georgie selbst, wie nah er herangehen will, und wird für ruhiges, selbstbestimmtes Verhalten belohnt, indem er sich zurückziehen darf – Abstand wird zur Belohnung. Das stärkt sein Gefühl, die Situation selbst kontrollieren zu können, was Stress reduziert."},
+      {titel:"Die Reaktionsschwelle", text:"Die Reaktionsschwelle (Threshold) ist bei allen drei Methoden entscheidend: Reagiert Georgie schon, seid ihr zu nah dran – dann übt er nur die Reaktion, statt etwas Neues zu lernen. Bleibt knapp UNTERHALB der Schwelle und verringert den Abstand nur langsam, über mehrere Sitzungen."}
     ],
+    beispielSzenario: "Ihr steht 25 Meter von einem fremden Rüden entfernt, unterhalb der Reaktionsschwelle. Georgie blickt kurz hinüber, ist noch ruhig – in dem Moment sagst du \"Ja\" und gibst sofort ein Stück Wurst. Er blickt wieder hin – wieder \"Ja\" und Belohnung. Nach ein paar Wiederholungen fängt er an, nach dem Hinschauen automatisch zu dir zu schauen, statt sich weiter zu fixieren – genau das ist das Ziel von Look-at-That.",
     praxisschritt: "Probiere diese Woche einmal das Look-at-That-Spiel bei sicherem Abstand: Sobald Georgie einen anderen Hund erblickt und noch ruhig ist, sag \"Ja\" und gib sofort ein Leckerli. Wiederhole das mehrfach an verschiedenen Tagen, bevor du den Abstand verringerst.",
     reflexion: "Bei welcher Entfernung zu einem fremden Rüden fängt Georgie erfahrungsgemäß an, angespannt zu reagieren? Diese Distanz ist praktisch deine aktuelle Arbeits-Schwelle.",
     zusammenfassung: [
@@ -3988,13 +4046,14 @@ lessons: [
     id: "eigenes-verhalten",
     title: "Dein eigenes Verhalten als Halter",
     konzept: "Ruhig bleiben, Leine, Vorausschau",
-    erklaerung: [
-      "Warum das wichtig ist: Georgie liest dich ständig mit – über die Leine, deine Anspannung, dein Tempo. Dein eigenes Verhalten ist oft der am leichtesten veränderbare Hebel, weil du ihn sofort selbst in der Hand hast.",
-      "Eine straffe, angespannte Leine überträgt sich direkt körperlich auf den Hund – noch bevor überhaupt ein anderer Hund in Sicht ist. Eine lockere Leine ist ein stilles Signal: \"Alles ruhig hier.\" Das ist keine Nebensache, sondern messbar wirksam – viele Trainer sehen die Leinenspannung als einen der stärksten unbewussten Halter-Einflüsse überhaupt.",
-      "Deine eigene Atmung und Körperhaltung wirken ähnlich. Ein angehaltener Atem, versteifte Schultern, ein plötzlich schnellerer Schritt – Georgie merkt das oft, bevor er den anderen Hund selbst wahrnimmt.",
-      "Vorausschauend statt reaktiv handeln heißt: Trigger früh erkennen (Modul 1) und schon reagieren, BEVOR Georgie reagiert – Abstand vergrößern, Aufmerksamkeit auf dich lenken, statt erst einzugreifen, wenn er schon zieht und bellt.",
-      "Wichtig auch: Bestrafung in der Reaktion (Leinenruck, Anschreien) verstärkt oft ungewollt die negative Verknüpfung mit anderen Hunden – der Hund lernt \"anderer Hund = ich werde auch noch angeschrien\", nicht \"ich soll ruhig bleiben\"."
+    erklaerung:[
+      {titel:"Warum wichtig", text:"Georgie liest dich ständig mit – über die Leine, deine Anspannung, dein Tempo. Dein eigenes Verhalten ist oft der am leichtesten veränderbare Hebel, weil du ihn sofort selbst in der Hand hast."},
+      {titel:"Leinenspannung", text:"Eine straffe, angespannte Leine überträgt sich direkt körperlich auf den Hund – noch bevor überhaupt ein anderer Hund in Sicht ist. Eine lockere Leine ist ein stilles Signal: \"Alles ruhig hier.\" Das ist keine Nebensache, sondern messbar wirksam – viele Trainer sehen die Leinenspannung als einen der stärksten unbewussten Halter-Einflüsse überhaupt."},
+      {titel:"Atmung und Körperhaltung", text:"Deine eigene Atmung und Körperhaltung wirken ähnlich. Ein angehaltener Atem, versteifte Schultern, ein plötzlich schnellerer Schritt – Georgie merkt das oft, bevor er den anderen Hund selbst wahrnimmt."},
+      {titel:"Vorausschauend handeln", text:"Vorausschauend statt reaktiv handeln heißt: Trigger früh erkennen (Modul 1) und schon reagieren, BEVOR Georgie reagiert – Abstand vergrößern, Aufmerksamkeit auf dich lenken, statt erst einzugreifen, wenn er schon zieht und bellt."},
+      {titel:"Keine Bestrafung in der Reaktion", text:"Wichtig auch: Bestrafung in der Reaktion (Leinenruck, Anschreien) verstärkt oft ungewollt die negative Verknüpfung mit anderen Hunden – der Hund lernt \"anderer Hund = ich werde auch noch angeschrien\", nicht \"ich soll ruhig bleiben\"."}
     ],
+    beispielSzenario: "Zwei Spaziergänge, gleiche Straße, gleicher Abstand zu einem fremden Hund: Beim ersten Mal hältst du die Leine kurz und angespannt, hältst die Luft an – Georgie reagiert schnell gereizt. Beim zweiten Mal lässt du die Leine bewusst locker, atmest normal weiter, gehst im gewohnten Tempo – Georgie bleibt spürbar entspannter, obwohl die Situation objektiv identisch war.",
     praxisschritt: "Achte beim nächsten Spaziergang bewusst NUR auf deine eigene Leinenhaltung und Atmung, sobald ihr einen anderen Hund in großer Entfernung seht – noch bevor Georgie reagiert. Notier dir danach, ob sich dadurch etwas verändert hat.",
     reflexion: "Wie ist deine eigene Körperspannung, wenn du schon von Weitem einen anderen Rüden siehst – auch bevor Georgie reagiert? Was könntest du an deinem eigenen Verhalten in genau diesem Moment verändern?",
     zusammenfassung: [
@@ -4009,12 +4068,13 @@ lessons: [
     id: "trainingstagebuch",
     title: "Trainingstagebuch führen",
     konzept: "Beobachtungen strukturiert festhalten",
-    erklaerung: [
-      "Warum das wichtig ist: Fortschritt bei Reaktivität ist oft langsam und in Wellen – im Alltag merkt man ihn kaum. Erst mit Aufzeichnungen über Wochen wird ein Muster sichtbar, das dir sonst entgeht.",
-      "Ein guter Eintrag braucht nicht viel: Datum, Situation (Ort, geschätzte Entfernung, Anzahl Hunde), Georgies Reaktion (welche Stufe der Ladder of Aggression aus Modul 1?), und was du versucht hast.",
-      "Besonders wertvoll: Notiere auch, was GUT lief, nicht nur die schwierigen Momente. Das hilft dir zu erkennen, welche Bedingungen (Uhrzeit, Ort, Abstand) für Georgie leichter sind – und die kannst du gezielt öfter aufsuchen.",
-      "Nutze dafür das Lerntagebuch dieser App (unter ⋯ Mehr in der Seminarvorbereitung) oder die Reflexionsfragen hier in diesem Kurs – nach ein paar Wochen lohnt sich der Blick zurück auf die ersten Einträge, um Fortschritt überhaupt sichtbar zu machen."
+    erklaerung:[
+      {titel:"Warum wichtig", text:"Fortschritt bei Reaktivität ist oft langsam und in Wellen – im Alltag merkt man ihn kaum. Erst mit Aufzeichnungen über Wochen wird ein Muster sichtbar, das dir sonst entgeht."},
+      {titel:"Ein guter Eintrag", text:"Ein guter Eintrag braucht nicht viel: Datum, Situation (Ort, geschätzte Entfernung, Anzahl Hunde), Georgies Reaktion (welche Stufe der Ladder of Aggression aus Modul 1?), und was du versucht hast."},
+      {titel:"Auch das Gute festhalten", text:"Besonders wertvoll: Notiere auch, was GUT lief, nicht nur die schwierigen Momente. Das hilft dir zu erkennen, welche Bedingungen (Uhrzeit, Ort, Abstand) für Georgie leichter sind – und die kannst du gezielt öfter aufsuchen."},
+      {titel:"Wo du das führst", text:"Nutze dafür das Lerntagebuch dieser App (unter ⋯ Mehr in der Seminarvorbereitung) oder die Reflexionsfragen hier in diesem Kurs – nach ein paar Wochen lohnt sich der Blick zurück auf die ersten Einträge, um Fortschritt überhaupt sichtbar zu machen."}
     ],
+    beispielSzenario: "Ein Beispiel-Eintrag: \"Mo, 14.3., Feldweg, ca. 15m Abstand, 1 Rüde. Georgie: kurz angespannt, dann Nase lecken, kein Bellen. Ich: Seite gewechselt, ruhig geblieben. Lief gut.\" – kurz, aber mit allen wichtigen Infos: Ort, Abstand, Reaktion, deine Handlung, Ergebnis.",
     praxisschritt: "Leg dir für die nächsten zwei Wochen eine feste Routine an: nach jedem Spaziergang mit Hundekontakt ein bis zwei Sätze notieren, egal ob's gut oder schwierig lief.",
     reflexion: "Schreib jetzt schon einen ersten Eintrag: Wie war die letzte Begegnung mit einem anderen Rüden – Ort, Abstand, Georgies Reaktion, was hast du gemacht?",
     zusammenfassung: [
@@ -4155,6 +4215,48 @@ function kursReset(){
   kursRenderAll();
 }
 
+function farbverlaufHex(start, ende, anteil){
+  const s = start.match(/\w\w/g).map(h=>parseInt(h,16));
+  const e = ende.match(/\w\w/g).map(h=>parseInt(h,16));
+  const mix = s.map((c,i)=> Math.round(c + (e[i]-c)*anteil));
+  return '#' + mix.map(c=>c.toString(16).padStart(2,'0')).join('');
+}
+
+function stufenmodellHTML(sm){
+  if(!sm || !sm.schritte || !sm.schritte.length) return '';
+  const n = sm.schritte.length;
+  const zeilen = sm.schritte.map((s,i)=>{
+    const anteil = n>1 ? i/(n-1) : 0;
+    const farbe = sm.farbverlauf ? farbverlaufHex('3f8a58', 'c4593a', anteil) : '#c9a521';
+    return `<div class="stufenmodellSchritt" style="border-left-color:${farbe};">
+      <span class="stufenmodellNr" style="background:${farbe};">${i+1}</span>
+      <span class="stufenmodellText">${escapeHTML(s)}</span>
+    </div>`;
+  }).join('');
+  return `
+      <div class="kursLabel" style="margin-top:18px;">${escapeHTML(sm.titel)}</div>
+      <div class="kursCard stufenmodellCard">
+        ${zeilen}
+        <button class="kursRunBtn" style="margin-top:10px;" onclick='kursSprich(${JSON.stringify(sm.titel + ". " + sm.schritte.join(". Dann: "))})'>🔊 Stufen vorlesen</button>
+      </div>`;
+}
+
+function vergleichHTML(v){
+  if(!v) return '';
+  return `
+      <div class="kursLabel" style="margin-top:18px;">${escapeHTML(v.titel)}</div>
+      <div class="kursVergleich">
+        <div class="kursVergleichSpalte links">
+          <div class="kursVergleichKopf">${escapeHTML(v.linksTitel)}</div>
+          <ul>${v.linksPunkte.map(p=>`<li>${escapeHTML(p)}</li>`).join('')}</ul>
+        </div>
+        <div class="kursVergleichSpalte rechts">
+          <div class="kursVergleichKopf">${escapeHTML(v.rechtsTitel)}</div>
+          <ul>${v.rechtsPunkte.map(p=>`<li>${escapeHTML(p)}</li>`).join('')}</ul>
+        </div>
+      </div>`;
+}
+
 function kursRenderAll(){
   const ov = document.getElementById('kursOverlay');
   const l = aktiveLessons()[kursState.current];
@@ -4168,6 +4270,13 @@ function kursRenderAll(){
       </div>
       <div class="kursFeedback" id="kursQuizFeedback"></div>
     </div>` : '';
+
+  const beispielSzenarioHTML = (istWissenskurs && l.beispielSzenario) ? `
+      <div class="kursLabel" style="margin-top:18px;">Beispiel aus der Praxis</div>
+      <div class="kursCard">
+        <p>${escapeHTML(l.beispielSzenario)}</p>
+        <button class="kursRunBtn" onclick="kursVorleseBeispielSzenario()">🔊 Beispiel vorlesen</button>
+      </div>` : '';
 
   const praxisHTML = (istWissenskurs && l.praxisschritt) ? `
       <div class="kursLabel" style="margin-top:18px;">Praxisschritt</div>
@@ -4186,6 +4295,7 @@ function kursRenderAll(){
   const quelleHTML = l.quelle ? `<div class="kursQuelle">📚 ${escapeHTML(l.quelle)}</div>` : '';
 
   const mittelteilHTML = istWissenskurs ? `
+      ${beispielSzenarioHTML}
       ${praxisHTML}
       <div class="kursLabel" style="margin-top:18px;">Reflexion</div>
       <div class="kursCard" style="padding-bottom:6px;">
@@ -4230,9 +4340,12 @@ function kursRenderAll(){
       <div class="kursEyebrow">Modul ${kursState.current+1} von ${aktiveLessons().length} · ${escapeHTML(l.konzept)}</div>
       <div class="kursTitel">${escapeHTML(l.title)}</div>
       <div class="kursCard">
-        ${l.erklaerung.map(p=>`<p>${escapeHTML(p)}</p>`).join('')}
+        ${erklaerungHTML(l.erklaerung)}
         <button class="kursRunBtn" style="margin-top:4px;" onclick="kursVorleseErklaerung()">🔊 Erklärung vorlesen</button>
       </div>
+
+      ${stufenmodellHTML(l.stufenmodell)}
+      ${vergleichHTML(l.vergleich)}
 
       ${mittelteilHTML}
 
@@ -4293,10 +4406,10 @@ function kursRenderVorlesenModus(){
   const l = aktiveLessons()[kursState.current];
   const istWissenskurs = aktiverKurs().kursTyp === 'wissen';
   const abschnitte = istWissenskurs ? [
-    { label: 'Erklärung', typ: 'fach', text: l.erklaerung.join(' ') },
+    { label: 'Erklärung', typ: 'fach', text: erklaerungVolltext(l.erklaerung) },
     { label: 'Reflexionsfrage', typ: 'reflexion', text: l.reflexion },
   ] : [
-    { label: 'Erklärung', typ: 'fach', text: l.erklaerung.join(' ') },
+    { label: 'Erklärung', typ: 'fach', text: erklaerungVolltext(l.erklaerung) },
     { label: 'Beispielcode', typ: 'ablauf', text: l.beispiel },
     { label: 'Aufgabe', typ: 'reflexion', text: l.aufgabe },
   ];
@@ -4333,10 +4446,10 @@ function kursAllesVorlesen(){
   const l = aktiveLessons()[kursState.current];
   const istWissenskurs = aktiverKurs().kursTyp === 'wissen';
   alleVorlesen(istWissenskurs ? [
-    { titel: 'Erklärung', text: l.erklaerung.join(' ') },
+    { titel: 'Erklärung', text: erklaerungVolltext(l.erklaerung) },
     { titel: 'Reflexionsfrage', text: l.reflexion },
   ] : [
-    { titel: 'Erklärung', text: l.erklaerung.join(' ') },
+    { titel: 'Erklärung', text: erklaerungVolltext(l.erklaerung) },
     { titel: 'Beispielcode', text: l.beispiel },
     { titel: 'Aufgabe', text: l.aufgabe },
   ]);
@@ -4382,9 +4495,25 @@ function kursSprich(text){
   utter.lang = 'de-DE';
   speechSynthesis.speak(utter);
 }
+function erklaerungVolltext(erklaerung){
+  return erklaerung.map(e => typeof e === 'string' ? e : e.text).join(' ');
+}
+
+function erklaerungHTML(erklaerung){
+  const chunks = erklaerung.map(e => typeof e === 'string' ? {titel:null, text:e} : e);
+  return chunks.map((c,i) => `
+    <div class="erklaerungChunk${i===0?' offen':''}">
+      <button class="erklaerungKopf" onclick="this.parentElement.classList.toggle('offen')" type="button">
+        <span>${escapeHTML(c.titel || ('Teil ' + (i+1)))}</span>
+        <span class="erklaerungPfeil">▾</span>
+      </button>
+      <div class="erklaerungInhalt"><p>${escapeHTML(c.text)}</p></div>
+    </div>`).join('');
+}
+
 function kursVorleseErklaerung(){
   const l = aktiveLessons()[kursState.current];
-  kursSprich(l.erklaerung.join(' '));
+  kursSprich(erklaerungVolltext(l.erklaerung));
 }
 function kursVorleseBeispiel(){
   const l = aktiveLessons()[kursState.current];
@@ -4428,6 +4557,11 @@ async function kursReflexionPruefen(){
 function kursVorleseReflexion(){
   const l = aktiveLessons()[kursState.current];
   kursSprich(l.reflexion);
+}
+
+function kursVorleseBeispielSzenario(){
+  const l = aktiveLessons()[kursState.current];
+  kursSprich(l.beispielSzenario);
 }
 
 async function kursUebungPruefen(){
