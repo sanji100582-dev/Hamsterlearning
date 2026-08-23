@@ -5,11 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" href="icon-180.png">
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#f7f1e3">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Hamster dein Wissen">
 <title>Hamster dein Wissen</title>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <style>
@@ -27,33 +22,8 @@
     --text-main:#3b332a;
     --text-muted:#6b5f49;
     --pin-metall:#d9d9d9;
-    --schrift-hand: -apple-system, BlinkMacSystemFont, 'SF Pro Rounded', 'Segoe UI Rounded', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --schrift-hand: 'Segoe Print','Bradley Hand','Comic Sans MS', cursive;
     --schrift-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    --dialog-bg:#fbf6e6;
-    --dialog-text:#20241e;
-    --header-bg-1:rgba(247,241,227,0.98);
-    --header-bg-2:rgba(247,241,227,0.9);
-    --karte-bg:#fffdf8;
-  }
-  :root[data-theme="dark"]{
-    --filz-1:#242019;
-    --filz-2:#1c1914;
-    --filz-3:#161310;
-    --gelb:#8a6f2e;
-    --gelb-dk:#c9a521;
-    --blau:#3a5a72;
-    --blau-dk:#6fa8cc;
-    --gruen:#3d6b4d;
-    --gruen-dk:#7ec18f;
-    --tinte:#f1ede4;
-    --text-main:#e8e2d4;
-    --text-muted:#a89c80;
-    --pin-metall:#8a8a8a;
-    --dialog-bg:#2b2620;
-    --dialog-text:#f1ede4;
-    --header-bg-1:rgba(28,25,20,0.98);
-    --header-bg-2:rgba(28,25,20,0.9);
-    --karte-bg:#332c22;
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html{overflow-x:hidden; width:100%;}
@@ -72,13 +42,13 @@
   /* ---------- Header / Tabs ---------- */
   header{
     position:sticky; top:0; z-index:20;
-    background:linear-gradient(180deg, var(--header-bg-1), var(--header-bg-2));
+    background:linear-gradient(180deg, rgba(247,241,227,0.98), rgba(247,241,227,0.9));
     backdrop-filter:blur(4px);
     border-bottom:2px solid rgba(0,0,0,0.06);
     padding:10px 12px 8px;
   }
   h1{
-    font-family:var(--schrift-hand); font-weight:700;
+    font-family:var(--schrift-hand);
     font-size:1.5rem;
     margin:2px 4px 8px;
     letter-spacing:0.5px;
@@ -92,7 +62,7 @@
   }
   .infoBtn{
     margin-left:auto; width:30px; height:30px; border-radius:50%; border:1px solid rgba(0,0,0,0.15);
-    background:var(--karte-bg); color:#7a5c2e; font-size:0.85rem; cursor:pointer; flex:0 0 auto;
+    background:#fffdf8; color:#7a5c2e; font-size:0.85rem; cursor:pointer; flex:0 0 auto;
   }
 
   /* ---------- Splash Screen ---------- */
@@ -113,7 +83,7 @@
     animation:splashPop .5s ease;
   }
   .splashTitel{
-    font-family:var(--schrift-hand); font-weight:700; font-size:1.8rem; color:#7a5c2e; margin:0 0 8px;
+    font-family:var(--schrift-hand); font-size:1.8rem; color:#7a5c2e; margin:0 0 8px;
     text-shadow:0 1px 0 rgba(255,255,255,0.6);
   }
   .splashSlogan{
@@ -125,13 +95,6 @@
   }
   }
   .tabRow{display:flex; gap:6px; overflow-x:auto; padding-bottom:6px; scrollbar-width:thin;}
-  .aktSeminarZeile{
-    display:flex; align-items:center; justify-content:space-between; width:100%;
-    background:rgba(0,0,0,0.04); border:1px solid rgba(0,0,0,0.1); border-radius:10px;
-    padding:9px 12px; font-size:0.9rem; font-weight:600; color:#5c4413;
-    cursor:pointer; font-family:var(--schrift-sans); margin-bottom:2px;
-  }
-  .aktSeminarWechsel{font-size:0.76rem; font-weight:600; color:#2f5c82; opacity:0.85;}
   .tab{
     flex:0 0 auto;
     padding:8px 14px;
@@ -163,20 +126,6 @@
     gap:34px 20px;
     padding:10px 6px 0;
   }
-  /* ---------- Listenansicht (durchgehendes Lesen in empfohlener Reihenfolge) ---------- */
-  .listenAnsicht{display:flex; flex-direction:column; gap:0; padding-top:6px;}
-  .listenBlock{
-    background:var(--karte-bg); border-radius:12px; padding:16px 16px 14px; margin-bottom:14px;
-    box-shadow:0 3px 10px rgba(90,70,40,0.1); border-left:5px solid var(--gelb-dk);
-  }
-  .listenBlock.ablauf{border-left-color:var(--blau-dk);}
-  .listenBlock.reflexion{border-left-color:var(--gruen-dk);}
-  .listenBlockKopf{margin-bottom:10px;}
-  .listenBlockKopf h3{
-    font-family:var(--schrift-hand); font-weight:700; font-size:1.15rem; margin:0 0 6px; color:var(--text-main);
-  }
-  .listenBlockMeta{display:flex; gap:6px; flex-wrap:wrap;}
-  .listenBlockBody{padding-top:2px;}
   .karte{
     position:relative;
     padding:22px 16px 16px;
@@ -194,7 +143,7 @@
     box-shadow:0 3px 4px rgba(0,0,0,0.5);
   }
   .karte h3{
-    font-family:var(--schrift-hand); font-weight:700;
+    font-family:var(--schrift-hand);
     font-size:1.15rem; margin:0 0 8px; line-height:1.2;
   }
   .karte p{
@@ -203,7 +152,7 @@
     display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
   }
   .karte .badge{
-    position:absolute; top:10px; right:12px; font-family:var(--schrift-hand); font-weight:700;
+    position:absolute; top:10px; right:12px; font-family:var(--schrift-hand);
     font-size:0.75rem; opacity:0.8; font-weight:600;
   }
   .karte .gruppeTag{
@@ -212,10 +161,9 @@
     background:rgba(0,0,0,0.12); color:inherit;
   }
   .karte .geuebtMarke{
-    position:absolute; top:10px; left:12px; min-width:18px; height:18px; border-radius:9px; padding:0 4px;
+    position:absolute; top:10px; left:12px; width:18px; height:18px; border-radius:50%;
     background:#2b6b45; color:#fff; font-size:0.7rem; display:flex; align-items:center; justify-content:center;
   }
-  .karte .geuebtMarke.teilweise{background:#c9a521; font-size:0.62rem; font-weight:700;}
 
   .karte.fach{background:var(--gelb); border-radius:4px; border:1px solid var(--gelb-dk);}
   .karte.ablauf{
@@ -246,7 +194,7 @@
   .audioRow.ablauf{border-color:var(--blau-dk);}
   .audioRow.reflexion{border-color:var(--gruen-dk);}
   .audioRow .info{flex:1; min-width:0;}
-  .audioRow h4{margin:0 0 3px; font-family:var(--schrift-hand); font-weight:700; font-size:1.05rem; color:var(--text-main);}
+  .audioRow h4{margin:0 0 3px; font-family:var(--schrift-hand); font-size:1.05rem; color:var(--text-main);}
   .audioRow .typLbl{font-size:0.7rem; opacity:0.85; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); font-weight:600;}
   .audioRow .txtPrev{font-size:0.8rem; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
   .playBtn{
@@ -259,7 +207,7 @@
     background:rgba(0,0,0,0.03); border-radius:10px;
   }
 
-  .leer{text-align:center; padding:60px 20px; color:var(--text-muted); font-family:var(--schrift-hand); font-weight:700; font-size:1.2rem;}
+  .leer{text-align:center; padding:60px 20px; color:var(--text-muted); font-family:var(--schrift-hand); font-size:1.2rem;}
 
   /* ---------- Gruppen-Filter ---------- */
   .gruppeRow{display:flex; gap:6px; overflow-x:auto; padding:8px 0 2px; scrollbar-width:thin;}
@@ -272,7 +220,7 @@
   /* ---------- Detailansicht ---------- */
   .detailDialog{width:min(560px,94vw); max-height:85vh; overflow-y:auto;}
   .detailHeader{display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:4px;}
-  .detailHeader h2{font-family:var(--schrift-hand); font-weight:700; font-size:1.4rem; margin:0; line-height:1.25;}
+  .detailHeader h2{font-family:var(--schrift-hand); font-size:1.4rem; margin:0; line-height:1.25;}
   .detailMeta{display:flex; gap:8px; align-items:center; margin-bottom:14px; flex-wrap:wrap;}
   .detailBadge{
     font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.4px;
@@ -287,57 +235,7 @@
     font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;
     color:#6b551a; margin-bottom:4px;
   }
-  .detailBody{font-size:0.95rem; line-height:1.5; white-space:pre-wrap; color:var(--dialog-text);}
-  .lernMarker{
-    background:linear-gradient(180deg, transparent 55%, var(--gelb) 55%);
-    padding:0 1px; border-radius:2px; font-weight:600;
-  }
-  .lernmarkerHinweis{font-size:0.72rem; color:#8a7f6a; margin:6px 0 6px;}
-  .lernmarkerBtnRow{display:flex; gap:8px; flex-wrap:wrap;}
-  .sprachBtnRow{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
-  .sprachBtn{
-    background:#fff6dd; border:1px solid var(--gelb-dk); color:#5c4413;
-    border-radius:8px; padding:9px 13px; font-size:0.85rem; cursor:pointer; font-family:var(--schrift-sans);
-  }
-  .sprachBtn.aufnahme{background:#c4593a; color:#fff; border-color:#c4593a; animation:pulsieren 1.4s infinite;}
-  .sprachZeit{font-size:0.85rem; color:#8a3520; font-weight:700;}
-  .sprachPlayer{display:flex; align-items:center; gap:8px; width:100%;}
-  .sprachPlayer audio{flex:1; height:36px;}
-  @keyframes pulsieren{ 0%,100%{opacity:1;} 50%{opacity:0.6;} }
-  .referenzToggle{display:flex; align-items:flex-start; gap:8px; font-size:0.8rem; color:#4a4a3a; cursor:pointer; font-weight:400;}
-  .referenzToggle input{margin-top:3px; flex:0 0 auto;}
-  .karte.referenzKarte{opacity:0.6;}
-  .karte .referenzBadge{
-    position:absolute; bottom:10px; right:12px; font-size:0.85rem; opacity:0.7;
-  }
-
-  /* ---------- Reflexion & Tagebuch ---------- */
-  .reflexionBox{
-    background:rgba(255,255,255,0.6); border-radius:10px; padding:14px; margin-top:20px; text-align:left;
-  }
-  .reflexionLabel{font-size:0.82rem; font-weight:700; color:#5c4413; margin-bottom:8px;}
-  .reflexionTextarea{
-    width:100%; min-height:70px; padding:10px; border-radius:8px; border:1.5px solid rgba(0,0,0,0.12);
-    background:var(--karte-bg); color:var(--text-main); font-size:0.88rem; font-family:var(--schrift-sans);
-    box-sizing:border-box; margin-bottom:8px; resize:vertical;
-  }
-  .reflexionGespeichert{
-    text-align:center; font-size:0.9rem; font-weight:600; color:#1f5c34; padding:10px;
-  }
-  .tagebuchEintrag{
-    background:var(--karte-bg); border:1px solid rgba(0,0,0,0.08); border-radius:10px;
-    padding:12px 14px; margin-bottom:10px;
-  }
-  .tagebuchKopf{
-    display:flex; justify-content:space-between; align-items:center;
-    font-size:0.74rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-bottom:6px;
-  }
-  .tagebuchLoeschen{background:transparent; border:none; color:#c4593a; font-size:0.9rem; cursor:pointer;}
-  .tagebuchText{font-size:0.9rem; line-height:1.4; color:var(--text-main); white-space:pre-wrap;}
-  .lernmarkerBtn{
-    background:#fff6dd; border:1px solid var(--gelb-dk); color:#5c4413;
-    border-radius:8px; padding:7px 11px; font-size:0.78rem; cursor:pointer; font-family:var(--schrift-sans);
-  }
+  .detailBody{font-size:0.95rem; line-height:1.5; white-space:pre-wrap; color:#20241e;}
   .detailBody.strategie ol{margin:0; padding-left:1.2em;}
   .detailBody.strategie li{margin-bottom:5px;}
   .detail-actions{display:flex; justify-content:space-between; gap:8px; margin-top:18px; padding-top:14px; border-top:1px solid #e6dfc4;}
@@ -355,69 +253,12 @@
   .uebungCloseBtn{background:rgba(0,0,0,0.06); border:none; color:var(--text-main); width:32px; height:32px; border-radius:50%; font-size:1rem; cursor:pointer;}
   .uebungCardWrap{flex:1; display:flex; flex-direction:column; justify-content:center; overflow-y:auto; padding:10px 2px 20px;}
   .uebungKarte{
-    background:var(--karte-bg); color:var(--tinte); border-radius:16px; padding:24px 20px;
+    background:#fffdf8; color:var(--tinte); border-radius:16px; padding:24px 20px;
     box-shadow:0 10px 24px rgba(90,70,40,0.2);
-    touch-action:pan-y; will-change:transform;
   }
-  .uebungKarte.swipeSitzt{box-shadow:0 10px 24px rgba(90,70,40,0.2), 0 0 0 4px #3f8a58 inset;}
-  .uebungKarte.swipeNochmal{box-shadow:0 10px 24px rgba(90,70,40,0.2), 0 0 0 4px #c4593a inset;}
-  .swipeHinweis{
-    text-align:center; font-size:0.72rem; color:var(--text-muted); margin-top:10px;
-  }
-  .konfettiContainer{position:fixed; inset:0; z-index:200; pointer-events:none; overflow:hidden;}
-  .konfettiStueck{
-    position:absolute; top:-20px; width:8px; height:14px; opacity:0.95; border-radius:2px;
-    animation-name:konfettiFall; animation-timing-function:cubic-bezier(.25,.46,.45,.94); animation-fill-mode:forwards;
-  }
-  @keyframes konfettiFall{
-    0%{ transform:translateY(0) rotate(0deg); opacity:1; }
-    100%{ transform:translateY(112vh) rotate(560deg); opacity:0.4; }
-  }
-  @keyframes boardFadeInAnim{
-    from{ opacity:0; transform:translateY(8px); }
-    to{ opacity:1; transform:translateY(0); }
-  }
-  .boardFadeIn{ animation:boardFadeInAnim .28s ease; }
   .uebungTypBadge{font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:3px 10px; border-radius:999px; color:#20241e; display:inline-block; margin-bottom:10px;}
-  .uebungTitel{font-family:var(--schrift-hand); font-weight:700; font-size:1.4rem; margin:0 0 6px;}
+  .uebungTitel{font-family:var(--schrift-hand); font-size:1.4rem; margin:0 0 6px;}
   .uebungHinweis{font-size:0.82rem; color:#6b5c3f; margin-bottom:18px;}
-  .uebungVorschau{
-    background:#f4efe0; border-radius:10px; padding:12px 14px; margin-bottom:14px;
-    font-size:0.9rem; line-height:1.5; color:#3b332a;
-  }
-  .lernLuecke{
-    display:inline-block; min-width:70px; border-bottom:2.5px solid var(--gelb-dk);
-    height:1.1em; vertical-align:text-bottom; margin:0 2px;
-  }
-  .luecktextInput{
-    width:100%; padding:13px 14px; border-radius:10px; border:1.5px solid rgba(0,0,0,0.15);
-    background:var(--karte-bg); color:var(--text-main); font-size:1rem; font-family:var(--schrift-sans);
-    margin-bottom:10px; box-sizing:border-box;
-  }
-  .luecktextInput:focus{border-color:var(--gelb-dk); outline:none;}
-  .luecktextFeedback{
-    padding:10px 12px; border-radius:8px; font-size:0.88rem; margin-bottom:12px; line-height:1.4;
-  }
-  .luecktextFeedback.richtig{background:#d6efdb; color:#1f5c34;}
-  .luecktextFeedback.falsch{background:#f7ded3; color:#8a3520;}
-
-  /* ---------- Zuordnen ---------- */
-  .zuordnenSpalten{display:flex; gap:10px; align-items:flex-start;}
-  .zuordnenSpalte{
-    flex:1; display:flex; flex-direction:column; gap:8px;
-    max-height:58vh; overflow-y:auto; padding-right:2px;
-  }
-  .zuordnenKarte{
-    padding:12px 10px; border-radius:10px; border:1.5px solid rgba(0,0,0,0.15);
-    background:var(--karte-bg); color:var(--text-main); font-size:0.82rem; line-height:1.32;
-    cursor:pointer; text-align:left; font-family:var(--schrift-sans); min-height:52px;
-    flex:0 0 auto;
-  }
-  .zuordnenKarte.ausgewaehlt{border-color:var(--gelb-dk); background:var(--gelb); font-weight:600;}
-  .zuordnenKarte.richtig{background:#d6efdb; border-color:#3f8a58; color:#1f5c34; cursor:default;}
-  .zuordnenKarte.falsch{background:#f7ded3; border-color:#c4593a; color:#8a3520;}
-  .zuordnenKarte[disabled]{opacity:0.5; pointer-events:none;}
-  .zuordnenScoreLine{font-size:0.85rem; color:var(--text-muted); margin-bottom:12px; text-align:center;}
   .uebungAntwortBtn{
     display:block; width:100%; padding:14px; border-radius:10px; border:none;
     background:#3f8a58; color:#fff; font-size:1rem; font-weight:600; cursor:pointer; margin-top:10px;
@@ -429,7 +270,7 @@
   .btnNochmal{background:#f7ded3; color:#8a3520;}
   .btnSitzt{background:#d6efdb; color:#1f5c34;}
   .uebungEnde{text-align:center; padding:30px 10px;}
-  .uebungEnde h2{font-family:var(--schrift-hand); font-weight:700; font-size:1.6rem; color:#7a5c2e; margin-bottom:10px;}
+  .uebungEnde h2{font-family:var(--schrift-hand); font-size:1.6rem; color:#7a5c2e; margin-bottom:10px;}
   .uebungEnde p{color:var(--text-muted); margin-bottom:20px;}
   .uebungEnde .iconBtn{margin:4px;}
 
@@ -440,23 +281,23 @@
   }
   .kursTop{
     position:sticky; top:0; z-index:5; display:flex; align-items:center; gap:10px;
-    padding:14px 16px; background:linear-gradient(180deg, var(--header-bg-1), var(--header-bg-2));
+    padding:14px 16px; background:linear-gradient(180deg, rgba(247,241,227,0.98), rgba(247,241,227,0.9));
     backdrop-filter:blur(4px); border-bottom:1px solid rgba(0,0,0,0.06);
   }
-  .kursTop h2{flex:1; font-family:var(--schrift-hand); font-weight:700; font-size:1.2rem; margin:0; color:#7a5c2e;}
-  .kursBody{padding:16px 16px 90px; max-width:640px; margin:0 auto; width:100%;}
+  .kursTop h2{flex:1; font-family:var(--schrift-hand); font-size:1.2rem; margin:0; color:#7a5c2e;}
+  .kursBody{padding:16px 16px 40px; max-width:640px; margin:0 auto; width:100%;}
   .kursTrack{display:flex; gap:6px; overflow-x:auto; padding-bottom:14px; scrollbar-width:thin;}
   .kursDot{
     flex:0 0 auto; width:30px; height:30px; border-radius:50%; display:flex; align-items:center;
     justify-content:center; font-family:var(--schrift-sans); font-size:0.78rem; font-weight:700;
-    border:2px solid rgba(0,0,0,0.15); background:var(--karte-bg); color:var(--text-muted); cursor:pointer;
+    border:2px solid rgba(0,0,0,0.15); background:#fffdf8; color:var(--text-muted); cursor:pointer;
   }
   .kursDot.done{background:#2b6b45; border-color:#2b6b45; color:#fff;}
   .kursDot.active{border-color:var(--gelb-dk); box-shadow:0 0 0 3px rgba(224,184,74,0.25); color:var(--text-main);}
   .kursEyebrow{font-size:0.72rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); font-weight:600; margin:0 0 4px;}
-  .kursTitel{font-family:var(--schrift-hand); font-weight:700; font-size:1.5rem; margin:0 0 14px; color:var(--text-main);}
+  .kursTitel{font-family:var(--schrift-hand); font-size:1.5rem; margin:0 0 14px; color:var(--text-main);}
   .kursCard{
-    background:var(--karte-bg); border:1px solid rgba(0,0,0,0.08); border-radius:12px;
+    background:#fffdf8; border:1px solid rgba(0,0,0,0.08); border-radius:12px;
     padding:16px 18px; margin-bottom:16px; box-shadow:0 4px 10px rgba(90,70,40,0.1);
   }
   .kursCard p{margin:0 0 8px; font-size:0.9rem; line-height:1.55; color:var(--text-main);}
@@ -496,23 +337,9 @@
   .kursQuizOpt.falsch{background:#f7ded3; border-color:#c4593a; font-weight:700;}
   .kursQuizOpt[disabled]{cursor:default;}
   .kursNavRow{display:flex; justify-content:space-between; margin-top:22px;}
-  .kursUebersichtListe{display:flex; flex-direction:column; gap:10px;}
-  .kursUebersichtZeile{
-    display:flex; align-items:center; gap:14px; background:#fffdf8; border:1px solid rgba(0,0,0,0.08);
-    border-radius:12px; padding:14px 16px; cursor:pointer;
-  }
-  .kursUebersichtZeile.aktuell{border-color:var(--gelb-dk); box-shadow:0 0 0 2px rgba(224,184,74,0.25);}
-  .kursUebersichtZeile.done{background:#f4faf6;}
-  .kursUebersichtNr{
-    width:32px; height:32px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
-    background:#e6dfc4; color:var(--text-main); font-weight:700; font-size:0.85rem;
-  }
-  .kursUebersichtZeile.done .kursUebersichtNr{background:#2b6b45; color:#fff;}
-  .kursUebersichtTitel{font-weight:600; font-size:0.95rem; color:var(--text-main);}
-  .kursUebersichtKonzept{font-size:0.76rem; color:var(--text-muted); margin-top:2px;}
   .kursNavBtn{
     font-family:var(--schrift-sans); font-size:0.82rem; font-weight:600; padding:10px 16px;
-    border-radius:8px; border:1px solid rgba(0,0,0,0.12); background:var(--karte-bg); color:var(--text-main); cursor:pointer;
+    border-radius:8px; border:1px solid rgba(0,0,0,0.12); background:#fffdf8; color:var(--text-main); cursor:pointer;
   }
   .kursNavBtn:disabled{opacity:0.35; cursor:default;}
   .kursNavBtn.primary{background:var(--gelb-dk); color:#3d2c05; border-color:var(--gelb-dk);}
@@ -522,7 +349,7 @@
   .quizOptionen{display:flex; flex-direction:column; gap:10px;}
   .quizOption{
     text-align:left; padding:13px 14px; border-radius:10px; border:1.5px solid rgba(0,0,0,0.15);
-    background:var(--karte-bg); color:var(--text-main); font-size:0.9rem; cursor:pointer; font-family:var(--schrift-sans);
+    background:#fffdf8; color:var(--text-main); font-size:0.9rem; cursor:pointer; font-family:var(--schrift-sans);
   }
   .quizOption.richtig{background:#d6efdb; border-color:#3f8a58; color:#1f5c34; font-weight:600;}
   .quizOption.falsch{background:#f7ded3; border-color:#c4593a; color:#8a3520; font-weight:600;}
@@ -539,7 +366,7 @@
   .bottomNav{
     position:fixed; left:0; right:0; bottom:0; z-index:70;
     display:flex; justify-content:space-around; align-items:stretch;
-    background:linear-gradient(0deg, var(--header-bg-1), var(--header-bg-2));
+    background:linear-gradient(0deg, rgba(247,241,227,0.98), rgba(247,241,227,0.9));
     border-top:1px solid rgba(0,0,0,0.08);
     padding:8px 4px calc(8px + env(safe-area-inset-bottom));
     backdrop-filter:blur(6px);
@@ -558,11 +385,6 @@
   .navBtn.active{color:#8a5a1f; background:rgba(224,184,74,0.2);}
 
   /* ---------- Übersicht (Kacheln) ---------- */
-  .countdownKreis{
-    width:42px; height:42px; border-radius:50%; border:2px solid var(--gelb-dk);
-    background:#fdf8ec; font-size:1.3rem; display:flex; align-items:center; justify-content:center;
-    cursor:pointer; margin-bottom:12px; box-shadow:0 2px 6px rgba(90,70,40,0.15);
-  }
   .uebersichtGrid{
     display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:6px;
   }
@@ -572,7 +394,7 @@
     background:var(--gelb); color:var(--tinte);
   }
   .kachel.reflexion{background:var(--gruen);}
-  .kachel .kachelTitel{font-family:var(--schrift-hand); font-weight:700; font-size:1.1rem; margin:0 0 6px; line-height:1.2;}
+  .kachel .kachelTitel{font-family:var(--schrift-hand); font-size:1.1rem; margin:0 0 6px; line-height:1.2;}
   .kachel .kachelMeta{font-size:0.76rem; opacity:0.85; margin-bottom:8px; font-weight:500;}
   .kachel .kachelBar{height:6px; border-radius:999px; background:rgba(0,0,0,0.12); overflow:hidden;}
   .kachel .kachelBar > div{height:100%; background:#3f8a58;}
@@ -581,7 +403,7 @@
   .kachelKlein{
     display:flex; align-items:center; justify-content:space-between; gap:10px;
     padding:12px 14px; border-radius:10px; cursor:pointer;
-    background:var(--blau); border:1px solid var(--blau-dk); color:var(--tinte);
+    background:#eaf4fb; border:1px solid var(--blau-dk); color:var(--text-main);
     font-size:0.85rem;
   }
   .kachelKlein .kleinMeta{font-size:0.72rem; opacity:0.85; color:var(--text-muted);}
@@ -593,7 +415,7 @@
     border-radius:8px; padding:7px 12px; font-size:0.85rem; cursor:pointer; font-family:var(--schrift-sans);
   }
   .boardHeader h2{
-    flex:1; font-family:var(--schrift-hand); font-weight:700; font-size:1.25rem; margin:0; color:#7a5c2e;
+    flex:1; font-family:var(--schrift-hand); font-size:1.25rem; margin:0; color:#7a5c2e;
   }
   .boardHeader .addBtn{
     background:var(--gelb); color:#5c4413; border:none; border-radius:8px;
@@ -607,7 +429,7 @@
   .sortListe{display:flex; flex-direction:column; gap:8px; position:relative;}
   .sortRow{
     display:flex; align-items:center; gap:10px;
-    background:var(--karte-bg); border:1px solid rgba(0,0,0,0.1); border-radius:10px;
+    background:#fffdf8; border:1px solid rgba(0,0,0,0.1); border-radius:10px;
     padding:12px 12px; height:44px; box-sizing:border-box;
     transition:transform .18s ease;
     touch-action:none; user-select:none; -webkit-user-select:none;
@@ -633,23 +455,22 @@
   .mehrList{display:flex; flex-direction:column; gap:8px;}
   .mehrItem{
     text-align:left; padding:13px 14px; border-radius:10px; border:1px solid #d8cfa8;
-    background:var(--karte-bg); color:var(--dialog-text); font-size:0.92rem; cursor:pointer; font-family:var(--schrift-sans);
+    background:#fffdf5; color:#20241e; font-size:0.92rem; cursor:pointer; font-family:var(--schrift-sans);
   }
-  .mehrItem.aktuell{background:var(--gelb); border-color:var(--gelb-dk); font-weight:700;}
 
   /* ---------- Modal ---------- */
   dialog{
     border:none; border-radius:14px; padding:0; width:min(440px,92vw);
-    background:var(--dialog-bg); color:var(--dialog-text);
+    background:#fbf6e6; color:#20241e;
   }
   dialog::backdrop{background:rgba(0,0,0,0.6);}
   .modalInner{padding:20px;}
-  .modalInner h2{font-family:var(--schrift-hand); font-weight:700; margin:0 0 14px; font-size:1.3rem;}
+  .modalInner h2{font-family:var(--schrift-hand); margin:0 0 14px; font-size:1.3rem;}
   .field{margin-bottom:12px;}
   .field label{display:block; font-size:0.78rem; font-weight:600; margin-bottom:4px; color:#4a4a3a;}
   .field input, .field select, .field textarea{
     width:100%; padding:10px; border-radius:8px; border:1.5px solid #d8cfa8; font-size:0.95rem;
-    font-family:var(--schrift-sans); background:var(--karte-bg);
+    font-family:var(--schrift-sans); background:#fffdf5;
   }
   .field textarea{min-height:110px; resize:vertical;}
   .typChoice{display:flex; gap:8px;}
@@ -678,19 +499,11 @@
   }
   .toast.show{opacity:1;}
 
-  .fokusTimerBadge{
-    position:fixed; top:12px; right:12px; z-index:80;
-    background:#2b6b45; color:#fff; padding:8px 14px; border-radius:999px;
-    font-size:0.85rem; font-weight:700; box-shadow:0 4px 12px rgba(0,0,0,0.25);
-    cursor:pointer; padding-top:calc(8px + env(safe-area-inset-top));
-  }
-  .fokusTimerBadge.ablaufend{background:#c4593a;}
-
   /* ---------- Suche ---------- */
   .searchRow{display:flex; align-items:center; gap:8px; margin-top:8px;}
   .searchRow input{
     flex:1; padding:9px 12px; border-radius:8px; border:1px solid rgba(0,0,0,0.12);
-    background:var(--karte-bg); color:var(--text-main); font-size:0.88rem; font-family:var(--schrift-sans);
+    background:#fffdf8; color:var(--text-main); font-size:0.88rem; font-family:var(--schrift-sans);
   }
   .searchRow input::placeholder{color:#a89c80;}
   .searchRow .clearBtn{
@@ -699,32 +512,6 @@
 
   /* ---------- Fortschritt ---------- */
   .fortschrittZeile{margin-bottom:14px;}
-  .fortschrittFaellig{
-    background:#eaf4fb; border:1px solid var(--blau-dk); color:#2f5c82;
-    padding:10px 12px; border-radius:10px; font-size:0.85rem; font-weight:600; margin-bottom:16px;
-  }
-  .streakZeile{
-    font-size:0.95rem; font-weight:700; color:#8a5a1f; margin-bottom:10px;
-  }
-  .levelZeile{margin-bottom:12px;}
-  .levelKopf{
-    display:flex; justify-content:space-between; font-size:0.85rem; font-weight:600;
-    color:#4a4a3a; margin-bottom:5px;
-  }
-  .abzeichenReihe{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:4px;}
-  .abzeichenChip{
-    width:38px; height:38px; border-radius:50%; background:#fff6dd; border:2px solid var(--gelb-dk);
-    display:flex; align-items:center; justify-content:center; font-size:1.1rem;
-  }
-  .abzeichenChip.gesperrt{background:#e6dfc4; border-color:#d8cfa8; opacity:0.4; filter:grayscale(1);}
-  .abzeichenLabel{font-size:0.72rem; color:var(--text-muted); margin-bottom:16px;}
-  .aktivitaetStreifen{
-    display:flex; flex-wrap:wrap; gap:3px; margin-bottom:16px;
-  }
-  .aktivitaetTag{
-    width:16px; height:16px; border-radius:3px; background:#e6dfc4; flex:0 0 auto;
-  }
-  .aktivitaetTag.aktiv{background:#3f8a58;}
   .fortschrittLabel{display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:5px; color:#4a4a3a;}
   .fortschrittBar{height:10px; border-radius:999px; background:#e6dfc4; overflow:hidden;}
   .fortschrittBar > div{height:100%; background:#2b6b45; border-radius:999px; transition:width .3s ease;}
@@ -794,10 +581,8 @@
   <div class="modalInner">
     <h2>Wie möchtest du üben?</h2>
     <div class="mehrList">
-      <button class="mehrItem" onclick="document.getElementById('uebenWahlDialog').close(); sprechModusAktiv=false; starteUebung();">🗂 Karteikarten<br><span style="font-weight:400;font-size:0.8rem;color:var(--text-muted);">Selbst erinnern, dann Antwort aufdecken</span></button>
+      <button class="mehrItem" onclick="document.getElementById('uebenWahlDialog').close(); starteUebung();">🗂 Karteikarten<br><span style="font-weight:400;font-size:0.8rem;color:var(--text-muted);">Selbst erinnern, dann Antwort aufdecken</span></button>
       <button class="mehrItem" onclick="document.getElementById('uebenWahlDialog').close(); starteQuiz();">❓ Quiz<br><span style="font-weight:400;font-size:0.8rem;color:var(--text-muted);">Multiple-Choice-Fragen, automatisch erstellt</span></button>
-      <button class="mehrItem" onclick="document.getElementById('uebenWahlDialog').close(); starteZuordnen();">🔗 Zuordnen<br><span style="font-weight:400;font-size:0.8rem;color:var(--text-muted);">Titel und Inhalte per Antippen einander zuordnen</span></button>
-      <button class="mehrItem" onclick="document.getElementById('uebenWahlDialog').close(); starteSprechtraining();">🗣️ Sprechtraining<br><span style="font-weight:400;font-size:0.8rem;color:var(--text-muted);">Text frei sprechen, aufnehmen, anhören, selbst bewerten</span></button>
     </div>
     <div class="modal-actions">
       <button class="cancel" onclick="document.getElementById('uebenWahlDialog').close()">Abbrechen</button>
@@ -812,94 +597,16 @@
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); openKartenModal();">➕ Neue Karte anlegen</button>
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); document.getElementById('scanInput').click();">📷 Dokument/Flipchart scannen</button>
       <input type="file" id="scanInput" accept="image/*" capture="environment" style="display:none" onchange="scanFotoAusgewaehlt(event)">
-      <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); openNeuesSeminarDialog();">📁 Neues Seminar</button>
-      <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); openSeminarBearbeiten();">✏️ Aktuelles Seminar bearbeiten</button>
-      <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); oeffneSeminarWechsel();">🔀 Seminar wechseln</button>
-      <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); zeigeTagebuch();">📔 Lerntagebuch</button>
+      <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); document.getElementById('seminarDialog').showModal();">📁 Neues Seminar</button>
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); loescheAktuellesSeminar();">🗑 Aktuelles Seminar löschen</button>
       <button class="mehrItem" onclick="loadTemplate('verhandeln_pm'); document.getElementById('mehrDialog').close();">⤓ Vorlage „Verhandeln im PM-Alltag" laden</button>
       <button class="mehrItem" onclick="zufallskarte(); document.getElementById('mehrDialog').close();">🎲 Zufallskarte</button>
-      <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); oeffneFokusTimerDialog();">⏱ Fokus-Timer starten</button>
-      <button class="mehrItem" onclick="exportJSON()">💾 Nur dieses Seminar sichern</button>
-      <button class="mehrItem" onclick="document.getElementById('importInput').click()">📂 Nur dieses Seminar laden</button>
+      <button class="mehrItem" onclick="exportJSON()">💾 Sichern (Backup exportieren)</button>
+      <button class="mehrItem" onclick="document.getElementById('importInput').click()">📂 Laden (Backup importieren)</button>
       <input type="file" id="importInput" accept="application/json" style="display:none" onchange="importJSON(event)">
     </div>
     <div class="modal-actions">
       <button class="cancel" onclick="document.getElementById('mehrDialog').close()">Schließen</button>
-    </div>
-  </div>
-</dialog>
-
-<dialog id="kursUebenWahlDialog">
-  <div class="modalInner">
-    <h2>Wohin möchtest du?</h2>
-    <div class="mehrList" id="kursUebenWahlListe"></div>
-    <div class="modal-actions">
-      <button class="cancel" onclick="document.getElementById('kursUebenWahlDialog').close()">Abbrechen</button>
-    </div>
-  </div>
-</dialog>
-
-<dialog id="kursMehrDialog">
-  <div class="modalInner">
-    <h2>Mehr</h2>
-    <div class="mehrList">
-      <button class="mehrItem" onclick="document.getElementById('kursMehrDialog').close(); kursReset();">🔄 Kursfortschritt zurücksetzen</button>
-      <button class="mehrItem" onclick="document.getElementById('kursMehrDialog').close(); oeffneFokusTimerDialog();">⏱ Fokus-Timer starten</button>
-      <button class="mehrItem" id="darkModeBtnKurs" onclick="toggleDarkMode()">🌙 Dark Mode</button>
-    </div>
-    <div class="modal-actions">
-      <button class="cancel" onclick="document.getElementById('kursMehrDialog').close()">Schließen</button>
-    </div>
-  </div>
-</dialog>
-
-<dialog id="tagebuchDialog" class="detailDialog">
-  <div class="modalInner">
-    <div class="detailHeader">
-      <h2>📔 Lerntagebuch</h2>
-      <button class="iconBtn" onclick="document.getElementById('tagebuchDialog').close()" style="background:#e6dfc4;color:#4a4a3a;">✕</button>
-    </div>
-    <div id="tagebuchBody"></div>
-    <div class="modal-actions">
-      <button class="cancel" onclick="document.getElementById('tagebuchDialog').close()">Schließen</button>
-    </div>
-  </div>
-</dialog>
-
-<dialog id="seminarWechselDialog">
-  <div class="modalInner">
-    <h2>Seminar wechseln</h2>
-    <div class="mehrList" id="seminarWechselListe"></div>
-    <div class="modal-actions">
-      <button class="cancel" onclick="document.getElementById('seminarWechselDialog').close()">Schließen</button>
-    </div>
-  </div>
-</dialog>
-
-<dialog id="countdownDialog">
-  <div class="modalInner">
-    <h2>🗓 Seminar-Countdown</h2>
-    <p id="countdownDetailText" style="font-size:0.95rem; margin:0 0 16px;"></p>
-    <button class="mehrItem" id="countdownCramBtn" onclick="starteCramModus()">🔁 Komplett auffrischen</button>
-    <div class="modal-actions">
-      <button class="cancel" onclick="document.getElementById('countdownDialog').close()">Schließen</button>
-    </div>
-  </div>
-</dialog>
-
-<dialog id="fokusTimerDialog">
-  <div class="modalInner">
-    <h2>⏱ Fokus-Timer</h2>
-    <p style="font-size:0.85rem; color:var(--text-muted); margin:0 0 14px;">Läuft im Hintergrund weiter, egal was du in der App gerade machst.</p>
-    <div class="mehrList">
-      <button class="mehrItem" onclick="starteFokusTimer(5)">5 Minuten</button>
-      <button class="mehrItem" onclick="starteFokusTimer(10)">10 Minuten</button>
-      <button class="mehrItem" onclick="starteFokusTimer(15)">15 Minuten</button>
-      <button class="mehrItem" onclick="starteFokusTimer(25)">25 Minuten</button>
-    </div>
-    <div class="modal-actions">
-      <button class="cancel" onclick="document.getElementById('fokusTimerDialog').close()">Abbrechen</button>
     </div>
   </div>
 </dialog>
@@ -956,7 +663,7 @@
     </div>
     <div class="detailSection">
       <div class="detailLabel">🧠 Üben</div>
-      <div class="detailBody">Zwei Modi: Karteikarten (selbst erinnern, dann Antwort aufdecken) oder Quiz (automatisch erstellte Multiple-Choice-Fragen aus deinen Karten). Die App merkt sich, was du gut kannst, und bringt dir Karten, die du oft falsch beantwortest, häufiger – Karten, die sicher sitzen, tauchen seltener auf. So übst du automatisch das, was noch nötig ist, statt immer alles gleich oft zu wiederholen.</div>
+      <div class="detailBody">Zwei Modi: Karteikarten (selbst erinnern, dann Antwort aufdecken) oder Quiz (automatisch erstellte Multiple-Choice-Fragen aus deinen Karten). Beides merkt sich, was schon „sitzt".</div>
     </div>
     <div class="detailSection">
       <div class="detailLabel">🔊 Vorlesen</div>
@@ -987,9 +694,8 @@
       <button class="iconBtn" onclick="document.getElementById('einstellungenDialog').close()" style="background:#e6dfc4;color:#4a4a3a;">✕</button>
     </div>
     <div class="mehrList">
-      <button class="mehrItem" id="darkModeBtn" onclick="toggleDarkMode()">🌙 Dark Mode</button>
-      <button class="mehrItem" onclick="gesamtExportJSON()">💾 Alles sichern (Gesamt-Backup)</button>
-      <button class="mehrItem" onclick="document.getElementById('gesamtImportInput').click()">📂 Alles laden (Gesamt-Backup)</button>
+      <button class="mehrItem" onclick="gesamtExportJSON()">💾 Gesamt-Backup sichern</button>
+      <button class="mehrItem" onclick="document.getElementById('gesamtImportInput').click()">📂 Gesamt-Backup laden</button>
       <input type="file" id="gesamtImportInput" accept="application/json" style="display:none" onchange="gesamtImportJSON(event)">
     </div>
     <p style="font-size:0.8rem; color:var(--text-muted); margin-top:14px;">Sichert alle Seminare und den Fortschritt aller Lernkurse in einer Datei.</p>
@@ -1011,7 +717,7 @@
 
 <dialog id="seminarDialog">
   <div class="modalInner">
-    <h2 id="sDialogTitel">Neues Seminar</h2>
+    <h2>Neues Seminar</h2>
     <div class="field">
       <label>Titel</label>
       <input type="text" id="sTitel" placeholder="z. B. Kommunikation im Team">
@@ -1022,7 +728,7 @@
     </div>
     <div class="modal-actions">
       <button class="cancel" onclick="document.getElementById('seminarDialog').close()">Abbrechen</button>
-      <button class="save" id="sDialogSpeichernBtn" onclick="saveSeminar()">Anlegen</button>
+      <button class="save" onclick="saveSeminar()">Anlegen</button>
     </div>
   </div>
 </dialog>
@@ -1053,23 +759,6 @@
     <div class="field">
       <label>Text</label>
       <textarea id="kText" placeholder="Inhalt, Leitfragen, Stichpunkte... Tipp: Zeilen wie 'Setting: ...' oder 'Ziel: ...' werden in der Detailansicht automatisch als eigene Abschnitte angezeigt."></textarea>
-      <div class="lernmarkerHinweis">
-        Text markieren, der zur Lernkarte werden soll (Rest bleibt normaler Lesetext):
-      </div>
-      <div class="lernmarkerBtnRow">
-        <button type="button" class="lernmarkerBtn" onclick="markiereAuswahlAlsLernkarte()">✨ Auswahl markieren</button>
-        <button type="button" class="lernmarkerBtn" onclick="entferneMarkierungInAuswahl()">Markierung entfernen</button>
-      </div>
-    </div>
-    <div class="field">
-      <label>Sprachnotiz (optional)</label>
-      <div id="sprachnotizBereich"></div>
-    </div>
-    <div class="field">
-      <label class="referenzToggle">
-        <input type="checkbox" id="kReferenzNur">
-        <span>📎 Nur Referenz – wird nie im Üben/Quiz abgefragt, bleibt aber sichtbar (weiter unten einsortiert)</span>
-      </label>
     </div>
     <div class="modal-actions">
       <button class="danger" id="kDeleteBtn" style="display:none;" onclick="deleteKarte()">Löschen</button>
@@ -1100,10 +789,6 @@
 
 <div class="toast" id="toast"></div>
 
-<div class="fokusTimerBadge" id="fokusTimerBadge" style="display:none;" onclick="frageFokusTimerStopp()">
-  <span id="fokusTimerText">⏱ 00:00</span>
-</div>
-
 <script>
 const TYP_LABEL = { fach:'Fachinhalt', ablauf:'Ablauf', reflexion:'Reflexion' };
 
@@ -1112,7 +797,6 @@ let aktuellesSeminarId = null;
 let karten = [];
 let modus = 'visuell';
 let currentView = 'uebersicht';
-let ansichtsStil = 'pinnwand'; // 'pinnwand' oder 'liste'
 let boardTyp = 'fach';
 let boardGruppe = null;
 let suchbegriff = '';
@@ -1126,7 +810,7 @@ let storageOk = true;
 const LABEL_MUSTER = /^Setting|^Ziel für die Führungskraft|^Trainerhinweis|^Gesprächsstrategie|^Ziel\b/;
 
 function teaserText(text){
-  const bereinigt = klartext(text).replace(/^(Setting|Ziel für die Führungskraft|Trainerhinweis \(DISG\)|Gesprächsstrategie|Ziel):\s*/gm, '');
+  const bereinigt = text.replace(/^(Setting|Ziel für die Führungskraft|Trainerhinweis \(DISG\)|Gesprächsstrategie|Ziel):\s*/gm, '');
   const erste = bereinigt.split(/\n\n+/).find(p => p.trim().length) || '';
   const einzeiler = erste.replace(/\n/g, ' ').trim();
   return einzeiler.length > 140 ? einzeiler.slice(0, 140).trim() + '…' : einzeiler;
@@ -1144,52 +828,6 @@ function parseAbschnitte(text){
     }
   }
   return abschnitte;
-}
-
-/* ---------- Lernmarker: einzelne Sätze/Abschnitte als "==markiert==" zu Lernkarten machen ---------- */
-const LERNMARKER_MUSTER = /==(.+?)==/gs;
-
-// Wandelt Text sicher (HTML-escaped) in HTML um, markierte Stellen bekommen ein <mark>.
-function formatiereMitLernmarkern(text){
-  const escaped = escapeHTML(text);
-  // escapeHTML wandelt "==" nicht um, funktioniert also nach dem Escapen weiterhin als Marker
-  return escaped.replace(/==(.+?)==/gs, '<mark class="lernMarker">$1</mark>');
-}
-
-function hatLernmarker(text){
-  LERNMARKER_MUSTER.lastIndex = 0;
-  return LERNMARKER_MUSTER.test(text || '');
-}
-
-// Einfacher, stabiler String-Hash für IDs (kein Kryptozweck, nur Wiedererkennung gleicher Textstellen)
-function textHash(str){
-  let h = 0;
-  for(let i = 0; i < str.length; i++){
-    h = (h * 31 + str.charCodeAt(i)) | 0;
-  }
-  return Math.abs(h).toString(36);
-}
-
-/* Extrahiert aus einer Karte die zu übenden Lerneinheiten.
-   - Enthält der Text explizite ==Markierungen==, wird jede einzelne zu einer eigenen Lerneinheit.
-   - Enthält der Text KEINE Markierung, gilt die ganze Karte weiterhin als eine Lerneinheit
-     (Rückwärtskompatibilität mit alten Karten, die noch nie markiert wurden). */
-function extrahiereLernelemente(karte){
-  LERNMARKER_MUSTER.lastIndex = 0;
-  const treffer = [...(karte.text || '').matchAll(LERNMARKER_MUSTER)]
-    .map(m => m[1].trim())
-    .filter(Boolean);
-  if(treffer.length === 0){
-    return [{ id: 'le_' + karte.id + '_ganz', karteId: karte.id, text: karte.titel, ganzeKarte: true }];
-  }
-  // Mehrfache identische Markierungen im selben Text nur einmal zählen
-  const eindeutig = [...new Set(treffer)];
-  return eindeutig.map(t => ({
-    id: 'le_' + karte.id + '_' + textHash(t),
-    karteId: karte.id,
-    text: t,
-    ganzeKarte: false
-  }));
 }
 
 /* ---------- Storage: localStorage (funktioniert eigenständig in Safari, ohne Claude-Umgebung) ---------- */
@@ -1273,128 +911,12 @@ async function fotosFuerSeminarLoeschen(seminarId){
   }catch(e){ /* egal */ }
 }
 
-/* ---------- Sprachnotizen-Speicher (IndexedDB) – eigene Audio-Aufnahmen je Karte ---------- */
-const AUDIO_DB_NAME = 'vbwand_audio';
-const AUDIO_STORE = 'audio';
-function openAudioDB(){
-  return new Promise((resolve, reject)=>{
-    const req = indexedDB.open(AUDIO_DB_NAME, 1);
-    req.onupgradeneeded = (e)=>{
-      const db = e.target.result;
-      if(!db.objectStoreNames.contains(AUDIO_STORE)) db.createObjectStore(AUDIO_STORE, {keyPath:'id'});
-    };
-    req.onsuccess = ()=>resolve(req.result);
-    req.onerror = ()=>reject(req.error);
-  });
-}
-async function audioSpeichern(id, seminarId, blob){
-  try{
-    const db = await openAudioDB();
-    return new Promise((resolve,reject)=>{
-      const tx = db.transaction(AUDIO_STORE, 'readwrite');
-      tx.objectStore(AUDIO_STORE).put({id, seminarId, blob});
-      tx.oncomplete = ()=>resolve(true);
-      tx.onerror = ()=>reject(tx.error);
-    });
-  }catch(e){ console.error('Sprachnotiz speichern fehlgeschlagen', e); return false; }
-}
-async function audioLaden(id){
-  try{
-    const db = await openAudioDB();
-    return new Promise((resolve,reject)=>{
-      const tx = db.transaction(AUDIO_STORE, 'readonly');
-      const req = tx.objectStore(AUDIO_STORE).get(id);
-      req.onsuccess = ()=>resolve(req.result ? req.result.blob : null);
-      req.onerror = ()=>reject(req.error);
-    });
-  }catch(e){ return null; }
-}
-async function audioLoeschen(id){
-  try{
-    const db = await openAudioDB();
-    return new Promise((resolve,reject)=>{
-      const tx = db.transaction(AUDIO_STORE, 'readwrite');
-      tx.objectStore(AUDIO_STORE).delete(id);
-      tx.oncomplete = ()=>resolve();
-      tx.onerror = ()=>reject(tx.error);
-    });
-  }catch(e){ /* egal */ }
-}
-async function audiosFuerSeminarLoeschen(seminarId){
-  try{
-    const db = await openAudioDB();
-    return new Promise((resolve,reject)=>{
-      const tx = db.transaction(AUDIO_STORE, 'readwrite');
-      const store = tx.objectStore(AUDIO_STORE);
-      const req = store.openCursor();
-      req.onsuccess = (e)=>{
-        const cursor = e.target.result;
-        if(cursor){
-          if(cursor.value.seminarId === seminarId) cursor.delete();
-          cursor.continue();
-        }
-      };
-      tx.oncomplete = ()=>resolve();
-      tx.onerror = ()=>reject(tx.error);
-    });
-  }catch(e){ /* egal */ }
-}
-
 function zeigeToast(msg){
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
   clearTimeout(t._timer);
   t._timer = setTimeout(()=> t.classList.remove('show'), 2200);
-}
-
-/* ---------- Fokus-Timer (läuft app-weit im Hintergrund) ---------- */
-let fokusTimerEnde = null;
-let fokusTimerIntervall = null;
-
-function oeffneFokusTimerDialog(){
-  document.getElementById('fokusTimerDialog').showModal();
-}
-
-function starteFokusTimer(minuten){
-  document.getElementById('fokusTimerDialog').close();
-  fokusTimerEnde = Date.now() + minuten * 60000;
-  const badge = document.getElementById('fokusTimerBadge');
-  badge.style.display = 'block';
-  badge.classList.remove('ablaufend');
-  aktualisiereFokusTimerBadge();
-  clearInterval(fokusTimerIntervall);
-  fokusTimerIntervall = setInterval(aktualisiereFokusTimerBadge, 1000);
-  zeigeToast(`⏱ Fokus-Timer gestartet: ${minuten} Minuten`);
-}
-
-function aktualisiereFokusTimerBadge(){
-  if(!fokusTimerEnde) return;
-  const restMs = fokusTimerEnde - Date.now();
-  const badge = document.getElementById('fokusTimerBadge');
-  const text = document.getElementById('fokusTimerText');
-  if(restMs <= 0){
-    clearInterval(fokusTimerIntervall);
-    fokusTimerIntervall = null;
-    fokusTimerEnde = null;
-    badge.style.display = 'none';
-    zeigeToast('⏱ Fokus-Zeit vorbei – gut gemacht! 🎉');
-    return;
-  }
-  const restSek = Math.ceil(restMs / 1000);
-  const min = Math.floor(restSek / 60);
-  const sek = restSek % 60;
-  text.textContent = `⏱ ${min}:${sek.toString().padStart(2,'0')}`;
-  badge.classList.toggle('ablaufend', restSek <= 30);
-}
-
-function frageFokusTimerStopp(){
-  if(confirm('Fokus-Timer stoppen?')){
-    clearInterval(fokusTimerIntervall);
-    fokusTimerIntervall = null;
-    fokusTimerEnde = null;
-    document.getElementById('fokusTimerBadge').style.display = 'none';
-  }
 }
 
 function hashRotation(id){
@@ -1406,15 +928,11 @@ function hashRotation(id){
 /* ---------- Init ---------- */
 async function init(){
   const splashStart = Date.now();
-  await ladeDarkMode();
-  await ladeSpielstand();
   seminare = (await storeGet('seminare')) || [];
   const last = await storeGet('letztesSeminar');
   if(seminare.length){
     aktuellesSeminarId = (last && seminare.find(s=>s.id===last)) ? last : seminare[0].id;
     karten = (await storeGet('karten_' + aktuellesSeminarId)) || [];
-    await ladeLernstand(aktuellesSeminarId);
-    await ladeTagebuch(aktuellesSeminarId);
   }
   const letzterBereich = await storeGet('letzterBereich');
   if(letzterBereich === 'seminare'){
@@ -1475,11 +993,9 @@ async function renderStartKacheln(){
 }
 
 async function gesamtExportJSON(){
-  const data = { seminare, kartenProSeminar:{}, lernstandProSeminar:{}, tagebuchProSeminar:{}, kurse:{} };
+  const data = { seminare, kartenProSeminar:{}, kurse:{} };
   for(const s of seminare){
     data.kartenProSeminar[s.id] = (s.id === aktuellesSeminarId) ? karten : (await storeGet('karten_'+s.id)) || [];
-    data.lernstandProSeminar[s.id] = (s.id === aktuellesSeminarId) ? lernstand : (await storeGet('lernstand_'+s.id)) || {};
-    data.tagebuchProSeminar[s.id] = (s.id === aktuellesSeminarId) ? tagebuch : (await storeGet('tagebuch_'+s.id)) || [];
   }
   for(const kursId in LERNKURSE){
     let fortschritt = await storeGet('kursFortschritt_' + kursId);
@@ -1489,8 +1005,6 @@ async function gesamtExportJSON(){
     }
     data.kurse[kursId] = fortschritt || { completed:[], current:0 };
   }
-  data.spielstand = (await storeGet('spielstand_global')) || spielstand;
-  data.aktivitaet = (await storeGet('aktivitaet')) || {};
   const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -1513,23 +1027,12 @@ function gesamtImportJSON(evt){
       for(const sid in (data.kartenProSeminar || {})){
         await storeSet('karten_' + sid, data.kartenProSeminar[sid]);
       }
-      for(const sid in (data.lernstandProSeminar || {})){
-        await storeSet('lernstand_' + sid, data.lernstandProSeminar[sid]);
-      }
-      for(const sid in (data.tagebuchProSeminar || {})){
-        await storeSet('tagebuch_' + sid, data.tagebuchProSeminar[sid]);
-      }
       for(const kursId in (data.kurse || {})){
         await storeSet('kursFortschritt_' + kursId, data.kurse[kursId]);
       }
-      if(data.spielstand) await storeSet('spielstand_global', data.spielstand);
-      if(data.aktivitaet) await storeSet('aktivitaet', data.aktivitaet);
-      await ladeSpielstand();
       if(seminare.length){
         aktuellesSeminarId = seminare[0].id;
         karten = data.kartenProSeminar[aktuellesSeminarId] || [];
-        await ladeLernstand(aktuellesSeminarId);
-        await ladeTagebuch(aktuellesSeminarId);
         await storeSet('letztesSeminar', aktuellesSeminarId);
       }
       kursLoadedIds = new Set();
@@ -1559,34 +1062,24 @@ async function speichereKartenListe(){
 function renderSeminarTabs(){
   const row = document.getElementById('tabRow');
   row.innerHTML = '';
-  if(!seminare.length){
-    const hinweis = document.createElement('div');
-    hinweis.className = 'aktSeminarZeile';
-    hinweis.innerHTML = `<span>Kein Seminar angelegt</span>`;
-    hinweis.onclick = () => document.getElementById('mehrDialog').showModal();
-    row.appendChild(hinweis);
-    return;
-  }
-  const aktuelles = seminare.find(s=>s.id===aktuellesSeminarId) || seminare[0];
-  const zeile = document.createElement('button');
-  zeile.className = 'aktSeminarZeile';
-  zeile.innerHTML = `<span>📁 ${escapeHTML(aktuelles.titel)}${aktuelles.datum ? ' · ' + aktuelles.datum : ''}</span>` +
-    (seminare.length > 1 ? '<span class="aktSeminarWechsel">Wechseln ▾</span>' : '');
-  zeile.onclick = () => oeffneSeminarWechsel();
-  row.appendChild(zeile);
-}
-
-function oeffneSeminarWechsel(){
-  const liste = document.getElementById('seminarWechselListe');
-  liste.innerHTML = '';
   seminare.forEach(s=>{
     const b = document.createElement('button');
-    b.className = 'mehrItem' + (s.id === aktuellesSeminarId ? ' aktuell' : '');
-    b.textContent = s.titel + (s.datum ? ' · ' + s.datum : '') + (s.id === aktuellesSeminarId ? ' (aktuell)' : '');
-    b.onclick = () => { document.getElementById('seminarWechselDialog').close(); wechsleSeminar(s.id); };
-    liste.appendChild(b);
+    b.className = 'tab' + (s.id === aktuellesSeminarId ? ' active' : '');
+    b.textContent = s.titel + (s.datum ? ' · ' + s.datum : '');
+    b.onclick = () => wechsleSeminar(s.id);
+    row.appendChild(b);
   });
-  document.getElementById('seminarWechselDialog').showModal();
+  const addBtn = document.createElement('button');
+  addBtn.className = 'tab add';
+  addBtn.textContent = '+ Seminar';
+  addBtn.onclick = () => document.getElementById('seminarDialog').showModal();
+  row.appendChild(addBtn);
+
+  const tplBtn = document.createElement('button');
+  tplBtn.className = 'tab tpl';
+  tplBtn.textContent = '⤓ Vorlage „Verhandeln im PM-Alltag"';
+  tplBtn.onclick = () => loadTemplate('verhandeln_pm');
+  row.appendChild(tplBtn);
 }
 
 async function wechsleSeminar(id){
@@ -1599,51 +1092,14 @@ async function wechsleSeminar(id){
   if(sf) sf.value = '';
   await storeSet('letztesSeminar', id);
   karten = (await storeGet('karten_' + id)) || [];
-  await ladeLernstand(id);
-  await ladeSpielstand();
-  await ladeTagebuch(id);
   renderSeminarTabs();
   renderBoard();
-}
-
-let editSeminarId = null;
-
-function openNeuesSeminarDialog(){
-  editSeminarId = null;
-  document.getElementById('sDialogTitel').textContent = 'Neues Seminar';
-  document.getElementById('sDialogSpeichernBtn').textContent = 'Anlegen';
-  document.getElementById('sTitel').value = '';
-  document.getElementById('sDatum').value = '';
-  document.getElementById('seminarDialog').showModal();
-}
-
-function openSeminarBearbeiten(){
-  if(!aktuellesSeminarId){ zeigeToast('Kein Seminar ausgewählt'); return; }
-  const sem = seminare.find(s=>s.id===aktuellesSeminarId);
-  if(!sem) return;
-  editSeminarId = sem.id;
-  document.getElementById('sDialogTitel').textContent = 'Seminar bearbeiten';
-  document.getElementById('sDialogSpeichernBtn').textContent = 'Speichern';
-  document.getElementById('sTitel').value = sem.titel;
-  document.getElementById('sDatum').value = sem.datum || '';
-  document.getElementById('seminarDialog').showModal();
 }
 
 async function saveSeminar(){
   const titel = document.getElementById('sTitel').value.trim();
   const datum = document.getElementById('sDatum').value;
   if(!titel){ zeigeToast('Bitte einen Titel eingeben'); return; }
-  if(editSeminarId){
-    const sem = seminare.find(s=>s.id===editSeminarId);
-    if(sem){ sem.titel = titel; sem.datum = datum; }
-    await storeSet('seminare', seminare);
-    editSeminarId = null;
-    document.getElementById('seminarDialog').close();
-    renderSeminarTabs();
-    renderBoard();
-    zeigeToast('Seminar aktualisiert');
-    return;
-  }
   const id = 's_' + Date.now();
   seminare.push({ id, titel, datum });
   await storeSet('seminare', seminare);
@@ -1663,15 +1119,9 @@ async function loescheAktuellesSeminar(){
   seminare = seminare.filter(s=>s.id!==zuLoeschenId);
   await storeSet('seminare', seminare);
   window.localStorage.removeItem(LS_PREFIX + 'karten_' + zuLoeschenId);
-  window.localStorage.removeItem(LS_PREFIX + 'lernstand_' + zuLoeschenId);
-  window.localStorage.removeItem(LS_PREFIX + 'tagebuch_' + zuLoeschenId);
   await fotosFuerSeminarLoeschen(zuLoeschenId);
-  await audiosFuerSeminarLoeschen(zuLoeschenId);
   aktuellesSeminarId = seminare.length ? seminare[0].id : null;
   karten = aktuellesSeminarId ? ((await storeGet('karten_' + aktuellesSeminarId)) || []) : [];
-  await ladeLernstand(aktuellesSeminarId);
-    await ladeSpielstand();
-    await ladeTagebuch(aktuellesSeminarId);
   await storeSet('letztesSeminar', aktuellesSeminarId);
   currentView = 'uebersicht';
   renderSeminarTabs();
@@ -1712,14 +1162,7 @@ function gefilterteKarten(){
   if(boardTyp === 'fach'){
     liste = liste.filter(k => boardGruppe === null ? !k.gruppe : k.gruppe === boardGruppe);
   }
-  return liste.sort((a,b)=> {
-    if(!!a.referenzNur !== !!b.referenzNur) return a.referenzNur ? 1 : -1;
-    return (a.ord||9999) - (b.ord||9999);
-  });
-}
-
-function nurLernrelevante(liste){
-  return liste.filter(k => !k.referenzNur);
+  return liste.sort((a,b)=> (a.ord||9999) - (b.ord||9999));
 }
 
 function sucheGefiltert(){
@@ -1748,48 +1191,19 @@ function zufallskarte(){
 }
 
 /* ---------- Fortschritt ---------- */
-async function zeigeFortschritt(){
+function zeigeFortschritt(){
   if(!aktuellesSeminarId || !karten.length){ zeigeToast('Keine Karten in diesem Seminar'); return; }
   const body = document.getElementById('fortschrittBody');
-  const alleElemente = alleLernelemente(nurLernrelevante(karten));
-  const gesamt = alleElemente.length;
-  const gesamtSitzt = alleElemente.filter(e=>e.geuebt).length;
-  const gesamtFaellig = alleElemente.filter(istFaellig).length;
-  const aktivitaet = (await storeGet('aktivitaet')) || {};
-  const streak = berechneStreak(aktivitaet);
+  const gesamt = karten.length;
+  const gesamtSitzt = karten.filter(k=>k.geuebt).length;
   const gruppen = {};
-  alleElemente.forEach(e=>{
-    const key = e.karte.gruppe || TYP_LABEL[e.karte.typ];
+  karten.forEach(k=>{
+    const key = k.gruppe || TYP_LABEL[k.typ];
     if(!gruppen[key]) gruppen[key] = { sitzt:0, gesamt:0 };
     gruppen[key].gesamt++;
-    if(e.geuebt) gruppen[key].sitzt++;
+    if(k.geuebt) gruppen[key].sitzt++;
   });
   let html = '';
-  const lvl = berechneLevel(spielstand.punkte || 0);
-  const heute = heuteISO();
-  const punkteHeute = (spielstand.tagesPunkte && spielstand.tagesPunkte[heute]) || 0;
-  const tageszielPct = Math.min(100, Math.round((punkteHeute / TAGESZIEL_PUNKTE) * 100));
-  html += `<div class="levelZeile">
-    <div class="levelKopf"><span>🏆 Level ${lvl.level}</span><span>${spielstand.punkte || 0} Punkte</span></div>
-    <div class="fortschrittBar"><div style="width:${Math.round(lvl.progress*100)}%; background:#c9a521;"></div></div>
-  </div>`;
-  html += `<div class="levelZeile">
-    <div class="levelKopf"><span>🎯 Tagesziel</span><span>${punkteHeute}/${TAGESZIEL_PUNKTE} Punkte</span></div>
-    <div class="fortschrittBar"><div style="width:${tageszielPct}%; background:#3f8a58;"></div></div>
-  </div>`;
-  const freigeschaltet = ABZEICHEN_DEFS.filter(d => (spielstand.abzeichen||[]).includes(d.id));
-  html += `<div class="abzeichenReihe">` +
-    ABZEICHEN_DEFS.map(d => {
-      const frei = (spielstand.abzeichen||[]).includes(d.id);
-      return `<div class="abzeichenChip${frei ? '' : ' gesperrt'}" title="${escapeHTML(d.titel)}">${d.icon}</div>`;
-    }).join('') +
-    `</div>
-  <div class="abzeichenLabel">${freigeschaltet.length}/${ABZEICHEN_DEFS.length} Abzeichen freigeschaltet</div>`;
-  html += `<div class="streakZeile">🔥 <strong>${streak}</strong> Tag${streak===1?'':'e'} in Folge geübt</div>`;
-  html += aktivitaetsStreifenHTML(aktivitaet);
-  if(gesamtFaellig > 0){
-    html += `<div class="fortschrittFaellig">🔁 ${gesamtFaellig} Lerneinheit${gesamtFaellig===1?'':'en'} heute fällig zum Wiederholen</div>`;
-  }
   html += fortschrittZeileHTML('Gesamt', gesamtSitzt, gesamt, true);
   Object.keys(gruppen).sort().forEach(key=>{
     html += fortschrittZeileHTML(key, gruppen[key].sitzt, gruppen[key].gesamt, false);
@@ -1808,9 +1222,6 @@ function fortschrittZeileHTML(label, sitzt, gesamt, hervorgehoben){
 /* ---------- Hauptrendering ---------- */
 function renderBoard(){
   const area = document.getElementById('boardArea');
-  area.classList.remove('boardFadeIn');
-  void area.offsetWidth; // Reflow erzwingen, damit die Animation bei jedem Aufruf neu startet
-  area.classList.add('boardFadeIn');
   area.innerHTML = '';
   updateNavAktiv();
   if(!aktuellesSeminarId){
@@ -1839,9 +1250,8 @@ function renderBoard(){
     area.appendChild(leer);
     return;
   }
-  if(modus === 'auditiv') renderAuditiv(area, liste);
-  else if(ansichtsStil === 'liste') renderListenansicht(area, liste);
-  else renderVisuell(area, liste);
+  if(modus === 'visuell') renderVisuell(area, liste);
+  else renderAuditiv(area, liste);
 }
 
 function renderBoardHeader(area, imSortierModus){
@@ -1853,21 +1263,13 @@ function renderBoardHeader(area, imSortierModus){
       <button class="backBtn" onclick="sortierAbbrechen()">✕ Abbrechen</button>
       <h2>Sortieren</h2>`;
   }else{
-    const listeAktiv = ansichtsStil === 'liste';
-    const stilBtn = modus === 'auditiv' ? '' : `<button class="addBtn" onclick="toggleAnsichtsStil()" title="${listeAktiv ? 'Zur Pinnwand' : 'Als Liste lesen (empfohlene Reihenfolge)'}" style="background:#eaf4fb;color:#2f5c82;font-size:1rem;">${listeAktiv ? '📌' : '📋'}</button>`;
     header.innerHTML = `
       <button class="backBtn" onclick="zurueckZurUebersicht()">← Übersicht</button>
       <h2>${escapeHTML(gruppenLabel)}</h2>
-      ${stilBtn}
       <button class="addBtn" onclick="sortierStarten()" title="Reihenfolge ändern" style="background:#eaf4fb;color:#2f5c82;font-size:1rem;">🔀</button>
       <button class="addBtn" onclick="openKartenModal()" title="Karte hinzufügen">+</button>`;
   }
   area.appendChild(header);
-}
-
-function toggleAnsichtsStil(){
-  ansichtsStil = (ansichtsStil === 'liste') ? 'pinnwand' : 'liste';
-  renderBoard();
 }
 
 /* ---------- Sortiermodus (Karten per Ziehen umordnen) ---------- */
@@ -2009,55 +1411,15 @@ function renderSucheErgebnisse(area){
   else renderAuditiv(area, liste);
 }
 
-function tageBisSeminar(datum){
-  if(!datum) return null;
-  const heute = new Date(); heute.setHours(0,0,0,0);
-  const ziel = new Date(datum + 'T00:00:00');
-  if(isNaN(ziel.getTime())) return null;
-  return Math.round((ziel - heute) / 86400000);
-}
-
-let cramModusAktiv = false;
-function starteCramModus(){
-  document.getElementById('countdownDialog').close();
-  cramModusAktiv = true;
-  document.getElementById('uebenWahlDialog').showModal();
-}
-
-function zeigeCountdownDetail(){
-  const sem = seminare.find(s=>s.id===aktuellesSeminarId);
-  if(!sem || !sem.datum) return;
-  const tage = tageBisSeminar(sem.datum);
-  let text;
-  if(tage > 1) text = `Noch ${tage} Tage bis zum Seminar.`;
-  else if(tage === 1) text = `Morgen ist dein Seminar!`;
-  else if(tage === 0) text = `Heute ist dein Seminar! 🎉`;
-  else text = `Das Seminar war vor ${Math.abs(tage)} Tag${Math.abs(tage)===1?'':'en'}.`;
-  document.getElementById('countdownDetailText').textContent = text;
-  document.getElementById('countdownCramBtn').style.display = tage >= 0 ? 'block' : 'none';
-  document.getElementById('countdownDialog').showModal();
-}
-
 function renderUebersicht(area){
-  const sem = seminare.find(s=>s.id===aktuellesSeminarId);
-  if(sem && sem.datum){
-    const tage = tageBisSeminar(sem.datum);
-    if(tage !== null){
-      const kreis = document.createElement('button');
-      kreis.className = 'countdownKreis';
-      kreis.textContent = tage === 0 ? '🎉' : '🗓';
-      kreis.title = 'Countdown zum Seminar';
-      kreis.onclick = zeigeCountdownDetail;
-      area.appendChild(kreis);
-    }
-  }
   const fachKarten = karten.filter(k => k.typ === 'fach');
   const gruppenMap = {};
   fachKarten.forEach(k=>{
     const key = k.gruppe || null;
     const label = k.gruppe || 'Sonstige Fachinhalte';
-    if(!gruppenMap[label]) gruppenMap[label] = { key, karten: [] };
-    gruppenMap[label].karten.push(k);
+    if(!gruppenMap[label]) gruppenMap[label] = { key, gesamt:0, sitzt:0 };
+    gruppenMap[label].gesamt++;
+    if(k.geuebt) gruppenMap[label].sitzt++;
   });
   const reflexionKarten = karten.filter(k=>k.typ==='reflexion');
   const ablaufKarten = karten.filter(k=>k.typ==='ablauf');
@@ -2067,24 +1429,20 @@ function renderUebersicht(area){
 
   Object.keys(gruppenMap).sort().forEach(label=>{
     const g = gruppenMap[label];
-    const elemente = alleLernelemente(nurLernrelevante(g.karten));
-    const sitzt = elemente.filter(e=>e.geuebt).length;
-    const gesamt = elemente.length;
-    const pct = gesamt ? Math.round((sitzt/gesamt)*100) : 0;
+    const pct = g.gesamt ? Math.round((g.sitzt/g.gesamt)*100) : 0;
     const kachel = document.createElement('div');
     kachel.className = 'kachel';
     kachel.onclick = () => waehleGruppe('fach', g.key);
     kachel.innerHTML = `
       <div class="kachelTitel">${escapeHTML(label)}</div>
-      <div class="kachelMeta">${g.karten.length} Karte${g.karten.length===1?'':'n'} · ${pct}% sitzen</div>
+      <div class="kachelMeta">${g.gesamt} Karte${g.gesamt===1?'':'n'} · ${pct}% sitzen</div>
       <div class="kachelBar"><div style="width:${pct}%"></div></div>`;
     grid.appendChild(kachel);
   });
 
   if(reflexionKarten.length){
-    const elemente = alleLernelemente(nurLernrelevante(reflexionKarten));
-    const sitzt = elemente.filter(e=>e.geuebt).length;
-    const pct = elemente.length ? Math.round((sitzt/elemente.length)*100) : 0;
+    const sitzt = reflexionKarten.filter(k=>k.geuebt).length;
+    const pct = Math.round((sitzt/reflexionKarten.length)*100);
     const kachel = document.createElement('div');
     kachel.className = 'kachel reflexion';
     kachel.onclick = () => waehleGruppe('reflexion', null);
@@ -2118,68 +1476,12 @@ function renderUebersicht(area){
   }
 }
 
-function renderListenansicht(area, liste){
-  const wrap = document.createElement('div');
-  wrap.className = 'listenAnsicht';
-  liste.forEach(k=>{
-    const block = document.createElement('div');
-    block.className = 'listenBlock ' + k.typ;
-    const kopf = document.createElement('div');
-    kopf.className = 'listenBlockKopf';
-    const titelText = (k.typ === 'ablauf' && k.ord ? k.ord + '. ' : '') + k.titel;
-    kopf.innerHTML = `
-      <h3>${escapeHTML(titelText)}</h3>
-      <div class="listenBlockMeta">
-        <span class="detailBadge ${k.typ}">${TYP_LABEL[k.typ]}</span>
-        ${k.gruppe ? `<span class="detailBadge gruppe">${escapeHTML(k.gruppe)}</span>` : ''}
-      </div>`;
-    kopf.style.cursor = 'pointer';
-    kopf.onclick = () => openDetail(k.id);
-    block.appendChild(kopf);
-
-    const body = document.createElement('div');
-    body.className = 'listenBlockBody';
-    const abschnitte = parseAbschnitte(k.text);
-    abschnitte.forEach(a=>{
-      const sec = document.createElement('div');
-      sec.className = 'detailSection';
-      if(a.label){
-        const lab = document.createElement('div');
-        lab.className = 'detailLabel';
-        lab.textContent = a.label;
-        sec.appendChild(lab);
-      }
-      const bod = document.createElement('div');
-      const zeilen = a.inhalt.split('\n').filter(z=>z.trim());
-      const istListe = zeilen.length > 1 && zeilen.every(z => /^\d+\.\s/.test(z.trim()));
-      if(istListe){
-        bod.className = 'detailBody strategie';
-        const ol = document.createElement('ol');
-        zeilen.forEach(z=>{
-          const li = document.createElement('li');
-          li.innerHTML = formatiereMitLernmarkern(z.replace(/^\d+\.\s*/, ''));
-          ol.appendChild(li);
-        });
-        bod.appendChild(ol);
-      }else{
-        bod.className = 'detailBody';
-        bod.innerHTML = formatiereMitLernmarkern(a.inhalt);
-      }
-      sec.appendChild(bod);
-      body.appendChild(sec);
-    });
-    block.appendChild(body);
-    wrap.appendChild(block);
-  });
-  area.appendChild(wrap);
-}
-
 function renderVisuell(area, liste){
   const board = document.createElement('div');
   board.className = 'board';
   liste.forEach(k=>{
     const div = document.createElement('div');
-    div.className = 'karte ' + k.typ + (k.referenzNur ? ' referenzKarte' : '');
+    div.className = 'karte ' + k.typ;
     div.style.transform = `rotate(${hashRotation(k.id)})`;
     div.onclick = () => openDetail(k.id);
     const pin = document.createElement('div');
@@ -2195,25 +1497,11 @@ function renderVisuell(area, liste){
     badge.className = 'badge';
     badge.textContent = TYP_LABEL[k.typ];
     div.appendChild(badge);
-    if(k.referenzNur){
-      const refBadge = document.createElement('div');
-      refBadge.className = 'referenzBadge';
-      refBadge.textContent = '📎';
-      refBadge.title = 'Nur Referenz';
-      div.appendChild(refBadge);
-    }
-    const lf = kartenLernfortschritt(k);
-    if(!k.referenzNur && lf.gesamt > 0 && lf.sitzt === lf.gesamt){
+    if(k.geuebt){
       const marke = document.createElement('div');
       marke.className = 'geuebtMarke';
       marke.textContent = '✓';
       marke.title = 'Sitzt schon';
-      div.appendChild(marke);
-    }else if(!k.referenzNur && lf.sitzt > 0){
-      const marke = document.createElement('div');
-      marke.className = 'geuebtMarke teilweise';
-      marke.textContent = lf.sitzt + '/' + lf.gesamt;
-      marke.title = 'Teilweise gelernt';
       div.appendChild(marke);
     }
     if(k.gruppe){
@@ -2263,20 +1551,6 @@ function openDetail(id){
       else img.style.display = 'none';
     });
   }
-  if(k.audioId){
-    const wrap = document.createElement('div');
-    wrap.className = 'sprachPlayer';
-    wrap.style.marginBottom = '14px';
-    wrap.innerHTML = `<span style="font-size:0.85rem;color:var(--text-muted);">🎙️</span>`;
-    body.appendChild(wrap);
-    audioLaden(k.audioId).then(blob=>{
-      if(!blob) return;
-      const audio = document.createElement('audio');
-      audio.controls = true;
-      audio.src = URL.createObjectURL(blob);
-      wrap.appendChild(audio);
-    });
-  }
   const abschnitte = parseAbschnitte(k.text);
   abschnitte.forEach(a=>{
     const sec = document.createElement('div');
@@ -2295,13 +1569,13 @@ function openDetail(id){
       const ol = document.createElement('ol');
       zeilen.forEach(z=>{
         const li = document.createElement('li');
-        li.innerHTML = formatiereMitLernmarkern(z.replace(/^\d+\.\s*/, ''));
+        li.textContent = z.replace(/^\d+\.\s*/, '');
         ol.appendChild(li);
       });
       bod.appendChild(ol);
     }else{
       bod.className = 'detailBody';
-      bod.innerHTML = formatiereMitLernmarkern(a.inhalt);
+      bod.textContent = a.inhalt;
     }
     sec.appendChild(bod);
     body.appendChild(sec);
@@ -2367,7 +1641,7 @@ function renderAuditiv(area, liste){
 /* ---------- Text-to-Speech ---------- */
 function vorlesenEinzeln(k, btn){
   stopVorlesen();
-  const utter = new SpeechSynthesisUtterance((k.titel + '. ' + klartext(k.text)).replace(/\n/g,'. '));
+  const utter = new SpeechSynthesisUtterance((k.titel + '. ' + k.text).replace(/\n/g,'. '));
   utter.lang = 'de-DE';
   if(btn){
     utter.onstart = () => btn.classList.add('playing');
@@ -2385,7 +1659,7 @@ function alleVorlesen(liste){
 function vorleseNaechste(){
   if(speakIdx >= speakList.length) return;
   const k = speakList[speakIdx];
-  const utter = new SpeechSynthesisUtterance((k.titel + '. ' + klartext(k.text)).replace(/\n/g,'. '));
+  const utter = new SpeechSynthesisUtterance((k.titel + '. ' + k.text).replace(/\n/g,'. '));
   utter.lang = 'de-DE';
   utter.onend = () => { speakIdx++; vorleseNaechste(); };
   speechSynthesis.speak(utter);
@@ -2396,47 +1670,10 @@ function stopVorlesen(){
 }
 
 /* ---------- Karten CRUD ---------- */
-/* ---------- Text im Editor markieren/entmarkieren ---------- */
-function markiereAuswahlAlsLernkarte(){
-  const ta = document.getElementById('kText');
-  const start = ta.selectionStart, ende = ta.selectionEnd;
-  if(start === ende){ zeigeToast('Erst Text im Feld markieren (antippen und ziehen), dann Button drücken'); return; }
-  const wert = ta.value;
-  let auswahl = wert.slice(start, ende);
-  const vornWeg = auswahl.match(/^\s*/)[0].length;
-  const hintenWeg = auswahl.match(/\s*$/)[0].length;
-  const kernStart = start + vornWeg;
-  const kernEnde = ende - hintenWeg;
-  const kern = wert.slice(kernStart, kernEnde);
-  if(!kern){ zeigeToast('Auswahl enthält keinen Text'); return; }
-  const neuerWert = wert.slice(0, kernStart) + '==' + kern + '==' + wert.slice(kernEnde);
-  ta.value = neuerWert;
-  const neuePos = kernEnde + 4;
-  ta.focus();
-  ta.setSelectionRange(kernStart, neuePos);
-  zeigeToast('Als Lernkarte markiert ✨');
-}
-
-function entferneMarkierungInAuswahl(){
-  const ta = document.getElementById('kText');
-  const start = ta.selectionStart, ende = ta.selectionEnd;
-  const wert = ta.value;
-  const suchStart = Math.max(0, start - 2);
-  const suchEnde = Math.min(wert.length, ende + 2);
-  const bereich = wert.slice(suchStart, suchEnde);
-  const bereinigt = bereich.replace(/==/g, '');
-  if(bereich === bereinigt){ zeigeToast('Keine Markierung in der Auswahl gefunden'); return; }
-  ta.value = wert.slice(0, suchStart) + bereinigt + wert.slice(suchEnde);
-  ta.focus();
-  zeigeToast('Markierung entfernt');
-}
-
 function openKartenModal(id){
   editKarteId = id || null;
   const dlg = document.getElementById('kartenDialog');
   const delBtn = document.getElementById('kDeleteBtn');
-  sprachnotizNeuBlob = null;
-  sprachnotizGeloescht = false;
   if(id){
     const k = karten.find(x=>x.id===id);
     document.getElementById('kDialogTitel').textContent = 'Karte bearbeiten';
@@ -2446,8 +1683,6 @@ function openKartenModal(id){
     document.getElementById('kText').value = k.text;
     document.getElementById('kOrd').value = k.ord || 1;
     delBtn.style.display = 'inline-block';
-    sprachnotizBestehendId = k.audioId || null;
-    document.getElementById('kReferenzNur').checked = !!k.referenzNur;
   }else{
     document.getElementById('kDialogTitel').textContent = 'Neue Karte';
     const vorTyp = (currentView === 'board') ? boardTyp : 'fach';
@@ -2457,10 +1692,7 @@ function openKartenModal(id){
     document.getElementById('kText').value = '';
     document.getElementById('kOrd').value = karten.filter(k=>k.typ==='ablauf').length + 1;
     delBtn.style.display = 'none';
-    sprachnotizBestehendId = null;
-    document.getElementById('kReferenzNur').checked = false;
   }
-  renderSprachnotizBereich();
   updateOrdFieldVisibility();
   dlg.showModal();
 }
@@ -2470,96 +1702,6 @@ function updateOrdFieldVisibility(){
   document.getElementById('ordField').style.display = (typ === 'ablauf') ? 'block' : 'none';
 }
 
-/* ---------- Sprachnotiz aufnehmen (Karten-Editor) ---------- */
-let sprachnotizRecorder = null;
-let sprachnotizChunks = [];
-let sprachnotizNeuBlob = null;
-let sprachnotizBestehendId = null;
-let sprachnotizGeloescht = false;
-let sprachnotizStartzeit = null;
-let sprachnotizTimerId = null;
-
-function renderSprachnotizBereich(){
-  const box = document.getElementById('sprachnotizBereich');
-  if(sprachnotizNeuBlob){
-    const url = URL.createObjectURL(sprachnotizNeuBlob);
-    box.innerHTML = `
-      <div class="sprachPlayer">
-        <audio controls src="${url}"></audio>
-        <button type="button" class="sprachBtn" onclick="sprachnotizVerwerfen()">🗑</button>
-      </div>`;
-    return;
-  }
-  if(sprachnotizBestehendId && !sprachnotizGeloescht){
-    box.innerHTML = `<div class="sprachPlayer"><span>⏳ lädt…</span></div>`;
-    audioLaden(sprachnotizBestehendId).then(blob=>{
-      if(!blob) return;
-      const url = URL.createObjectURL(blob);
-      box.innerHTML = `
-        <div class="sprachPlayer">
-          <audio controls src="${url}"></audio>
-          <button type="button" class="sprachBtn" onclick="sprachnotizVerwerfen()">🗑</button>
-        </div>`;
-    });
-    return;
-  }
-  box.innerHTML = `
-    <div class="sprachBtnRow">
-      <button type="button" class="sprachBtn" onclick="sprachnotizAufnahmeStarten()">🎙️ Aufnehmen</button>
-    </div>`;
-}
-
-function sprachnotizVerwerfen(){
-  sprachnotizNeuBlob = null;
-  sprachnotizGeloescht = true;
-  sprachnotizBestehendId = null;
-  renderSprachnotizBereich();
-}
-
-async function sprachnotizAufnahmeStarten(){
-  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
-    zeigeToast('Aufnahme wird von diesem Browser nicht unterstützt');
-    return;
-  }
-  try{
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    sprachnotizChunks = [];
-    const mimeKandidaten = ['audio/mp4', 'audio/webm', 'audio/webm;codecs=opus'];
-    const mime = mimeKandidaten.find(m => window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(m));
-    sprachnotizRecorder = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
-    sprachnotizRecorder.ondataavailable = (e) => { if(e.data.size > 0) sprachnotizChunks.push(e.data); };
-    sprachnotizRecorder.onstop = () => {
-      sprachnotizNeuBlob = new Blob(sprachnotizChunks, { type: sprachnotizRecorder.mimeType || 'audio/webm' });
-      sprachnotizGeloescht = false;
-      stream.getTracks().forEach(t => t.stop());
-      renderSprachnotizBereich();
-    };
-    sprachnotizRecorder.start();
-    sprachnotizStartzeit = Date.now();
-    const box = document.getElementById('sprachnotizBereich');
-    box.innerHTML = `
-      <div class="sprachBtnRow">
-        <button type="button" class="sprachBtn aufnahme" onclick="sprachnotizAufnahmeStoppen()">⏹ Stopp</button>
-        <span class="sprachZeit" id="sprachnotizZeit">0:00</span>
-      </div>`;
-    sprachnotizTimerId = setInterval(()=>{
-      const sek = Math.floor((Date.now() - sprachnotizStartzeit)/1000);
-      const anzeige = document.getElementById('sprachnotizZeit');
-      if(anzeige) anzeige.textContent = Math.floor(sek/60) + ':' + (sek%60).toString().padStart(2,'0');
-    }, 500);
-  }catch(e){
-    console.error(e);
-    zeigeToast('Zugriff aufs Mikrofon nicht möglich – bitte Berechtigung prüfen');
-  }
-}
-
-function sprachnotizAufnahmeStoppen(){
-  clearInterval(sprachnotizTimerId);
-  if(sprachnotizRecorder && sprachnotizRecorder.state !== 'inactive'){
-    sprachnotizRecorder.stop();
-  }
-}
-
 async function saveKarte(){
   if(!aktuellesSeminarId){ zeigeToast('Bitte zuerst ein Seminar anlegen'); return; }
   const typ = document.querySelector('input[name="kTyp"]:checked').value;
@@ -2567,23 +1709,12 @@ async function saveKarte(){
   const gruppe = document.getElementById('kGruppe').value.trim();
   const text = document.getElementById('kText').value.trim();
   const ord = parseInt(document.getElementById('kOrd').value) || 1;
-  const referenzNur = document.getElementById('kReferenzNur').checked;
   if(!titel){ zeigeToast('Bitte einen Titel eingeben'); return; }
-
-  let audioId = sprachnotizGeloescht ? null : sprachnotizBestehendId;
-  if(sprachnotizNeuBlob){
-    if(sprachnotizBestehendId) await audioLoeschen(sprachnotizBestehendId);
-    audioId = 'audio_' + Date.now();
-    await audioSpeichern(audioId, aktuellesSeminarId, sprachnotizNeuBlob);
-  }else if(sprachnotizGeloescht && sprachnotizBestehendId){
-    await audioLoeschen(sprachnotizBestehendId);
-  }
-
   if(editKarteId){
     const k = karten.find(x=>x.id===editKarteId);
-    k.typ = typ; k.titel = titel; k.gruppe = gruppe; k.text = text; k.ord = ord; k.audioId = audioId || undefined; k.referenzNur = referenzNur;
+    k.typ = typ; k.titel = titel; k.gruppe = gruppe; k.text = text; k.ord = ord;
   }else{
-    karten.push({ id:'k_'+Date.now(), typ, titel, gruppe, text, ord, audioId: audioId || undefined, referenzNur });
+    karten.push({ id:'k_'+Date.now(), typ, titel, gruppe, text, ord });
   }
   await speichereKartenListe();
   document.getElementById('kartenDialog').close();
@@ -2594,7 +1725,6 @@ async function deleteKarte(){
   if(!editKarteId) return;
   const k = karten.find(x=>x.id===editKarteId);
   if(k && k.bildId) await fotoLoeschen(k.bildId);
-  if(k && k.audioId) await audioLoeschen(k.audioId);
   karten = karten.filter(k=>k.id !== editKarteId);
   await speichereKartenListe();
   document.getElementById('kartenDialog').close();
@@ -2603,11 +1733,11 @@ async function deleteKarte(){
 
 /* ---------- Export / Import ---------- */
 function exportJSON(){
-  const data = { seminare, kartenProSeminar:{}, lernstandProSeminar:{} };
+  const data = { seminare, kartenProSeminar:{} };
+  seminare.forEach(async s=>{});
   (async ()=>{
     for(const s of seminare){
       data.kartenProSeminar[s.id] = (s.id === aktuellesSeminarId) ? karten : (await storeGet('karten_'+s.id)) || [];
-      data.lernstandProSeminar[s.id] = (s.id === aktuellesSeminarId) ? lernstand : (await storeGet('lernstand_'+s.id)) || {};
     }
     const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
     const url = URL.createObjectURL(blob);
@@ -2632,14 +1762,9 @@ function importJSON(evt){
       for(const sid in (data.kartenProSeminar || {})){
         await storeSet('karten_' + sid, data.kartenProSeminar[sid]);
       }
-      for(const sid in (data.lernstandProSeminar || {})){
-        await storeSet('lernstand_' + sid, data.lernstandProSeminar[sid]);
-      }
       if(seminare.length){
         aktuellesSeminarId = seminare[0].id;
         karten = data.kartenProSeminar[aktuellesSeminarId] || [];
-        await ladeLernstand(aktuellesSeminarId);
-        await ladeTagebuch(aktuellesSeminarId);
         await storeSet('letztesSeminar', aktuellesSeminarId);
       }
       currentView = 'uebersicht';
@@ -2694,10 +1819,6 @@ async function loadTemplate(key){
   await storeSet('letztesSeminar', id);
   karten = t.cards.map((c,i) => ({ id: 'k_' + Date.now() + '_' + i, typ:c.typ, titel:c.titel, gruppe:c.gruppe||'', text:c.text, ord:c.ord||1 }));
   await speichereKartenListe();
-  lernstand = {};
-  await speichereLernstandListe();
-  spielstand = { punkte:0, richtigGesamt:0, antwortenGesamt:0, abzeichen:[], tagesPunkte:{} };
-  await speichereSpielstand();
   currentView = 'uebersicht';
   renderSeminarTabs();
   renderBoard();
@@ -2708,346 +1829,35 @@ async function loadTemplate(key){
 let uebungListe = [];
 let uebungIdx = 0;
 let uebungOffen = false;
-let sprechModusAktiv = false;
-
-/* ---------- Spaced Repetition (Leitner-System, 5 Boxen) ---------- */
-const SRS_INTERVALLE = [0, 1, 3, 7, 16]; // Tage bis zur nächsten Fälligkeit je Box (Index = Box-Nr.)
-
-function heuteISO(){
-  return new Date().toISOString().slice(0,10);
-}
-
-/* ---------- Dark Mode ---------- */
-async function ladeDarkMode(){
-  const an = await storeGet('darkMode');
-  setDarkModeUI(!!an);
-}
-async function toggleDarkMode(){
-  const aktuell = document.documentElement.getAttribute('data-theme') === 'dark';
-  const neu = !aktuell;
-  setDarkModeUI(neu);
-  await storeSet('darkMode', neu);
-  document.getElementById('mehrDialog').close();
-}
-function setDarkModeUI(an){
-  document.documentElement.setAttribute('data-theme', an ? 'dark' : 'light');
-  const label = an ? '☀️ Light Mode' : '🌙 Dark Mode';
-  const btn = document.getElementById('darkModeBtn');
-  if(btn) btn.textContent = label;
-  const btnKurs = document.getElementById('darkModeBtnKurs');
-  if(btnKurs) btnKurs.textContent = label;
-}
-
-/* ---------- Spielelemente: Punkte, Level, Abzeichen, Tagesziel (je Seminar/Kurs getrennt) ---------- */
-let spielstand = { punkte:0, richtigGesamt:0, antwortenGesamt:0, abzeichen:[], tagesPunkte:{} };
-const TAGESZIEL_PUNKTE = 20;
-const LEVEL_SCHWELLEN = [0,50,120,220,350,520,750,1050,1450,1950,2600,3400,4400,5600,7000];
-
-const ABZEICHEN_DEFS = [
-  { id:'erste_schritte', titel:'Erste Schritte', icon:'🌱', pruefe: s => (s.antwortenGesamt||0) >= 1 },
-  { id:'zehn_richtig', titel:'Warmgelaufen', icon:'🔥', pruefe: s => (s.richtigGesamt||0) >= 10 },
-  { id:'fuenfzig_richtig', titel:'Auf Kurs', icon:'⭐', pruefe: s => (s.richtigGesamt||0) >= 50 },
-  { id:'hundert_richtig', titel:'Profi', icon:'🏆', pruefe: s => (s.richtigGesamt||0) >= 100 },
-  { id:'level_5', titel:'Level 5', icon:'🥉', pruefe: s => berechneLevel(s.punkte).level >= 5 },
-  { id:'level_10', titel:'Level 10', icon:'🥈', pruefe: s => berechneLevel(s.punkte).level >= 10 },
-  { id:'streak_7', titel:'7-Tage-Streak', icon:'📅', pruefe: (s, streak) => streak >= 7 },
-];
-
-function berechneLevel(punkte){
-  let level = 1;
-  for(let i=0;i<LEVEL_SCHWELLEN.length;i++){
-    if(punkte >= LEVEL_SCHWELLEN[i]) level = i+1;
-  }
-  const aktuelleSchwelle = LEVEL_SCHWELLEN[level-1];
-  const naechsteSchwelle = LEVEL_SCHWELLEN[level] !== undefined ? LEVEL_SCHWELLEN[level] : (aktuelleSchwelle + 1000);
-  const progress = naechsteSchwelle > aktuelleSchwelle ? Math.min(1, (punkte - aktuelleSchwelle) / (naechsteSchwelle - aktuelleSchwelle)) : 1;
-  return { level, aktuelleSchwelle, naechsteSchwelle, progress };
-}
-
-async function ladeSpielstand(){
-  const leer = { punkte:0, richtigGesamt:0, antwortenGesamt:0, abzeichen:[], tagesPunkte:{} };
-  spielstand = (await storeGet('spielstand_global')) || leer;
-  if(!spielstand.abzeichen) spielstand.abzeichen = [];
-  if(!spielstand.tagesPunkte) spielstand.tagesPunkte = {};
-}
-async function speichereSpielstand(){
-  await storeSet('spielstand_global', spielstand);
-}
-
-async function vergebePunkte(anzahl, warRichtig){
-  const punkteVorher = spielstand.punkte;
-  spielstand.punkte += anzahl;
-  spielstand.antwortenGesamt = (spielstand.antwortenGesamt||0) + 1;
-  if(warRichtig) spielstand.richtigGesamt = (spielstand.richtigGesamt||0) + 1;
-  const heute = heuteISO();
-  spielstand.tagesPunkte[heute] = (spielstand.tagesPunkte[heute]||0) + anzahl;
-  const vorherLevel = berechneLevel(punkteVorher).level;
-  const neuLevel = berechneLevel(spielstand.punkte).level;
-  await speichereSpielstand();
-  if(neuLevel > vorherLevel){
-    setTimeout(()=> { zeigeToast(`🎉 Level ${neuLevel} erreicht!`); feuerwerkKonfetti(); }, 400);
-  }
-  await pruefeAbzeichen();
-}
-
-/* ---------- Konfetti-Effekt (Levelaufstieg, Abzeichen) ---------- */
-function feuerwerkKonfetti(){
-  const farben = ['#f3d34a','#6fa8cc','#7ec18f','#c4593a','#8a5a1f','#e0b84a'];
-  const container = document.createElement('div');
-  container.className = 'konfettiContainer';
-  const anzahl = 26;
-  for(let i=0;i<anzahl;i++){
-    const stueck = document.createElement('div');
-    stueck.className = 'konfettiStueck';
-    stueck.style.left = Math.random()*100 + 'vw';
-    stueck.style.background = farben[Math.floor(Math.random()*farben.length)];
-    stueck.style.animationDelay = (Math.random()*0.35) + 's';
-    stueck.style.animationDuration = (1.7 + Math.random()*0.9) + 's';
-    stueck.style.transform = `rotate(${Math.random()*360}deg)`;
-    container.appendChild(stueck);
-  }
-  document.body.appendChild(container);
-  setTimeout(()=> container.remove(), 3000);
-}
-
-async function pruefeAbzeichen(){
-  const aktivitaet = (await storeGet('aktivitaet')) || {};
-  const streak = berechneStreak(aktivitaet);
-  let neu = false;
-  ABZEICHEN_DEFS.forEach(def=>{
-    if(!spielstand.abzeichen.includes(def.id) && def.pruefe(spielstand, streak)){
-      spielstand.abzeichen.push(def.id);
-      neu = true;
-      setTimeout(()=> { zeigeToast(`🏅 Abzeichen freigeschaltet: ${def.titel}`); feuerwerkKonfetti(); }, 900);
-    }
-  });
-  if(neu) await speichereSpielstand();
-}
-
-function istFaellig(k){
-  if(!k.srsFaellig) return true; // noch nie geübt -> sofort fällig
-  return k.srsFaellig <= heuteISO();
-}
-
-function srsBewerten(k, gut){
-  const box = typeof k.srsBox === 'number' ? k.srsBox : 0;
-  const neueBox = gut ? Math.min(box + 1, SRS_INTERVALLE.length - 1) : 0;
-  const tage = SRS_INTERVALLE[neueBox];
-  const faellig = new Date();
-  faellig.setDate(faellig.getDate() + tage);
-  k.srsBox = neueBox;
-  k.srsFaellig = faellig.toISOString().slice(0,10);
-  k.geuebt = neueBox >= 1; // für Fortschrittsanzeige/Häkchen: schon nach der ersten richtigen Antwort sichtbares Feedback
-}
-
-/* ---------- Lernstand je einzelner Lerneinheit (nicht mehr nur je ganzer Karte) ---------- */
-let lernstand = {}; // { [elementId]: {srsBox, srsFaellig, geuebt} }
-
-async function ladeLernstand(seminarId){
-  lernstand = seminarId ? ((await storeGet('lernstand_' + seminarId)) || {}) : {};
-}
-async function speichereLernstandListe(){
-  if(!aktuellesSeminarId) return;
-  await storeSet('lernstand_' + aktuellesSeminarId, lernstand);
-}
-
-function holeElementStand(elementId, fallbackKarte){
-  if(lernstand[elementId]) return lernstand[elementId];
-  // Migration: eine "ganze Karte"-Lerneinheit ohne eigenen Lernstand übernimmt
-  // den alten, direkt auf der Karte gespeicherten Fortschritt (Rückwärtskompatibilität).
-  if(fallbackKarte && typeof fallbackKarte.srsBox === 'number'){
-    return { srsBox: fallbackKarte.srsBox, srsFaellig: fallbackKarte.srsFaellig, geuebt: !!fallbackKarte.geuebt };
-  }
-  return { srsBox: 0, srsFaellig: undefined, geuebt: false };
-}
-
-async function bewerteLernelement(el, gut){
-  const stand = { srsBox: el.srsBox, srsFaellig: el.srsFaellig, geuebt: el.geuebt };
-  srsBewerten(stand, gut);
-  lernstand[el.id] = stand;
-  el.srsBox = stand.srsBox; el.srsFaellig = stand.srsFaellig; el.geuebt = stand.geuebt;
-  await speichereLernstandListe();
-  markiereAktivitaetHeute();
-}
-
-/* Alle übbaren Lerneinheiten für eine Kartenliste, inkl. aktuellem Lernstand */
-function alleLernelemente(kartenListe){
-  const ergebnis = [];
-  kartenListe.forEach(karte => {
-    extrahiereLernelemente(karte).forEach(el => {
-      const stand = holeElementStand(el.id, el.ganzeKarte ? karte : null);
-      ergebnis.push({ ...el, karte, srsBox: stand.srsBox, srsFaellig: stand.srsFaellig, geuebt: stand.geuebt });
-    });
-  });
-  return ergebnis;
-}
-
-/* Lernfortschritt einer einzelnen Karte (für Board-Häkchen & Übersicht), unabhängig
-   davon ob sie eine "ganze Karte"-Einheit oder mehrere markierte Lerneinheiten hat. */
-function kartenLernfortschritt(karte){
-  const elemente = extrahiereLernelemente(karte).map(el => holeElementStand(el.id, el.ganzeKarte ? karte : null));
-  const sitzt = elemente.filter(e => e.geuebt).length;
-  return { sitzt, gesamt: elemente.length };
-}
-
-function faelligeZuerst(liste){
-  const faellig = liste.filter(istFaellig);
-  const spaeter = liste.filter(k => !istFaellig(k));
-  if(faellig.length > 0) return { pool: faellig, nurFaellig: true, gesamt: liste.length };
-  return { pool: liste, nurFaellig: false, gesamt: liste.length };
-}
-
-/* ---------- Aktivität & Streak (geräteweit, über alle Seminare hinweg) ---------- */
-async function markiereAktivitaetHeute(){
-  const map = (await storeGet('aktivitaet')) || {};
-  const heute = heuteISO();
-  if(!map[heute]){
-    map[heute] = true;
-    await storeSet('aktivitaet', map);
-  }
-}
-
-/* ---------- Reflexions-Tagebuch (je Seminar/Kurs) ---------- */
-let tagebuch = [];
-
-async function ladeTagebuch(seminarId){
-  tagebuch = seminarId ? ((await storeGet('tagebuch_' + seminarId)) || []) : [];
-}
-async function speichereTagebuchListe(){
-  if(!aktuellesSeminarId) return;
-  await storeSet('tagebuch_' + aktuellesSeminarId, tagebuch);
-}
-
-async function speichereReflexion(feldId, kontext, containerId){
-  const feld = document.getElementById(feldId);
-  const text = feld ? feld.value.trim() : '';
-  if(!text) return;
-  tagebuch.unshift({ datum: heuteISO(), zeit: new Date().toISOString(), kontext, text });
-  await speichereTagebuchListe();
-  zeigeToast('📔 Eintrag gespeichert');
-  const feldWrap = document.getElementById(containerId);
-  if(feldWrap) feldWrap.innerHTML = '<div class="reflexionGespeichert">📔 Danke, notiert!</div>';
-}
-
-function reflexionsFeldHTML(feldId, containerId, kontext){
-  return `<div id="${containerId}" class="reflexionBox">
-    <div class="reflexionLabel">📔 Kurze Reflexion (optional)</div>
-    <textarea id="${feldId}" class="reflexionTextarea" placeholder="Was lief gut? Was noch nicht?"></textarea>
-    <button class="iconBtn" onclick="speichereReflexion('${feldId}','${kontext}','${containerId}')">💾 Eintrag speichern</button>
-  </div>`;
-}
-
-function zeigeTagebuch(){
-  const body = document.getElementById('tagebuchBody');
-  if(!tagebuch.length){
-    body.innerHTML = '<div class="leer" style="padding:30px 10px;font-size:1rem;">Noch keine Einträge.<br>Nach dem Üben kannst du kurz reflektieren.</div>';
-  }else{
-    body.innerHTML = tagebuch.map((e,i) => `
-      <div class="tagebuchEintrag">
-        <div class="tagebuchKopf">
-          <span>${escapeHTML(e.datum)} · ${e.kontext === 'quiz' ? '❓ Quiz' : e.kontext === 'zuordnen' ? '🔗 Zuordnen' : '🗂 Karteikarten'}</span>
-          <button class="tagebuchLoeschen" onclick="loescheTagebuchEintrag(${i})">✕</button>
-        </div>
-        <div class="tagebuchText">${escapeHTML(e.text)}</div>
-      </div>`).join('');
-  }
-  document.getElementById('tagebuchDialog').showModal();
-}
-
-async function loescheTagebuchEintrag(idx){
-  tagebuch.splice(idx, 1);
-  await speichereTagebuchListe();
-  zeigeTagebuch();
-}
-
-function berechneStreak(map){
-  const tag = new Date();
-  const heute = heuteISO();
-  if(!map[heute]) tag.setDate(tag.getDate() - 1); // heute noch nichts geübt -> bei gestern anfangen zu zählen
-  let streak = 0;
-  while(true){
-    const iso = tag.toISOString().slice(0,10);
-    if(map[iso]){ streak++; tag.setDate(tag.getDate() - 1); }
-    else break;
-  }
-  return streak;
-}
-
-function aktivitaetsStreifenHTML(map){
-  const tage = [];
-  const heute = new Date();
-  for(let i = 29; i >= 0; i--){
-    const d = new Date(heute);
-    d.setDate(d.getDate() - i);
-    const iso = d.toISOString().slice(0,10);
-    tage.push({ iso, aktiv: !!map[iso] });
-  }
-  return `<div class="aktivitaetStreifen">` +
-    tage.map(t => `<span class="aktivitaetTag${t.aktiv ? ' aktiv' : ''}" title="${t.iso}"></span>`).join('') +
-    `</div>`;
-}
-
-function starteSprechtraining(){
-  sprechModusAktiv = true;
-  starteUebung();
-}
 
 function starteUebung(){
-  const liste = nurLernrelevante(suchbegriff.trim() ? sucheGefiltert() : (currentView === 'uebersicht' ? karten.filter(k=>k.typ==='fach') : gefilterteKarten()));
-  if(!liste.length){ zeigeToast('Keine lernrelevanten Karten in der aktuellen Auswahl'); return; }
-  const nutzeCram = cramModusAktiv;
-  cramModusAktiv = false;
-  const elemente = alleLernelemente(liste);
-  const { pool, nurFaellig, gesamt } = nutzeCram ? { pool: elemente, nurFaellig:false, gesamt: elemente.length } : faelligeZuerst(elemente);
-  uebungListe = [...pool];
+  const liste = suchbegriff.trim() ? sucheGefiltert() : (currentView === 'uebersicht' ? karten.filter(k=>k.typ==='fach') : gefilterteKarten());
+  if(!liste.length){ zeigeToast('Keine Karten in der aktuellen Auswahl'); return; }
+  uebungListe = [...liste];
   uebungIdx = 0;
   uebungOffen = true;
   document.getElementById('uebungOverlay').style.display = 'flex';
   renderUebungKarte();
-  if(nutzeCram){
-    zeigeToast(`🔁 Komplettauffrischung: ${pool.length} Lerneinheiten`);
-  }else if(nurFaellig && pool.length < gesamt){
-    zeigeToast(`${pool.length} von ${gesamt} Lerneinheiten sind heute fällig`);
-  }else if(!nurFaellig){
-    zeigeToast('Nichts aktuell fällig – komplette Auswahl wird geübt');
-  }
 }
 
 function beendeUebung(){
   uebungOffen = false;
-  sprechModusAktiv = false;
   document.getElementById('uebungOverlay').style.display = 'none';
   stopVorlesen();
   renderBoard();
 }
 
 function mischeUebung(){
-  uebungListe = mischeGewichtet(uebungListe);
+  for(let i = uebungListe.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [uebungListe[i], uebungListe[j]] = [uebungListe[j], uebungListe[i]];
+  }
   uebungIdx = 0;
   renderUebungKarte();
 }
 
-/* Findet den Abschnitt einer Karte, der eine bestimmte markierte Textstelle enthält */
-function findeAbschnittFuerSnippet(karte, snippetText){
-  const abschnitte = parseAbschnitte(karte.text);
-  return abschnitte.find(a => a.inhalt.includes(snippetText)) || { label: null, inhalt: snippetText };
-}
-
-function klartext(text){
-  return (text || '').replace(/==(.+?)==/gs, '$1');
-}
-
-function maskierteVorschauHTML(abschnitt, snippetText){
-  const klar = klartext(abschnitt.inhalt);
-  const escInhalt = escapeHTML(klar);
-  const escSnippet = escapeHTML(snippetText);
-  const maske = `<span class="lernLuecke"></span>`;
-  return escInhalt.split(escSnippet).join(maske);
-}
-
 function renderUebungKarte(){
   const ov = document.getElementById('uebungOverlay');
-  ov.classList.remove('boardFadeIn'); void ov.offsetWidth; ov.classList.add('boardFadeIn');
   if(uebungIdx >= uebungListe.length){
     const sitzt = uebungListe.filter(k=>k.geuebt).length;
     ov.innerHTML = `
@@ -3056,32 +1866,16 @@ function renderUebungKarte(){
       </div>
       <div class="uebungEnde">
         <h2>Durchlauf fertig 🎉</h2>
-        <p>${sitzt} von ${uebungListe.length} Lerneinheiten sitzen.</p>
+        <p>${sitzt} von ${uebungListe.length} Karten sitzen.</p>
         <button class="iconBtn" onclick="uebungNurOffene()">🔁 Nur die restlichen wiederholen</button><br>
         <button class="iconBtn" onclick="mischeUebung()">🔀 Nochmal von vorn (gemischt)</button><br>
         <button class="iconBtn" onclick="beendeUebung()">Zurück zum Board</button>
-        ${reflexionsFeldHTML('reflexionUebung','reflexionUebungBox','uebung')}
       </div>`;
     return;
   }
-  const el = uebungListe[uebungIdx];
-  const k = el.karte;
+  const k = uebungListe[uebungIdx];
   stopVorlesen();
   const fortschritt = Math.round((uebungIdx / uebungListe.length) * 100);
-  if(sprechModusAktiv){
-    renderSprechUebungKarte(ov, el, k, fortschritt);
-    return;
-  }
-  let vorschauHTML = '';
-  let aufgabenHinweis = 'Versuch dich zu erinnern, bevor du die Antwort aufdeckst.';
-  if(!el.ganzeKarte){
-    const abschnitt = findeAbschnittFuerSnippet(k, el.text);
-    if(abschnitt.label){
-      vorschauHTML += `<div class="detailLabel">${escapeHTML(abschnitt.label)}</div>`;
-    }
-    vorschauHTML += `<div class="detailBody">${maskierteVorschauHTML(abschnitt, el.text)}</div>`;
-    aufgabenHinweis = '🔤 Lückentext: Was gehört an die unterstrichene Stelle? Erst überlegen, dann Antwort aufdecken.';
-  }
   ov.innerHTML = `
     <div class="uebungTop">
       <button class="uebungCloseBtn" onclick="beendeUebung()">✕</button>
@@ -3092,23 +1886,12 @@ function renderUebungKarte(){
       <div class="uebungKarte">
         <span class="uebungTypBadge" style="background:${k.typ==='fach'?'var(--gelb)':k.typ==='ablauf'?'var(--blau)':'var(--gruen)'}">${TYP_LABEL[k.typ]}${k.gruppe ? ' · ' + k.gruppe : ''}</span>
         <h3 class="uebungTitel">${escapeHTML((k.typ==='ablauf' && k.ord ? k.ord+'. ' : '') + k.titel)}</h3>
-        <div class="uebungHinweis">${aufgabenHinweis}</div>
-        ${vorschauHTML ? `<div class="uebungVorschau">${vorschauHTML}</div>` : ''}
+        <div class="uebungHinweis">Versuch dich zu erinnern, bevor du die Antwort aufdeckst.</div>
         <div id="uebungAntwort">
-          ${el.ganzeKarte
-            ? `<button class="uebungAntwortBtn" onclick="uebungAntwortZeigen()">👁️ Antwort zeigen</button>`
-            : `<input type="text" id="luecktextEingabe" class="luecktextInput" placeholder="Deine Antwort..." autocomplete="off" autocapitalize="off" autocorrect="off">
-               <button class="uebungAntwortBtn" onclick="uebungLueckeAbfragen()">✓ Prüfen</button>
-               <button class="uebungAntwortBtn" style="background:transparent;color:#8a7f6a;box-shadow:none;padding:6px;" onclick="uebungAntwortZeigen()">Ich passe – Antwort einfach zeigen</button>`
-          }
+          <button class="uebungAntwortBtn" onclick="uebungAntwortZeigen()">👁️ Antwort zeigen</button>
         </div>
       </div>
     </div>`;
-  const eingabefeld = document.getElementById('luecktextEingabe');
-  if(eingabefeld){
-    eingabefeld.focus();
-    eingabefeld.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') uebungLueckeAbfragen(); });
-  }
 }
 
 function escapeHTML(s){
@@ -3117,214 +1900,46 @@ function escapeHTML(s){
   return d.innerHTML;
 }
 
-function normalisiere(s){
-  return (s || '').toLowerCase().trim().replace(/\s+/g,' ').replace(/[.,;:!?"'„"]/g,'');
-}
-
-function uebungLueckeAbfragen(){
-  const el = uebungListe[uebungIdx];
-  const eingabeFeld = document.getElementById('luecktextEingabe');
-  const eingabe = eingabeFeld ? eingabeFeld.value : '';
-  const normEingabe = normalisiere(eingabe);
-  const normRichtig = normalisiere(el.text);
-  const trifftZu = normEingabe.length > 0 && (normEingabe === normRichtig || (normEingabe.length >= 3 && normRichtig.includes(normEingabe)) || (normRichtig.length >= 3 && normEingabe.includes(normRichtig)));
-  uebungAntwortZeigen(eingabe, trifftZu);
-}
-
-function uebungAntwortZeigen(eingegebeneAntwort, trifftZu){
-  const el = uebungListe[uebungIdx];
-  const k = el.karte;
+function uebungAntwortZeigen(){
+  const k = uebungListe[uebungIdx];
   const box = document.getElementById('uebungAntwort');
+  const abschnitte = parseAbschnitte(k.text);
   let html = '';
-  if(typeof eingegebeneAntwort === 'string'){
-    if(eingegebeneAntwort.trim()){
-      html += `<div class="luecktextFeedback ${trifftZu ? 'richtig' : 'falsch'}">
-        Deine Antwort: „${escapeHTML(eingegebeneAntwort.trim())}" ${trifftZu ? '– passt gut! ✅' : '– vergleiche mit der richtigen Antwort unten'}
-      </div>`;
-    }else{
-      html += `<div class="luecktextFeedback falsch">Keine Antwort eingegeben – hier die richtige:</div>`;
-    }
-  }
-  if(el.ganzeKarte){
-    const abschnitte = parseAbschnitte(k.text);
-    abschnitte.forEach(a=>{
-      html += '<div class="detailSection">';
-      if(a.label) html += `<div class="detailLabel">${escapeHTML(a.label)}</div>`;
-      const zeilen = a.inhalt.split('\n').filter(z=>z.trim());
-      const istListe = zeilen.length > 1 && zeilen.every(z => /^\d+\.\s/.test(z.trim()));
-      if(istListe){
-        html += '<div class="detailBody strategie"><ol>' + zeilen.map(z=>`<li>${formatiereMitLernmarkern(z.replace(/^\d+\.\s*/,''))}</li>`).join('') + '</ol></div>';
-      }else{
-        html += `<div class="detailBody">${formatiereMitLernmarkern(a.inhalt)}</div>`;
-      }
-      html += '</div>';
-    });
-  }else{
-    const abschnitt = findeAbschnittFuerSnippet(k, el.text);
+  abschnitte.forEach(a=>{
     html += '<div class="detailSection">';
-    if(abschnitt.label) html += `<div class="detailLabel">${escapeHTML(abschnitt.label)}</div>`;
-    html += `<div class="detailBody">${formatiereMitLernmarkern(abschnitt.inhalt)}</div>`;
+    if(a.label) html += `<div class="detailLabel">${escapeHTML(a.label)}</div>`;
+    const zeilen = a.inhalt.split('\n').filter(z=>z.trim());
+    const istListe = zeilen.length > 1 && zeilen.every(z => /^\d+\.\s/.test(z.trim()));
+    if(istListe){
+      html += '<div class="detailBody strategie"><ol>' + zeilen.map(z=>`<li>${escapeHTML(z.replace(/^\d+\.\s*/,''))}</li>`).join('') + '</ol></div>';
+    }else{
+      html += `<div class="detailBody">${escapeHTML(a.inhalt)}</div>`;
+    }
     html += '</div>';
-  }
-  html += `<button class="uebungAntwortBtn" style="background:#6fa8cc;" onclick="vorlesenLernelement(uebungListe[${uebungIdx}])">🔊 Vorlesen</button>
+  });
+  html += `<button class="uebungAntwortBtn" style="background:#6fa8cc;" onclick="vorlesenEinzeln(uebungListe[${uebungIdx}], null)">🔊 Vorlesen</button>
     <div class="uebungBewertung">
       <button class="btnNochmal" onclick="uebungBewerten(false)">🔁 Nochmal üben</button>
       <button class="btnSitzt" onclick="uebungBewerten(true)">✅ Sitzt</button>
-    </div>
-    <div class="swipeHinweis">Oder Karte wischen: ← Nochmal · Sitzt →</div>`;
+    </div>`;
   box.innerHTML = html;
   document.querySelector('.uebungAntwortBtn[onclick*="uebungAntwortZeigen"]')?.remove();
-  aktiviereKartenSwipe();
 }
 
-/* ---------- Wisch-Geste: rechts = Sitzt, links = Nochmal (nur nach Aufdecken der Antwort) ---------- */
-function aktiviereKartenSwipe(){
-  const karte = document.querySelector('.uebungKarte');
-  if(!karte) return;
-  let startX = 0, startY = 0, dragging = false, deltaX = 0;
-  const schwelle = 90;
-
-  function onDown(e){
-    dragging = true;
-    startX = e.clientX; startY = e.clientY; deltaX = 0;
-    karte.style.transition = 'none';
-    try{ karte.setPointerCapture(e.pointerId); }catch(err){}
-  }
-  function onMove(e){
-    if(!dragging) return;
-    deltaX = e.clientX - startX;
-    const deltaY = e.clientY - startY;
-    if(Math.abs(deltaY) > Math.abs(deltaX) * 1.3) return;
-    karte.style.transform = `translateX(${deltaX}px) rotate(${deltaX/18}deg)`;
-    karte.classList.toggle('swipeSitzt', deltaX > 30);
-    karte.classList.toggle('swipeNochmal', deltaX < -30);
-  }
-  function onUp(){
-    if(!dragging) return;
-    dragging = false;
-    karte.style.transition = 'transform .25s ease, opacity .25s ease';
-    if(deltaX > schwelle){
-      karte.style.transform = `translateX(650px) rotate(22deg)`;
-      karte.style.opacity = '0';
-      setTimeout(()=> uebungBewerten(true), 180);
-    }else if(deltaX < -schwelle){
-      karte.style.transform = `translateX(-650px) rotate(-22deg)`;
-      karte.style.opacity = '0';
-      setTimeout(()=> uebungBewerten(false), 180);
-    }else{
-      karte.style.transform = '';
-      karte.classList.remove('swipeSitzt','swipeNochmal');
-    }
-  }
-
-  karte.addEventListener('pointerdown', onDown);
-  karte.addEventListener('pointermove', onMove);
-  karte.addEventListener('pointerup', onUp);
-  karte.addEventListener('pointercancel', onUp);
-}
-
-/* ---------- Sprechtraining (Text frei sprechen, aufnehmen, anhören, selbst bewerten) ---------- */
-function renderSprechUebungKarte(ov, el, k, fortschritt){
-  const inhalt = el.ganzeKarte ? k.text : findeAbschnittFuerSnippet(k, el.text).inhalt;
-  ov.innerHTML = `
-    <div class="uebungTop">
-      <button class="uebungCloseBtn" onclick="beendeUebung()">✕</button>
-      <div class="uebungProgress"><div style="width:${fortschritt}%"></div></div>
-      <div class="uebungCount">${uebungIdx+1} / ${uebungListe.length}</div>
-    </div>
-    <div class="uebungCardWrap">
-      <div class="uebungKarte">
-        <span class="uebungTypBadge" style="background:${k.typ==='fach'?'var(--gelb)':k.typ==='ablauf'?'var(--blau)':'var(--gruen)'}">${TYP_LABEL[k.typ]}${k.gruppe ? ' · ' + k.gruppe : ''}</span>
-        <h3 class="uebungTitel">${escapeHTML((k.typ==='ablauf' && k.ord ? k.ord+'. ' : '') + k.titel)}</h3>
-        <div class="uebungHinweis">🗣️ Sprich das frei in eigenen Worten, dann nimm dich dabei auf.</div>
-        <div class="uebungVorschau"><div class="detailBody">${formatiereMitLernmarkern(inhalt)}</div></div>
-        <div id="sprechAufnahmeBereich">
-          <button class="uebungAntwortBtn" onclick="sprechAufnahmeStarten()">🎙️ Aufnehmen</button>
-        </div>
-      </div>
-    </div>`;
-}
-
-let sprechRecorder = null;
-let sprechChunks = [];
-let sprechStartzeit = null;
-let sprechTimerId = null;
-
-async function sprechAufnahmeStarten(){
-  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
-    zeigeToast('Aufnahme wird von diesem Browser nicht unterstützt');
-    return;
-  }
-  try{
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    sprechChunks = [];
-    const mimeKandidaten = ['audio/mp4', 'audio/webm', 'audio/webm;codecs=opus'];
-    const mime = mimeKandidaten.find(m => window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(m));
-    sprechRecorder = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
-    sprechRecorder.ondataavailable = (e) => { if(e.data.size > 0) sprechChunks.push(e.data); };
-    sprechRecorder.onstop = () => {
-      const blob = new Blob(sprechChunks, { type: sprechRecorder.mimeType || 'audio/webm' });
-      stream.getTracks().forEach(t => t.stop());
-      sprechAufnahmeFertig(blob);
-    };
-    sprechRecorder.start();
-    sprechStartzeit = Date.now();
-    const bereich = document.getElementById('sprechAufnahmeBereich');
-    bereich.innerHTML = `
-      <button class="sprachBtn aufnahme" onclick="sprechAufnahmeStoppen()">⏹ Stopp</button>
-      <span class="sprachZeit" id="sprechZeit">0:00</span>`;
-    sprechTimerId = setInterval(()=>{
-      const sek = Math.floor((Date.now() - sprechStartzeit)/1000);
-      const anzeige = document.getElementById('sprechZeit');
-      if(anzeige) anzeige.textContent = Math.floor(sek/60) + ':' + (sek%60).toString().padStart(2,'0');
-    }, 500);
-  }catch(e){
-    console.error(e);
-    zeigeToast('Zugriff aufs Mikrofon nicht möglich – bitte Berechtigung prüfen');
-  }
-}
-
-function sprechAufnahmeStoppen(){
-  clearInterval(sprechTimerId);
-  if(sprechRecorder && sprechRecorder.state !== 'inactive'){
-    sprechRecorder.stop();
-  }
-}
-
-function sprechAufnahmeFertig(blob){
-  const url = URL.createObjectURL(blob);
-  const bereich = document.getElementById('sprechAufnahmeBereich');
-  bereich.innerHTML = `
-    <div class="sprachPlayer"><audio controls autoplay src="${url}"></audio></div>
-    <div class="uebungBewertung">
-      <button class="btnNochmal" onclick="uebungBewerten(false)">🔁 Nochmal üben</button>
-      <button class="btnSitzt" onclick="uebungBewerten(true)">✅ Flüssig genug</button>
-    </div>`;
-  aktiviereKartenSwipe();
-}
-
-function vorlesenLernelement(el){
-  const text = el.ganzeKarte ? (el.karte.titel + '. ' + el.karte.text) : (el.karte.titel + '. ' + el.text);
-  vorlesenEinzeln({ titel: '', text }, null);
-}
-
-async function uebungBewerten(gut){
-  const el = uebungListe[uebungIdx];
-  await bewerteLernelement(el, gut);
-  // Legacy-Kartenfeld für "ganze Karte"-Einheiten weiter mitpflegen (Board-Häkchen ohne Zusatzabfrage synchron halten)
-  if(el.ganzeKarte){
-    const k = karten.find(x => x.id === el.karteId);
-    if(k){ k.srsBox = el.srsBox; k.srsFaellig = el.srsFaellig; k.geuebt = el.geuebt; speichereKartenListe(); }
-  }
-  await vergebePunkte(gut ? 10 : 2, gut);
+function uebungBewerten(gut){
+  const k = karten.find(x => x.id === uebungListe[uebungIdx].id);
+  if(k){ k.geuebt = gut; speichereKartenListe(); }
   uebungIdx++;
   renderUebungKarte();
 }
 
 function uebungNurOffene(){
-  uebungListe = uebungListe.filter(el => !el.geuebt);
+  uebungListe = uebungListe.filter(k=>{
+    const akt = karten.find(x=>x.id===k.id);
+    return akt && !akt.geuebt;
+  });
   uebungIdx = 0;
-  if(!uebungListe.length){ zeigeToast('Alles sitzt 🎉'); beendeUebung(); return; }
+  if(!uebungListe.length){ zeigeToast('Alle Karten sitzen 🎉'); beendeUebung(); return; }
   renderUebungKarte();
 }
 
@@ -3345,38 +1960,14 @@ function mische(arr){
   return a;
 }
 
-/* Gewichtete Zufallsreihenfolge: Karten mit niedriger Box (= schwächer sitzend)
-   kommen im Schnitt früher dran, bleibt aber jedes Mal unterschiedlich gemischt
-   (Efraimidis-Spirakis-Verfahren für gewichtetes Sampling ohne Zurücklegen). */
-function mischeGewichtet(liste){
-  return liste
-    .map(k => {
-      const box = typeof k.srsBox === 'number' ? k.srsBox : 0;
-      const gewicht = 6 - box; // Box 0 -> Gewicht 6, Box 4 -> Gewicht 2
-      const schluessel = Math.pow(Math.random(), 1 / gewicht);
-      return { k, schluessel };
-    })
-    .sort((a, b) => b.schluessel - a.schluessel)
-    .map(x => x.k);
-}
-
 function starteQuiz(){
-  const liste = nurLernrelevante(suchbegriff.trim() ? sucheGefiltert() : (currentView === 'uebersicht' ? karten.filter(k=>k.typ==='fach') : gefilterteKarten()));
-  if(liste.length < 2){ zeigeToast('Mindestens 2 lernrelevante Karten nötig für ein Quiz'); return; }
-  const nutzeCram = cramModusAktiv;
-  cramModusAktiv = false;
-  const { pool, nurFaellig, gesamt } = nutzeCram ? { pool: liste, nurFaellig:false, gesamt: liste.length } : faelligeZuerst(liste);
-  if(pool.length < 2){ zeigeToast('Mindestens 2 fällige Karten nötig – ganze Auswahl wird genutzt'); quizListe = mischeGewichtet(liste); }
-  else quizListe = mischeGewichtet(pool);
+  const liste = suchbegriff.trim() ? sucheGefiltert() : (currentView === 'uebersicht' ? karten.filter(k=>k.typ==='fach') : gefilterteKarten());
+  if(liste.length < 2){ zeigeToast('Mindestens 2 Karten nötig für ein Quiz'); return; }
+  quizListe = mische(liste);
   quizIdx = 0;
   quizRichtig = 0;
   document.getElementById('uebungOverlay').style.display = 'flex';
   renderQuizFrage();
-  if(nutzeCram){
-    zeigeToast(`🔁 Komplettauffrischung: ${quizListe.length} Fragen`);
-  }else if(nurFaellig && pool.length < gesamt && pool.length >= 2){
-    zeigeToast(`${pool.length} von ${gesamt} Karten sind heute fällig`);
-  }
 }
 
 function beendeQuiz(){
@@ -3430,7 +2021,6 @@ function baueQuizfrage(k, pool){
 
 function renderQuizFrage(){
   const ov = document.getElementById('uebungOverlay');
-  ov.classList.remove('boardFadeIn'); void ov.offsetWidth; ov.classList.add('boardFadeIn');
   if(quizIdx >= quizListe.length){
     const pct = Math.round((quizRichtig/quizListe.length)*100);
     ov.innerHTML = `
@@ -3443,7 +2033,6 @@ function renderQuizFrage(){
         <button class="iconBtn" onclick="starteQuizWiederholung()">🔁 Nur die falschen wiederholen</button><br>
         <button class="iconBtn" onclick="starteQuiz()">🔀 Neues Quiz (gemischt)</button><br>
         <button class="iconBtn" onclick="beendeQuiz()">Zurück zum Board</button>
-        ${reflexionsFeldHTML('reflexionQuiz','reflexionQuizBox','quiz')}
       </div>`;
     return;
   }
@@ -3477,8 +2066,7 @@ function quizAntworten(i){
   const richtig = i === frage.richtig;
   if(richtig) quizRichtig++;
   const k = karten.find(x=>x.id===frage.karte.id);
-  if(k){ srsBewerten(k, richtig); speichereKartenListe(); markiereAktivitaetHeute(); }
-  vergebePunkte(richtig ? 10 : 2, richtig);
+  if(k){ k.geuebt = richtig; speichereKartenListe(); }
   document.querySelectorAll('#quizOptionen .quizOption').forEach((btn,idx)=>{
     btn.disabled = true;
     if(idx === frage.richtig) btn.classList.add('richtig');
@@ -3494,108 +2082,10 @@ function starteQuizWiederholung(){
     return akt && !akt.geuebt;
   });
   if(!falsche.length){ zeigeToast('Alles richtig beantwortet 🎉'); beendeQuiz(); return; }
-  quizListe = mischeGewichtet(falsche);
+  quizListe = mische(falsche);
   quizIdx = 0;
   quizRichtig = 0;
   renderQuizFrage();
-}
-
-/* ---------- Zuordnen (Titel/Inhalt per Antippen verbinden) ---------- */
-let zuordnenPaare = [];
-let zuordnenLinks = [];
-let zuordnenRechts = [];
-let zuordnenAusgewaehlt = null;
-let zuordnenGeloest = 0;
-
-function kurzTeaser(text, laenge){
-  return teaserText(text);
-}
-
-function starteZuordnen(){
-  const liste = nurLernrelevante(suchbegriff.trim() ? sucheGefiltert() : (currentView === 'uebersicht' ? karten.filter(k=>k.typ==='fach') : gefilterteKarten()));
-  if(liste.length < 3){ zeigeToast('Mindestens 3 lernrelevante Karten nötig zum Zuordnen'); return; }
-  const auswahl = mische(liste).slice(0, Math.min(6, liste.length));
-  zuordnenPaare = auswahl.map((k, i) => ({ id: 'p' + i, titel: k.titel, inhalt: kurzTeaser(k.text) }));
-  zuordnenLinks = zuordnenPaare.map(p => ({ pairId: p.id, text: p.titel }));
-  zuordnenRechts = mische(zuordnenPaare.map(p => ({ pairId: p.id, text: p.inhalt })));
-  zuordnenAusgewaehlt = null;
-  zuordnenGeloest = 0;
-  document.getElementById('uebungOverlay').style.display = 'flex';
-  renderZuordnen();
-}
-
-function beendeZuordnen(){
-  document.getElementById('uebungOverlay').style.display = 'none';
-  renderBoard();
-}
-
-function renderZuordnen(){
-  const ov = document.getElementById('uebungOverlay');
-  if(zuordnenGeloest >= zuordnenPaare.length){
-    ov.innerHTML = `
-      <div class="uebungTop">
-        <button class="uebungCloseBtn" onclick="beendeZuordnen()">✕</button>
-      </div>
-      <div class="uebungEnde">
-        <h2>Alle zugeordnet 🎉</h2>
-        <p>${zuordnenPaare.length} Paare richtig verbunden.</p>
-        <button class="iconBtn" onclick="starteZuordnen()">🔀 Neue Runde</button><br>
-        <button class="iconBtn" onclick="beendeZuordnen()">Zurück zum Board</button>
-        ${reflexionsFeldHTML('reflexionZuordnen','reflexionZuordnenBox','zuordnen')}
-      </div>`;
-    return;
-  }
-  const linksHTML = zuordnenLinks.map(l => {
-    if(!l) return '';
-    const ausgewaehlt = zuordnenAusgewaehlt && zuordnenAusgewaehlt.seite === 'links' && zuordnenAusgewaehlt.pairId === l.pairId;
-    return `<button class="zuordnenKarte${ausgewaehlt ? ' ausgewaehlt' : ''}" data-seite="links" data-pairid="${l.pairId}" onclick="zuordnenAuswahl('links','${l.pairId}')">${escapeHTML(l.text)}</button>`;
-  }).join('');
-  const rechtsHTML = zuordnenRechts.map(r => {
-    if(!r) return '';
-    const ausgewaehlt = zuordnenAusgewaehlt && zuordnenAusgewaehlt.seite === 'rechts' && zuordnenAusgewaehlt.pairId === r.pairId;
-    return `<button class="zuordnenKarte${ausgewaehlt ? ' ausgewaehlt' : ''}" data-seite="rechts" data-pairid="${r.pairId}" onclick="zuordnenAuswahl('rechts','${r.pairId}')">${escapeHTML(r.text)}</button>`;
-  }).join('');
-  ov.innerHTML = `
-    <div class="uebungTop">
-      <button class="uebungCloseBtn" onclick="beendeZuordnen()">✕</button>
-      <div class="uebungProgress"><div style="width:${Math.round((zuordnenGeloest/zuordnenPaare.length)*100)}%"></div></div>
-      <div class="uebungCount">${zuordnenGeloest} / ${zuordnenPaare.length}</div>
-    </div>
-    <div class="uebungCardWrap">
-      <div class="zuordnenScoreLine">Tippe zuerst links den Titel, dann rechts den passenden Inhalt an.</div>
-      <div class="zuordnenSpalten">
-        <div class="zuordnenSpalte" id="zuordnenLinks">${linksHTML}</div>
-        <div class="zuordnenSpalte" id="zuordnenRechts">${rechtsHTML}</div>
-      </div>
-    </div>`;
-}
-
-function zuordnenAuswahl(seite, pairId){
-  if(!zuordnenAusgewaehlt){
-    zuordnenAusgewaehlt = { seite, pairId };
-    renderZuordnen();
-    return;
-  }
-  if(zuordnenAusgewaehlt.seite === seite){
-    zuordnenAusgewaehlt = { seite, pairId };
-    renderZuordnen();
-    return;
-  }
-  const treffer = zuordnenAusgewaehlt.pairId === pairId;
-  if(treffer){
-    zuordnenGeloest++;
-    zuordnenLinks = zuordnenLinks.map(l => (l && l.pairId === pairId) ? null : l);
-    zuordnenRechts = zuordnenRechts.map(r => (r && r.pairId === pairId) ? null : r);
-    zuordnenAusgewaehlt = null;
-    vergebePunkte(8, true);
-    renderZuordnen();
-  }else{
-    const vorherigeSeite = zuordnenAusgewaehlt.seite;
-    const vorherigeId = zuordnenAusgewaehlt.pairId;
-    document.querySelector(`.zuordnenKarte[data-seite="${vorherigeSeite}"][data-pairid="${vorherigeId}"]`)?.classList.add('falsch');
-    document.querySelector(`.zuordnenKarte[data-seite="${seite}"][data-pairid="${pairId}"]`)?.classList.add('falsch');
-    setTimeout(()=>{ zuordnenAusgewaehlt = null; renderZuordnen(); }, 500);
-  }
 }
 
 /* ---------- Dokument/Flipchart scannen (Foto + OCR) ---------- */
@@ -3711,8 +2201,9 @@ titel: 'Programmieren lernen',
 icon: '💻',
 lessons: [
   {
-    title:"Was ist Programmieren?", konzept:"Grundidee",
+    id:"ausgabe", title:"Was ist Programmieren?", konzept:"Grundidee",
     erklaerung:[
+      "Warum das wichtig ist: Bevor du irgendetwas Kompliziertes baust, brauchst du ein Fenster, durch das du sehen kannst, was dein Code gerade tut. Ohne das arbeitest du im Blindflug.",
       "Programmieren heißt: Anweisungen aufschreiben, die der Computer Schritt für Schritt ausführt. Nichts Magisches – nur eine sehr genaue Art, Aufgaben zu beschreiben.",
       "Unser wichtigstes Werkzeug hier ist console.log(). Es zeigt dir, was dein Code gerade produziert."
     ],
@@ -3725,9 +2216,25 @@ lessons: [
     quiz:{ frage:"Womit gibst du in JavaScript einen Wert aus?", optionen:["print()","console.log()","echo()","show()"], richtig:1 }
   },
   {
-    title:"Variablen & Datentypen", konzept:"Werte speichern",
+    id:"werte-merken", title:"Werte merken", konzept:"Warum Variablen?",
     erklaerung:[
-      "Mit let oder const speicherst du einen Wert unter einem Namen. let kann sich später ändern, const bleibt fest.",
+      "Warum das wichtig ist: Bisher hat dein Code Werte immer nur sofort ausgegeben und danach sofort wieder vergessen. Willst du einen Wert später nochmal benutzen, musst du ihn dir irgendwo notieren.",
+      "Eine Variable ist wie eine beschriftete Box: Du schreibst einen Namen drauf (z. B. \"Alter\") und legst einen Wert rein. Später schaust du einfach auf die Box, statt den Wert neu zu berechnen.",
+      "Im Beispiel unten siehst du das Problem, das eine Variable löst: die gleiche Rechnung taucht zweimal auf, weil der Computer sich das erste Ergebnis nicht gemerkt hat."
+    ],
+    beispiel:'console.log(5 + 3);\nconsole.log(5 + 3);',
+    aufgabe:"Führ den Beispielcode aus. Du berechnest 5 + 3 zweimal – der Computer hat sich das erste Ergebnis nicht gemerkt, du musstest es erneut hinschreiben. Genau dieses Problem lösen Variablen, die du im nächsten Modul kennenlernst.",
+    starter:'console.log(5 + 3);\nconsole.log(5 + 3);\n',
+    pruefen:(out)=> out.length>=2
+      ? {ok:true,msg:"Genau – zweimal dieselbe Rechnung. Im nächsten Modul lösen wir das mit einer Variable."}
+      : {ok:false,msg:"Führ den Code aus, um das Ergebnis zu sehen."},
+    quiz:{ frage:"Warum reicht console.log() allein nicht, um einen Wert später wiederzuverwenden?", optionen:["Es gibt den Wert aus, merkt sich ihn aber nicht","console.log() funktioniert nur mit Zahlen","console.log() ist zu langsam","Es gibt keinen Grund dafür"], richtig:0 }
+  },
+  {
+    id:"variablen", title:"Variablen & Datentypen", konzept:"Werte speichern",
+    erklaerung:[
+      "Warum das wichtig ist: Im letzten Modul hast du das Problem gesehen – console.log() merkt sich nichts. Eine Variable ist die Lösung: deine beschriftete Box, in der ein Wert liegen bleibt, bis du ihn wieder brauchst.",
+      "Mit let oder const legst du so eine Box an und gibst ihr einen Namen. let kann sich später ändern, const bleibt fest.",
       "Die drei Grundtypen: String (Text, in Anführungszeichen), Number (Zahl) und Boolean (true/false)."
     ],
     beispiel:'let name = "Sascha";\nlet alter = 40;\nconsole.log(name, alter);',
@@ -3743,8 +2250,9 @@ lessons: [
     quiz:{ frage:"Welcher Datentyp ist true oder false?", optionen:["String","Number","Boolean","Array"], richtig:2 }
   },
   {
-    title:"Operatoren & Rechnen", konzept:"Werte verknüpfen",
+    id:"operatoren", title:"Operatoren & Rechnen", konzept:"Werte verknüpfen",
     erklaerung:[
+      "Warum das wichtig ist: Mit rohen Zahlen zu rechnen reicht selten – meistens willst du mit gespeicherten Werten weiterrechnen, so wie du im Kopf zwei Zutatenmengen addierst, bevor du einkaufen gehst.",
       "Mit +, -, *, / rechnest du mit Zahlen. Mit === vergleichst du zwei Werte auf Gleichheit.",
       "Der Modulo-Operator % liefert den Rest einer Division – praktisch, um z. B. gerade Zahlen zu erkennen."
     ],
@@ -3757,8 +2265,9 @@ lessons: [
     quiz:{ frage:"Was ergibt 7 % 2?", optionen:["3","1","0","3.5"], richtig:1 }
   },
   {
-    title:"Bedingungen", konzept:"if / else",
+    id:"bedingungen", title:"Bedingungen", konzept:"if / else",
     erklaerung:[
+      "Warum das wichtig ist: Programme, die immer exakt dasselbe tun, sind selten nützlich. Bedingungen sind wie eine Weiche im Zugverkehr: je nach Situation geht's links oder rechts weiter.",
       "Mit if(...) { } else { } lässt du den Code unterschiedlich reagieren, je nachdem ob eine Bedingung wahr oder falsch ist.",
       "Beispiel: if(alter >= 18) für eine Volljährigkeitsprüfung."
     ],
@@ -3774,10 +2283,11 @@ lessons: [
     quiz:{ frage:"Welches Symbol prüft auf Gleichheit von Wert und Typ?", optionen:["=","==","===","!=="], richtig:2 }
   },
   {
-    title:"Schleifen", konzept:"for-Loop",
+    id:"schleifen", title:"Schleifen", konzept:"for-Loop",
     erklaerung:[
+      "Warum das wichtig ist: Ohne Schleifen müsstest du jede Wiederholung einzeln hinschreiben – zehnmal dieselbe Zeile kopieren. Eine Schleife ist wie eine Ansage, die sich automatisch X-mal wiederholt, ohne dass du sie X-mal aufnimmst.",
       "Eine for-Schleife wiederholt Code, solange eine Bedingung wahr ist: for(let i=0; i<5; i++).",
-      "i ist der Zähler, i<5 die Bedingung, i++ zählt bei jedem Durchlauf eins hoch."
+      "Kurz zu i++: i ist der Zähler, der bei 0 (oder wo du willst) startet. i<5 ist die Bedingung, die geprüft wird. i++ heißt \"zähl i nach jedem Durchlauf eins hoch\" – eine Kurzform für i = i + 1. Ohne dieses Hochzählen würde die Schleife nie enden."
     ],
     beispiel:'for (let i = 1; i <= 3; i++) {\n  console.log(i);\n}',
     aufgabe:"Schreib eine for-Schleife, die die Zahlen 1 bis 5 einzeln loggt.",
@@ -3788,8 +2298,9 @@ lessons: [
     quiz:{ frage:"Wie oft läuft for(let i=0; i<3; i++) durch?", optionen:["2 mal","3 mal","4 mal","unendlich"], richtig:1 }
   },
   {
-    title:"Funktionen", konzept:"Code bündeln",
+    id:"funktionen", title:"Funktionen", konzept:"Code bündeln",
     erklaerung:[
+      "Warum das wichtig ist: Wiederholt sich derselbe Rechenschritt an mehreren Stellen im Code, willst du ihn nicht jedes Mal neu hinschreiben. Eine Funktion ist wie ein Rezept: einmal aufschreiben, beliebig oft nachkochen.",
       "Eine Funktion bündelt Code, den du wiederverwenden willst: function name(parameter) { return ...; }.",
       "return gibt einen Wert an die Stelle zurück, von der die Funktion aufgerufen wurde."
     ],
@@ -3802,9 +2313,10 @@ lessons: [
     quiz:{ frage:"Womit gibt eine Funktion einen Wert an den Aufrufer zurück?", optionen:["return","output","console.log","give"], richtig:0 }
   },
   {
-    title:"Arrays", konzept:"Listen von Werten",
+    id:"arrays", title:"Arrays", konzept:"Listen von Werten",
     erklaerung:[
-      "Ein Array ist eine geordnete Liste: let obst = [\"Apfel\", \"Birne\"]. Zugriff über Index, beginnend bei 0.",
+      "Warum das wichtig ist: Für eine einzelne Zahl reicht eine Variable. Aber eine Einkaufsliste mit zehn Dingen? Dafür brauchst du eine nummerierte Liste, auf der alle Einträge zusammen an einem Ort liegen.",
+      "Ein Array ist genau das: let obst = [\"Apfel\", \"Birne\"]. Zugriff über Index, beginnend bei 0.",
       "obst[0] ist also \"Apfel\", obst[1] ist \"Birne\"."
     ],
     beispiel:'let obst = ["Apfel", "Birne"];\nconsole.log(obst[0]);',
@@ -3816,8 +2328,9 @@ lessons: [
     quiz:{ frage:"Welchen Index hat das erste Element eines Arrays?", optionen:["0","1","-1","erstes"], richtig:0 }
   },
   {
-    title:"Objekte", konzept:"Eigenschaften bündeln",
+    id:"objekte", title:"Objekte", konzept:"Eigenschaften bündeln",
     erklaerung:[
+      "Warum das wichtig ist: Ein Array ist gut für gleichartige Dinge in einer Reihenfolge. Aber ein Werkzeug mit mehreren benannten Eigenschaften (Titel, Dauer, Ort) passt nicht in eine einfache Liste – dafür brauchst du ein ausgefülltes Formular mit benannten Feldern.",
       "Ein Objekt bündelt zusammengehörige Werte unter benannten Eigenschaften: { name: \"Sascha\", beruf: \"Trainer\" }.",
       "Zugriff über den Punkt: person.name."
     ],
@@ -3830,9 +2343,9 @@ lessons: [
     quiz:{ frage:"Wie greift man auf eine Objekt-Eigenschaft zu?", optionen:["objekt->eigenschaft","objekt[eigenschaft:0]","objekt.eigenschaft","eigenschaft(objekt)"], richtig:2 }
   },
   {
-    title:"Mini-Projekt", konzept:"Alles kombiniert",
+    id:"mini-projekt", title:"Mini-Projekt", konzept:"Alles kombiniert",
     erklaerung:[
-      "Letzter Schritt: Array, Schleife und Funktion zusammen. Das ist der typische Aufbau vieler echter Programme.",
+      "Warum das wichtig ist: Echte Programme bestehen fast nie aus nur einem Baustein – meistens arbeiten Array, Schleife und Funktion zusammen. Das übst du jetzt einmal am Stück.",
       "Aufgabe: eine Funktion, die für jeden Namen in einem Array eine Begrüßung ausgibt."
     ],
     beispiel:'function begruessung(n){ return "Hallo " + n + "!"; }\nlet team = ["Julia","Christian"];\nfor (let i = 0; i < team.length; i++) {\n  console.log(begruessung(team[i]));\n}',
@@ -3849,8 +2362,9 @@ lessons: [
 
 function aktiverKurs(){ return LERNKURSE[kursState.kursId]; }
 function aktiveLessons(){ return LERNKURSE[kursState.kursId].lessons; }
+function aktiveLessonIndex(){ return aktiveLessons().findIndex(l=>l.id===kursState.currentId); }
 
-let kursState = { kursId:null, completed:[], current:0 };
+let kursState = { kursId:null, completed:[], currentId:null };
 let kursLoadedIds = new Set();
 
 function kursRunSandboxed(code){
@@ -3885,8 +2399,19 @@ async function oeffneKurs(kursId, speichern=true){
       const alt = await storeGet('kursFortschritt');
       if(alt && Array.isArray(alt.completed)) gespeichert = alt;
     }
-    kursState.completed = (gespeichert && Array.isArray(gespeichert.completed)) ? gespeichert.completed : [];
-    kursState.current = (gespeichert && typeof gespeichert.current === 'number') ? gespeichert.current : 0;
+    const gueltigeIds = aktiveLessons().map(l=>l.id);
+    const istAltesFormat = gespeichert && Array.isArray(gespeichert.completed) && gespeichert.completed.some(x=> typeof x === 'number');
+    if(istAltesFormat){
+      // Alte, positionsbasierte Speicherung kann nach Modul-Änderungen nicht mehr sicher zugeordnet werden
+      kursState.completed = [];
+      kursState.currentId = gueltigeIds[0];
+      zeigeToast('Kursaufbau wurde erweitert – Fortschritt wurde einmalig zurückgesetzt.');
+    }else{
+      const rohCompleted = (gespeichert && Array.isArray(gespeichert.completed)) ? gespeichert.completed : [];
+      kursState.completed = rohCompleted.filter(id=> gueltigeIds.includes(id));
+      const rohCurrent = gespeichert && gespeichert.currentId;
+      kursState.currentId = gueltigeIds.includes(rohCurrent) ? rohCurrent : gueltigeIds[0];
+    }
     kursLoadedIds.add(kursId);
   }
   document.getElementById('startScreen').style.display = 'none';
@@ -3897,69 +2422,39 @@ async function oeffneKurs(kursId, speichern=true){
 }
 
 function schliesseKurs(){
-  kursVorlesenAktiv = false;
   zeigeStartbildschirm();
 }
 
 async function kursSpeichern(){
-  await storeSet('kursFortschritt_' + kursState.kursId, { completed: kursState.completed, current: kursState.current });
+  await storeSet('kursFortschritt_' + kursState.kursId, { completed: kursState.completed, currentId: kursState.currentId });
 }
 
-function kursWaehleModul(i){
-  kursState.current = i;
-  kursRender();
-}
-
-function kursRender(){
-  if(kursVorlesenAktiv) kursRenderVorlesenModus();
-  else kursRenderAll();
-}
-
-function kursZeigeUebersicht(){
-  kursVorlesenAktiv = false;
-  const ov = document.getElementById('kursOverlay');
-  const rows = aktiveLessons().map((m,i) => {
-    const fertig = kursState.completed.includes(i);
-    const aktuell = i === kursState.current;
-    const cls = 'kursUebersichtZeile' + (fertig ? ' done' : '') + (aktuell ? ' aktuell' : '');
-    return `<div class="${cls}" onclick="kursWaehleModul(${i})">
-      <span class="kursUebersichtNr">${fertig ? '✓' : (i+1)}</span>
-      <div class="kursUebersichtInfo">
-        <div class="kursUebersichtTitel">${escapeHTML(m.title)}</div>
-        <div class="kursUebersichtKonzept">${escapeHTML(m.konzept)}</div>
-      </div>
-    </div>`;
-  }).join('');
-  ov.innerHTML = `
-    <div class="kursTop">
-      <img src="icon-180.png" alt="" class="h1Icon" onclick="schliesseKurs()" style="cursor:pointer;">
-      <h2>${aktiverKurs().icon} ${escapeHTML(aktiverKurs().titel)}</h2>
-    </div>
-    <div class="kursBody">
-      <div class="kursEyebrow">${kursState.completed.length} von ${aktiveLessons().length} Modulen abgeschlossen</div>
-      <div class="kursUebersichtListe">${rows}</div>
-    </div>
-    <nav class="bottomNav">
-      <button class="navBtn active" onclick="kursZeigeUebersicht()"><img src="nav_home_tempel.png" class="navIcon">Übersicht</button>
-      <button class="navBtn" onclick="kursToggleVorlesen()"><img src="nav_audio_welle.png" class="navIcon">Vorlesen</button>
-      <button class="navBtn" onclick="kursOeffneUebenWahl()"><img src="nav_gehirn_gruen.png" class="navIcon">Üben</button>
-      <button class="navBtn" onclick="zeigeFortschrittKurs()"><img src="nav_fortschritt_chart.png" class="navIcon">Fortschritt</button>
-      <button class="navBtn" onclick="document.getElementById('kursMehrDialog').showModal()"><span>⋯</span>Mehr</button>
-    </nav>`;
+function kursWaehleModul(id){
+  kursState.currentId = id;
+  kursRenderAll();
 }
 
 function kursReset(){
   const sicher = confirm('Fortschritt in „' + aktiverKurs().titel + '" wirklich zurücksetzen?');
   if(!sicher) return;
   kursState.completed = [];
-  kursState.current = 0;
+  kursState.currentId = aktiveLessons()[0].id;
   kursSpeichern();
   kursRenderAll();
 }
 
+function kursTrackHTML(){
+  return aktiveLessons().map((m,i)=>{
+    const cls = 'kursDot' + (kursState.completed.includes(m.id)?' done':'') + (m.id===kursState.currentId?' active':'');
+    return `<div class="${cls}" onclick="kursWaehleModul('${m.id}')">${kursState.completed.includes(m.id)?'✓':(i+1)}</div>`;
+  }).join('');
+}
+
 function kursRenderAll(){
   const ov = document.getElementById('kursOverlay');
-  const l = aktiveLessons()[kursState.current];
+  const idx = aktiveLessonIndex();
+  const l = aktiveLessons()[idx];
+
   const quizHTML = l.quiz ? `
     <div class="kursLabel">Kurzcheck</div>
     <div class="kursCard">
@@ -3972,13 +2467,14 @@ function kursRenderAll(){
 
   ov.innerHTML = `
     <div class="kursTop">
-      <img src="icon-180.png" alt="" class="h1Icon" onclick="schliesseKurs()" style="cursor:pointer;">
+      <button class="uebungCloseBtn" onclick="schliesseKurs()">✕</button>
       <h2>${aktiverKurs().icon} ${escapeHTML(aktiverKurs().titel)}</h2>
       <button class="iconBtn" onclick="stopVorlesen()" style="background:transparent;border:none;font-size:0.9rem;" title="Vorlesen stoppen">⏹</button>
       <button class="iconBtn" onclick="kursReset()" style="background:transparent;border:none;font-size:0.75rem;color:var(--text-muted);">Zurücksetzen</button>
     </div>
     <div class="kursBody">
-      <div class="kursEyebrow">Modul ${kursState.current+1} von ${aktiveLessons().length} · ${escapeHTML(l.konzept)}</div>
+      <div class="kursTrack">${kursTrackHTML()}</div>
+      <div class="kursEyebrow">Modul ${idx+1} von ${aktiveLessons().length} · ${escapeHTML(l.konzept)}</div>
       <div class="kursTitel">${escapeHTML(l.title)}</div>
       <div class="kursCard">
         ${l.erklaerung.map(p=>`<p>${escapeHTML(p)}</p>`).join('')}
@@ -4010,127 +2506,10 @@ function kursRenderAll(){
       ${quizHTML}
 
       <div class="kursNavRow">
-        <button class="kursNavBtn" onclick="kursVorheriges()" ${kursState.current===0?'disabled':''}>← Zurück</button>
-        <button class="kursNavBtn primary" onclick="kursNaechstes()">${kursState.current===aktiveLessons().length-1?'Fertig':'Weiter →'}</button>
+        <button class="kursNavBtn" onclick="kursVorheriges()" ${idx===0?'disabled':''}>← Zurück</button>
+        <button class="kursNavBtn primary" onclick="kursNaechstes()">${idx===aktiveLessons().length-1?'Fertig':'Weiter →'}</button>
       </div>
-    </div>
-    <nav class="bottomNav">
-      <button class="navBtn" onclick="kursZeigeUebersicht()"><img src="nav_home_tempel.png" class="navIcon">Übersicht</button>
-      <button class="navBtn" onclick="kursToggleVorlesen()"><img src="nav_audio_welle.png" class="navIcon">Vorlesen</button>
-      <button class="navBtn" onclick="kursOeffneUebenWahl()"><img src="nav_gehirn_gruen.png" class="navIcon">Üben</button>
-      <button class="navBtn" onclick="zeigeFortschrittKurs()"><img src="nav_fortschritt_chart.png" class="navIcon">Fortschritt</button>
-      <button class="navBtn" onclick="document.getElementById('kursMehrDialog').showModal()"><span>⋯</span>Mehr</button>
-    </nav>`;
-}
-
-function kursOeffneUebenWahl(){
-  const l = aktiveLessons()[kursState.current];
-  const box = document.getElementById('kursUebenWahlListe');
-  let html = `<button class="mehrItem" onclick="document.getElementById('kursUebenWahlDialog').close(); kursSpringeZuUebung();">✏️ Zur Code-Übung dieses Moduls</button>`;
-  if(l.quiz){
-    html += `<button class="mehrItem" onclick="document.getElementById('kursUebenWahlDialog').close(); kursSpringeZuQuiz();">❓ Zum Kurzcheck-Quiz dieses Moduls</button>`;
-  }
-  box.innerHTML = html;
-  document.getElementById('kursUebenWahlDialog').showModal();
-}
-
-function kursSpringeZuUebung(){
-  const feld = document.getElementById('kursUebungInput');
-  if(feld){ feld.scrollIntoView({behavior:'smooth', block:'center'}); feld.focus(); }
-}
-
-function kursSpringeZuQuiz(){
-  const feld = document.getElementById('kursQuizOptionen');
-  if(feld) feld.scrollIntoView({behavior:'smooth', block:'center'});
-}
-
-/* ---------- Vorlesen-Modus im Kurs (analog zum Seminar: Liste einzeln abspielbarer Abschnitte) ---------- */
-let kursVorlesenAktiv = false;
-
-function kursToggleVorlesen(){
-  kursVorlesenAktiv = !kursVorlesenAktiv;
-  if(kursVorlesenAktiv) kursRenderVorlesenModus();
-  else kursRenderAll();
-}
-
-function kursRenderVorlesenModus(){
-  const ov = document.getElementById('kursOverlay');
-  const l = aktiveLessons()[kursState.current];
-  const abschnitte = [
-    { label: 'Erklärung', typ: 'fach', text: l.erklaerung.join(' ') },
-    { label: 'Beispielcode', typ: 'ablauf', text: l.beispiel },
-    { label: 'Aufgabe', typ: 'reflexion', text: l.aufgabe },
-  ];
-  const zeilenHTML = abschnitte.map((a,i) => `
-    <div class="audioRow ${a.typ}">
-      <div class="info">
-        <h4>${escapeHTML(a.label)}</h4>
-        <div class="txtPrev">${escapeHTML(a.text.slice(0,90))}${a.text.length>90?'…':''}</div>
-      </div>
-      <button class="playBtn" onclick="kursSprich(${JSON.stringify(a.text)})">▶</button>
-    </div>`).join('');
-  ov.innerHTML = `
-    <div class="kursTop">
-      <img src="icon-180.png" alt="" class="h1Icon" onclick="schliesseKurs()" style="cursor:pointer;">
-      <h2>${aktiverKurs().icon} Vorlesen · Modul ${kursState.current+1}</h2>
-    </div>
-    <div class="kursBody">
-      <div class="allePlayBar">
-        <button class="iconBtn" onclick="kursAllesVorlesen()">▶ Alles vorlesen</button>
-        <button class="iconBtn" onclick="stopVorlesen()">■ Stopp</button>
-      </div>
-      <div class="audioList">${zeilenHTML}</div>
-    </div>
-    <nav class="bottomNav">
-      <button class="navBtn" onclick="kursZeigeUebersicht()"><img src="nav_home_tempel.png" class="navIcon">Übersicht</button>
-      <button class="navBtn active" onclick="kursToggleVorlesen()"><img src="nav_audio_welle.png" class="navIcon">Vorlesen</button>
-      <button class="navBtn" onclick="kursOeffneUebenWahl()"><img src="nav_gehirn_gruen.png" class="navIcon">Üben</button>
-      <button class="navBtn" onclick="zeigeFortschrittKurs()"><img src="nav_fortschritt_chart.png" class="navIcon">Fortschritt</button>
-      <button class="navBtn" onclick="document.getElementById('kursMehrDialog').showModal()"><span>⋯</span>Mehr</button>
-    </nav>`;
-}
-
-function kursAllesVorlesen(){
-  const l = aktiveLessons()[kursState.current];
-  alleVorlesen([
-    { titel: 'Erklärung', text: l.erklaerung.join(' ') },
-    { titel: 'Beispielcode', text: l.beispiel },
-    { titel: 'Aufgabe', text: l.aufgabe },
-  ]);
-}
-
-function zeigeFortschrittKurs(){
-  const body = document.getElementById('fortschrittBody');
-  const lvl = berechneLevel(spielstand.punkte || 0);
-  const heute = heuteISO();
-  const punkteHeute = (spielstand.tagesPunkte && spielstand.tagesPunkte[heute]) || 0;
-  const tageszielPct = Math.min(100, Math.round((punkteHeute / TAGESZIEL_PUNKTE) * 100));
-  storeGet('aktivitaet').then(akt=>{
-    const aktivitaet = akt || {};
-    const streak = berechneStreak(aktivitaet);
-    const freigeschaltet = ABZEICHEN_DEFS.filter(d => (spielstand.abzeichen||[]).includes(d.id));
-    let html = '';
-    html += `<div class="levelZeile">
-      <div class="levelKopf"><span>🏆 Level ${lvl.level}</span><span>${spielstand.punkte || 0} Punkte</span></div>
-      <div class="fortschrittBar"><div style="width:${Math.round(lvl.progress*100)}%; background:#c9a521;"></div></div>
     </div>`;
-    html += `<div class="levelZeile">
-      <div class="levelKopf"><span>🎯 Tagesziel</span><span>${punkteHeute}/${TAGESZIEL_PUNKTE} Punkte</span></div>
-      <div class="fortschrittBar"><div style="width:${tageszielPct}%; background:#3f8a58;"></div></div>
-    </div>`;
-    html += `<div class="abzeichenReihe">` +
-      ABZEICHEN_DEFS.map(d => {
-        const frei = (spielstand.abzeichen||[]).includes(d.id);
-        return `<div class="abzeichenChip${frei ? '' : ' gesperrt'}" title="${escapeHTML(d.titel)}">${d.icon}</div>`;
-      }).join('') +
-      `</div>
-    <div class="abzeichenLabel">${freigeschaltet.length}/${ABZEICHEN_DEFS.length} Abzeichen freigeschaltet</div>`;
-    html += `<div class="streakZeile">🔥 <strong>${streak}</strong> Tag${streak===1?'':'e'} in Folge geübt</div>`;
-    html += aktivitaetsStreifenHTML(aktivitaet);
-    html += fortschrittZeileHTML('Kurs-Module', kursState.completed.length, aktiveLessons().length, true);
-    body.innerHTML = html;
-    document.getElementById('fortschrittDialog').showModal();
-  });
 }
 
 function kursSprich(text){
@@ -4140,20 +2519,20 @@ function kursSprich(text){
   speechSynthesis.speak(utter);
 }
 function kursVorleseErklaerung(){
-  const l = aktiveLessons()[kursState.current];
+  const l = aktiveLessons()[aktiveLessonIndex()];
   kursSprich(l.erklaerung.join(' '));
 }
 function kursVorleseBeispiel(){
-  const l = aktiveLessons()[kursState.current];
+  const l = aktiveLessons()[aktiveLessonIndex()];
   kursSprich(l.beispiel);
 }
 function kursVorleseAufgabe(){
-  const l = aktiveLessons()[kursState.current];
+  const l = aktiveLessons()[aktiveLessonIndex()];
   kursSprich(l.aufgabe);
 }
 
 function kursBeispielAusfuehren(){
-  const l = aktiveLessons()[kursState.current];
+  const l = aktiveLessons()[aktiveLessonIndex()];
   kursRenderConsole(document.getElementById('kursBeispielConsole'), kursRunSandboxed(l.beispiel));
 }
 
@@ -4163,7 +2542,7 @@ function kursUebungAusfuehren(){
 }
 
 async function kursUebungPruefen(){
-  const l = aktiveLessons()[kursState.current];
+  const l = aktiveLessons()[aktiveLessonIndex()];
   const code = document.getElementById('kursUebungInput').value;
   const result = kursRunSandboxed(code);
   kursRenderConsole(document.getElementById('kursUebungConsole'), result);
@@ -4178,21 +2557,19 @@ async function kursUebungPruefen(){
   fb.className = 'kursFeedback ' + (check.ok ? 'ok' : 'bad');
   fb.textContent = check.msg;
   kursSprich(check.msg);
-  if(check.ok && !kursState.completed.includes(kursState.current)){
-    kursState.completed.push(kursState.current);
+  if(check.ok && !kursState.completed.includes(l.id)){
+    kursState.completed.push(l.id);
     await kursSpeichern();
-    await vergebePunkte(15, true);
-    markiereAktivitaetHeute();
+    document.querySelector('.kursTrack').innerHTML = kursTrackHTML();
   }
 }
 
 function kursQuizAntworten(i){
-  const l = aktiveLessons()[kursState.current];
+  const l = aktiveLessons()[aktiveLessonIndex()];
   const buttons = document.querySelectorAll('#kursQuizOptionen .kursQuizOpt');
   buttons.forEach(b=>b.disabled = true);
   const fb = document.getElementById('kursQuizFeedback');
-  const richtig = (i === l.quiz.richtig);
-  if(richtig){
+  if(i === l.quiz.richtig){
     buttons[i].classList.add('richtig');
     fb.className = 'kursFeedback ok';
     fb.textContent = 'Richtig.';
@@ -4202,22 +2579,16 @@ function kursQuizAntworten(i){
     fb.className = 'kursFeedback bad';
     fb.textContent = 'Nicht ganz – die richtige Antwort ist markiert.';
   }
-  vergebePunkte(richtig ? 10 : 2, richtig);
-  markiereAktivitaetHeute();
 }
 
 async function kursVorheriges(){
-  if(kursState.current>0){ kursState.current--; await kursSpeichern(); kursRender(); }
+  const idx = aktiveLessonIndex();
+  if(idx>0){ kursState.currentId = aktiveLessons()[idx-1].id; await kursSpeichern(); kursRenderAll(); }
 }
 async function kursNaechstes(){
-  if(kursState.current<aktiveLessons().length-1){ kursState.current++; await kursSpeichern(); kursRender(); }
+  const idx = aktiveLessonIndex();
+  if(idx<aktiveLessons().length-1){ kursState.currentId = aktiveLessons()[idx+1].id; await kursSpeichern(); kursRenderAll(); }
   else{ schliesseKurs(); }
-}
-
-if('serviceWorker' in navigator){
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('service-worker.js').catch(() => {});
-  });
 }
 
 init();
