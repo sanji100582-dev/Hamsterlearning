@@ -298,6 +298,12 @@
   .storyBlock .detailBody::after{content:"“"; font-style:normal; font-weight:700; opacity:0.5;}
   .sprachTranskript{margin-top:10px; padding-top:10px; border-top:1px dashed rgba(0,0,0,0.12);}
   .sprachTranskriptLabel{font-size:0.76rem; font-weight:700; color:#6b551a; margin-bottom:6px;}
+  .archivZeile{
+    background:var(--karte-bg); border:1px solid rgba(0,0,0,0.08); border-radius:10px;
+    padding:12px 14px; margin-bottom:10px;
+  }
+  .archivZeileTitel{font-weight:600; font-size:0.9rem; margin-bottom:8px; color:var(--text-main);}
+  .archivZeileBtns{display:flex; gap:8px; flex-wrap:wrap;}
   .lernMarker{
     background:linear-gradient(180deg, transparent 55%, var(--gelb) 55%);
     padding:0 1px; border-radius:2px; font-weight:600;
@@ -873,6 +879,8 @@
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); openSeminarBearbeiten();">✏️ Aktuelles Seminar bearbeiten</button>
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); oeffneSeminarWechsel();">🔀 Seminar wechseln</button>
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); zeigeTagebuch();">📔 Lerntagebuch</button>
+      <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); archiviereAktuellesSeminar();">📦 Aktuelles Seminar archivieren</button>
+      <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); oeffneArchiv();">🗂 Archiv ansehen</button>
       <button class="mehrItem" onclick="document.getElementById('mehrDialog').close(); loescheAktuellesSeminar();">🗑 Aktuelles Seminar löschen</button>
       <button class="mehrItem" onclick="loadTemplate('verhandeln_pm'); document.getElementById('mehrDialog').close();">⤓ Vorlage „Verhandeln im PM-Alltag" laden</button>
       <button class="mehrItem" onclick="zufallskarte(); document.getElementById('mehrDialog').close();">🎲 Zufallskarte</button>
@@ -920,6 +928,19 @@
     <div id="tagebuchBody"></div>
     <div class="modal-actions">
       <button class="cancel" onclick="document.getElementById('tagebuchDialog').close()">Schließen</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="archivDialog" class="detailDialog">
+  <div class="modalInner">
+    <div class="detailHeader">
+      <h2>🗂 Archiv</h2>
+      <button class="iconBtn" onclick="document.getElementById('archivDialog').close()" style="background:#e6dfc4;color:#4a4a3a;">✕</button>
+    </div>
+    <div id="archivListe"></div>
+    <div class="modal-actions">
+      <button class="cancel" onclick="document.getElementById('archivDialog').close()">Schließen</button>
     </div>
   </div>
 </dialog>
@@ -1475,8 +1496,10 @@ async function init(){
   await ladeSpielstand();
   seminare = (await storeGet('seminare')) || [];
   const last = await storeGet('letztesSeminar');
-  if(seminare.length){
-    aktuellesSeminarId = (last && seminare.find(s=>s.id===last)) ? last : seminare[0].id;
+  const aktiveSem = seminare.filter(s=>!s.archiviert);
+  if(aktiveSem.length){
+    const letztesAktiv = last && aktiveSem.find(s=>s.id===last);
+    aktuellesSeminarId = letztesAktiv ? last : aktiveSem[0].id;
     karten = (await storeGet('karten_' + aktuellesSeminarId)) || [];
     await ladeLernstand(aktuellesSeminarId);
     await ladeTagebuch(aktuellesSeminarId);
@@ -1519,9 +1542,10 @@ async function betreteSeminare(speichern=true){
 async function renderStartKacheln(){
   const cont = document.getElementById('startKacheln');
 
-  // Seminarvorbereitung: aggregierter Fortschritt über alle Seminare hinweg
+  // Seminarvorbereitung: aggregierter Fortschritt über alle AKTIVEN (nicht archivierten) Seminare hinweg
+  const aktiveSeminare = seminare.filter(s => !s.archiviert);
   let semSitzt = 0, semGesamt = 0;
-  for(const s of seminare){
+  for(const s of aktiveSeminare){
     const sKarten = (s.id === aktuellesSeminarId) ? karten : (await storeGet('karten_' + s.id)) || [];
     const sLernstand = (s.id === aktuellesSeminarId) ? lernstand : (await storeGet('lernstand_' + s.id)) || {};
     sKarten.filter(k=>!k.referenzNur).forEach(k=>{
@@ -1533,7 +1557,7 @@ async function renderStartKacheln(){
     });
   }
   const semPct = semGesamt ? Math.round((semSitzt/semGesamt)*100) : 0;
-  const semMeta = seminare.length ? `${seminare.length} Seminar${seminare.length===1?'':'e'} · ${semPct}% sitzen` : 'Noch kein Seminar angelegt';
+  const semMeta = aktiveSeminare.length ? `${aktiveSeminare.length} Seminar${aktiveSeminare.length===1?'':'e'} · ${semPct}% sitzen` : 'Noch kein Seminar angelegt';
 
   let html = `<div class="kachel start-seminar" onclick="betreteSeminare()">
     <div class="kachelTitel">📌 Seminarvorbereitung</div>
@@ -1681,13 +1705,21 @@ function renderSeminarTabs(){
 function oeffneSeminarWechsel(){
   const liste = document.getElementById('seminarWechselListe');
   liste.innerHTML = '';
-  seminare.forEach(s=>{
+  const aktive = seminare.filter(s => !s.archiviert);
+  aktive.forEach(s=>{
     const b = document.createElement('button');
     b.className = 'mehrItem' + (s.id === aktuellesSeminarId ? ' aktuell' : '');
     b.textContent = s.titel + (s.datum ? ' · ' + s.datum : '') + (s.id === aktuellesSeminarId ? ' (aktuell)' : '');
     b.onclick = () => { document.getElementById('seminarWechselDialog').close(); wechsleSeminar(s.id); };
     liste.appendChild(b);
   });
+  if(!aktive.length){
+    const hinweis = document.createElement('div');
+    hinweis.className = 'leer';
+    hinweis.style.padding = '10px';
+    hinweis.textContent = 'Keine aktiven Seminare – alle sind archiviert oder es existiert noch keins.';
+    liste.appendChild(hinweis);
+  }
   document.getElementById('seminarWechselDialog').showModal();
 }
 
@@ -1779,6 +1811,69 @@ async function loescheAktuellesSeminar(){
   renderSeminarTabs();
   renderBoard();
   zeigeToast('Seminar gelöscht');
+}
+
+/* ---------- Archiv ---------- */
+async function archiviereAktuellesSeminar(){
+  if(!aktuellesSeminarId){ zeigeToast('Kein Seminar ausgewählt'); return; }
+  const sem = seminare.find(s=>s.id===aktuellesSeminarId);
+  if(!sem) return;
+  sem.archiviert = true;
+  await storeSet('seminare', seminare);
+  const naechstes = seminare.find(s=>!s.archiviert);
+  aktuellesSeminarId = naechstes ? naechstes.id : null;
+  karten = aktuellesSeminarId ? ((await storeGet('karten_' + aktuellesSeminarId)) || []) : [];
+  await ladeLernstand(aktuellesSeminarId);
+  await ladeTagebuch(aktuellesSeminarId);
+  await storeSet('letztesSeminar', aktuellesSeminarId);
+  currentView = 'uebersicht';
+  renderSeminarTabs();
+  renderBoard();
+  zeigeToast('📦 Seminar archiviert – zu finden unter ⋯ Mehr → Archiv');
+}
+
+function oeffneArchiv(){
+  const liste = document.getElementById('archivListe');
+  const archivierte = seminare.filter(s=>s.archiviert);
+  if(!archivierte.length){
+    liste.innerHTML = '<div class="leer" style="padding:20px 10px;">Noch keine archivierten Seminare.</div>';
+  }else{
+    liste.innerHTML = archivierte.map(s => `
+      <div class="archivZeile">
+        <div class="archivZeileTitel">${escapeHTML(s.titel)}${s.datum ? ' · ' + escapeHTML(s.datum) : ''}</div>
+        <div class="archivZeileBtns">
+          <button class="sprachBtn" onclick="seminarWiederherstellen('${s.id}')">↩️ Wiederherstellen</button>
+          <button class="sprachBtn" style="color:#c4593a;" onclick="seminarEndgueltigLoeschen('${s.id}')">🗑 Endgültig löschen</button>
+        </div>
+      </div>`).join('');
+  }
+  document.getElementById('archivDialog').showModal();
+}
+
+async function seminarWiederherstellen(id){
+  const sem = seminare.find(s=>s.id===id);
+  if(!sem) return;
+  delete sem.archiviert;
+  await storeSet('seminare', seminare);
+  zeigeToast('Seminar wiederhergestellt');
+  oeffneArchiv();
+  renderSeminarTabs();
+}
+
+async function seminarEndgueltigLoeschen(id){
+  const sem = seminare.find(s=>s.id===id);
+  if(!sem) return;
+  const sicher = confirm(`„${sem.titel}" endgültig löschen? Das kann nicht rückgängig gemacht werden.`);
+  if(!sicher) return;
+  seminare = seminare.filter(s=>s.id!==id);
+  await storeSet('seminare', seminare);
+  window.localStorage.removeItem(LS_PREFIX + 'karten_' + id);
+  window.localStorage.removeItem(LS_PREFIX + 'lernstand_' + id);
+  window.localStorage.removeItem(LS_PREFIX + 'tagebuch_' + id);
+  await fotosFuerSeminarLoeschen(id);
+  await audiosFuerSeminarLoeschen(id);
+  zeigeToast('Endgültig gelöscht');
+  oeffneArchiv();
 }
 
 /* ---------- Navigation Übersicht ↔ Board ---------- */
