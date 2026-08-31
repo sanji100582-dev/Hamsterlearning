@@ -1895,7 +1895,6 @@ function waehleGruppe(typ, gruppe){
 }
 function toggleVorlesenModus(){
   modus = (modus === 'auditiv') ? 'visuell' : 'auditiv';
-  if(currentView === 'uebersicht') currentView = 'board';
   renderBoard();
 }
 function updateNavAktiv(){
@@ -2019,6 +2018,10 @@ function renderBoard(){
     return;
   }
   if(currentView === 'uebersicht'){
+    if(modus === 'auditiv'){
+      renderAuditiv(area, karten.filter(k=>k.typ==='fach'));
+      return;
+    }
     renderUebersicht(area);
     return;
   }
@@ -2545,7 +2548,7 @@ function renderAuditiv(area, liste){
     typLbl.textContent = TYP_LABEL[k.typ];
     const prev = document.createElement('div');
     prev.className = 'txtPrev';
-    prev.textContent = k.text.replace(/\n/g,' · ');
+    prev.textContent = klartext(k.text).replace(/\n/g,' · ');
     info.appendChild(h4);
     info.appendChild(typLbl);
     info.appendChild(prev);
