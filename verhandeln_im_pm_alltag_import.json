@@ -1,0 +1,311 @@
+{
+  "seminare": [
+    {
+      "id": "s_1788943262332",
+      "titel": "Verhandeln im PM-Alltag",
+      "datum": ""
+    }
+  ],
+  "kartenProSeminar": {
+    "s_1788943262332": [
+      {
+        "id": "k_1788943262332_0",
+        "typ": "ablauf",
+        "titel": "Einstieg & Zielklärung (09:00–09:30)",
+        "text": "Ankommen, Erwartungen sichtbar machen, Relevanz herstellen.\nKernbotschaft: Du bist nicht machtlos – es gibt Verhandlungsspielräume, die bewusst genutzt werden müssen.\n\nAblauf: 1) Begrüßung & Ankommen  2) Ziel/Nutzen des Tages transparent machen  3) Tagesagenda vorstellen  4) Erwartungen sammeln (Moderationskarten, clustern)  5) Marktfakten-Einstieg (RAM/GPU-Beispiel, PETT-Prinzip: Problematisieren → Informieren → Trainieren → Transferieren)  6) Blitzlicht: „Wann warst du zuletzt in einer schwierigen Lieferantensituation?“  7) Relevanz & Ausgangslage sichern.\n\nTrainerhinweis: Marktfakten bewusst ohne Zahlenfriedhof halten – ein bis zwei Kennzahlen reichen. Fokus auf Konsequenz für den PM-Alltag, nicht auf Marktanalyse. Blitzlicht kurz halten, freundlich bremsen bei Länge.\n\nStolperstellen: Zu langer Vortragsbeginn ohne Beteiligung. Erwartungen nur eingesammelt, nicht aufgegriffen. Marktfakten-Einstieg gerät zum Zahlenvortrag.",
+        "ord": 1
+      },
+      {
+        "id": "k_1788943262332_1",
+        "typ": "ablauf",
+        "titel": "Standortbestimmung (09:30–10:15)",
+        "text": "Ist-Analyse der eigenen Praxis – erst beschreiben, dann Muster ableiten.\nKernbotschaft: Erst konkrete Situation beschreiben, dann Muster ableiten – nicht umgekehrt.\n\nAblauf in 4 Schritten: 1) Konkrete Situation erinnern (letztes Lieferantengespräch)  2) Kurz schriftlich beschreiben (Ablauf, kein Urteil)  3) Mit Satzanfängen reflektieren  4) In Kleingruppen austauschen, Muster sammeln (Plenum-Spalten: „Das läuft schon gut“ / „Hier werden wir vorsichtig“ / „Hier bleibt Potenzial liegen“).\n\nTrainerhinweis: Bewusst nicht zu früh „Bitte reflektiere dein Verhalten“ sagen, sondern „anschauen“, „sichtbar machen“ – wirkt zugänglicher. Bei zögerlicher Gruppe: Skalenfrage „Wie sicher fühlst du dich 1–10?“ senkt die Einstiegshürde. Keine neue Geschichte nötig – Rückgriff auf die Auto-Geschichte aus Sequenz 1 reicht als Aktivierung.",
+        "ord": 2
+      },
+      {
+        "id": "k_1788943262332_2",
+        "typ": "ablauf",
+        "titel": "Hebel erkennen (10:30–11:30)",
+        "text": "Systematisch alle relevanten Hebel im PM-Einkauf erkennen und einordnen.\nKernbotschaft: Verhandeln heißt nicht nur Preis – neun Stellschrauben stehen zur Verfügung.\n\nAblauf: Einstieg (3 Min., Bridge zur RAM/GPU-Lage aus Sequenz 1) → Trainerinput Hebelrahmen (8–10 Min., je Hebel 1 Satz + 1 Beispiel) → Gruppenarbeit „Verhandlungsspielräume“ (20 Min., 3er-Gruppen, grün/gelb/rot-Einordnung, 2 Prio-Hebel wählen) → Plenum: Sammlung & Priorisierung mit Klebepunkten (15 Min.) → Analyse-Input: Hürden & Gegenargumente (10 Min.) → Abschluss & Transferaufgabe (4 Min., ein Hebel + ein Eröffnungssatz notieren).\n\nMaterial: Vorlage „Verhandlungsspielräume“, Klebepunkte, Beispielkatalog PM-Fälle.\nOptional bei Zeit: Short Roleplay zu den zwei meistgepunkteten Hebeln (10 Min.).",
+        "ord": 3
+      },
+      {
+        "id": "k_1788943262332_3",
+        "typ": "ablauf",
+        "titel": "NBB-Potenzial überzeugend einbringen (11:30–12:15)",
+        "text": "Perspektivwechsel: den eigenen Wert für den Hersteller klar benennen.\nKernbotschaft: Nicht nur fordern, sondern den eigenen Nutzen für den Hersteller klar benennen.\n\nAblauf: Einstieg mit Perspektivwechsel-Impuls → kurzer Trainerimpuls (Planbarkeit, Reichweite, Verlässlichkeit, Wachstum, Vermarktung, Sortiment, operative Einfachheit, Partnerschaft) → Partnerarbeit mit Canvas „Unser Verhandlungswert“ (3 Leitfragen) → gegenseitiges Feedback (Kriterien: konkret? Nutzen klar? glaubwürdig? einsetzbar? attraktivitätssteigernd?) → Reflexionsfragen im Plenum.\n\nWichtig für langjährige Kolleg:innen: eigene Potenziale werden oft als selbstverständlich übersehen. Jüngere Kolleg:innen gewinnen Sicherheit durch klare NBB-Argumentation.",
+        "ord": 4
+      },
+      {
+        "id": "k_1788943262332_4",
+        "typ": "ablauf",
+        "titel": "Gesprächsvorbereitung als Erfolgsfaktor (13:00–14:00)",
+        "text": "Checkliste, BATNA – Sicherheit entsteht durch Vorbereitung.\nKernbotschaft: Sicherheit entsteht durch Vorbereitung, nicht im Gespräch selbst.\n\nAblauf: Einstieg & Rahmung → Input zu 5 Kernelementen (Zielbild, Hebel, Einwände, Optionen/BATNA, Gesprächsstrategie) → Checkliste erklären → Einzelarbeit: echten/typischen Fall vorbereiten → Austausch in Kleingruppen mit Peer-Feedback → Plenum: Was verändert sich durch bessere Vorbereitung? → Verdichtung.\n\nTrainerhinweis: Möglichst mit echtem, anstehendem Fall arbeiten (erhöht Transfer). BATNA einfach erklären: „deine beste Alternative, falls du dich nicht einigst“. Auf Trennung Minimum/Wunsch achten.",
+        "ord": 5
+      },
+      {
+        "id": "k_1788943262332_5",
+        "typ": "ablauf",
+        "titel": "Fragetechniken & Gesprächssteuerung (14:00–14:45)",
+        "text": "5 Fragetypen zur aktiven Gesprächssteuerung.\nKernbotschaft: Wer besser fragt, muss weniger raten und führt das Gespräch aktiver.\n\nAblauf: Einstieg → Trainerinput 5 Fragearten (offen, konkretisierend, hypothetisch, Bedingungsfragen, spiegelnde Gegenfrage) inkl. Warnung vor Warum-Fragen → Demonstration am Beispiel → Tandemübung mit Rollenkarten (PM ↔ Lieferant:in mit verdeckter Hintergrundinfo) → Beobachtungsfokus → Plenum-Auswertung → Verdichtung.\n\nMaterial: Handout Fragetechniken, Rollenkarten mit verdeckten Lieferanten-Hintergründen (siehe Fach-Karten dieser Gruppe).",
+        "ord": 6
+      },
+      {
+        "id": "k_1788943262332_6",
+        "typ": "ablauf",
+        "titel": "Typische Lieferantenaussagen souverän kontern (15:00–16:00)",
+        "text": "Reaktionslogik bei Widerständen – erst verstehen, dann führen.\nKernbotschaft: Erst verstehen, dann führen – nicht sofort dagegenargumentieren.\n\nAblauf: Einstieg (Einwände entdramatisieren) → Input Reaktionslogik (5 Schritte) → Demonstration an einer Aussage → Rollenspiel-Erklärung (3er-Gruppen, Rotation) → Fallkarten einsetzen (4 Standardaussagen) → Zeitstruktur (2 Min. Briefing, 5 Min. Rollenspiel, 3 Min. Feedback) → Feedbackkriterien (Haltung, Fragen, Alternativen, Abschlussstärke) → Plenum-Auswertung → Verdichtung.\n\nMaterial: Fallkarten mit verdeckten Lieferanten-Hintergründen, Beobachtungsbogen Sequenz 7 (siehe Fach-Karten).",
+        "ord": 7
+      },
+      {
+        "id": "k_1788943262332_7",
+        "typ": "ablauf",
+        "titel": "Praxisfall: Vom Termin zur Verhandlung (16:00–16:40)",
+        "text": "Gesamtsimulation – alle Elemente im Zusammenspiel.\nKernbotschaft: Wirkung entsteht im Zusammenspiel aller Bausteine, nicht durch einen cleveren Satz.\n\nAblauf: Einstieg/Rahmung als „Generalprobe“ → Erinnerung an 4 Bausteine (Zielbild, Hebel, Fragen, Umgang mit Widerständen) → Aufbau der Simulation erklären (3er-Gruppen: PM / Lieferant:in / Beobachter:in) → Praxisfall setzen (1 zentral oder 2–3 Varianten) → 3 Min. Vorbereitung → 8 Min. Simulation → 4 Min. Gruppenfeedback → Plenum-Auswertung → Verdichtung durch Trainer.\n\nMaterial: 3 Varianten mit Rollenkarten (Weihnachtsaktion, Zubehör-Launch, Bestandsware – siehe Fach-Karten), Beobachtungsbogen Sequenz 8.",
+        "ord": 8
+      },
+      {
+        "id": "k_1788943262332_8",
+        "typ": "ablauf",
+        "titel": "Transfer & Abschluss (16:40–17:00)",
+        "text": "Maßnahmenplan – konkrete Umsetzung sichern.\nKernbotschaft: Wenige konkrete Maßnahmen schlagen viele diffuse Vorsätze.\n\nAblauf: Einstieg in den Transfer → Einzelarbeit mit Transferblatt (2–3 konkrete Maßnahmen) → Hürden kurz mitdenken → persönlichen Quick Win formulieren → Abschlussrunde im Plenum (Quick Win + nächster Schritt nennen) → Würdigung durch Trainer → Ausblick auf Vertiefung.\n\nTrainerhinweis: Maßnahmen nicht zu groß formulieren. Bei knappen Antworten mit Satzanfängen arbeiten („Ich werde in meinem nächsten Lieferantengespräch bewusst …“).",
+        "ord": 9
+      },
+      {
+        "id": "k_1788943262332_9",
+        "typ": "fach",
+        "titel": "Die 9 Verhandlungshebel",
+        "text": "3 · Hebel erkennen",
+        "gruppe": "Einkaufspreis – unmittelbarer Rabatt/Nettopreis, oft erstes Thema, selten das einzige Instrument. Beispiel: Bestellvolumen über 2 Quartale bündeln → zusätzlicher Mengenrabatt.\nWKZ – Herstellerunterstützung für Marketing/Abverkauf, verhandelbar gegen Sichtbarkeit/Aktionsvolumen. Beispiel: Banner-Platzierung + Newsletter zusagen → WKZ-Zuschuss.\nMarketingbudget – Geld/Leistungen für Kampagnen, wichtig für Abverkauf und Listung. Beispiel: exklusive Launch-Bewerbung → zusätzliches Kampagnenbudget.\nFrachtkosten – Übernahme/Anteil an Transportkosten, oft bei angepassten Lieferbedingungen möglich. Beispiel: größere Läger bündeln → Frachtanteil-Übernahme.\nZahlungsziele – längere Ziele verbessern Liquidität, oft gegen höhere Abnahmemengen verhandelbar.\nAktionen – Bündelaktionen, Promotionsrabatte, Zugaben, wirken direkt auf Absatz.\nExklusivitäten – Platzierung, exklusive Modelle, besondere Sortimentskonditionen.\nAbverkaufsunterstützung – Regalplatz, Displays, Trainings, Retourenregelung.\nAbnahmemenge/Liefergarantie – feste Abnahmemenge oder Vorausbestellung sichert bei Engpassprodukten (z. B. RAM, Grafikkarten) Priorität bei der Belieferung – nicht nur einen Preisvorteil."
+      },
+      {
+        "id": "k_1788943262332_10",
+        "typ": "fach",
+        "titel": "Weitere Hebel im Arbeitsblatt",
+        "text": "3 · Hebel erkennen",
+        "gruppe": "Zusätzlich zur Kernliste taucht im Arbeitsblatt „Verhandlungsspielräume“ auf:\nRetourenregelung – Rückgaben, Reklamationen, Retourenkontingente, oft flexibler als angenommen.\nVertragslaufzeit/Kündigungsfristen – Planungssicherheit gegen andere Zugeständnisse.\nForecast/Bestellbündelung – verlässliche Vorschauzahlen oder gebündelte Bestellungen schaffen Verhandlungsmasse."
+      },
+      {
+        "id": "k_1788943262332_11",
+        "typ": "fach",
+        "titel": "Hürden & Gegenargumente je Hebel",
+        "text": "3 · Hebel erkennen",
+        "gruppe": "„Unsere Margen sind zu knapp.“ → „Welche Unterstützung bräuchten Sie, damit wir zusätzliches Werbevolumen planen?“\nWKZ „Das Budget ist zentral gesteuert.“ → „Wäre eine projektbasierte Freigabe möglich, wenn wir Abverkaufszahlen vorlegen?“\nLieferengpass „Wir können aktuell nicht mehr liefern.“ → „Welche Abnahmemenge oder Vorausplanung bräuchten Sie von uns, um uns bei der Zuteilung höher zu priorisieren?“"
+      },
+      {
+        "id": "k_1788943262332_12",
+        "typ": "fach",
+        "titel": "Typische Reaktionen auf Blockaden",
+        "text": "3 · Hebel erkennen",
+        "gruppe": "„Wir bekommen WKZ nie“ → Frage: „Was genau hat dich schon versucht, WKZ zu verhandeln? Welche Gegenleistung wurde erwartet?“ (Ziel: Details herausarbeiten)\n„Frachtkosten sind ein No-Go“ → Frage: „Was wäre ein minimaler Kompromiss (z. B. Teilsumme, Mindestbestellwert)?“\n„Wir verhandeln nur Preis“ → Hinweis: Ein Paket aus kleineren Hebeln ist oft wertvoller als ein Nachlass.\n„Wir bekommen einfach nicht genug Ware“ → Frage: „Welche Abnahmemenge oder Vorausplanung bräuchte der Hersteller, um uns höher zu priorisieren?“"
+      },
+      {
+        "id": "k_1788943262332_13",
+        "typ": "fach",
+        "titel": "Arbeitsblatt: Verhandlungsspielräume",
+        "text": "3 · Hebel erkennen",
+        "gruppe": "Spalten: Hebel | Kurzbeschreibung | Konkretes Beispiel aus meinem Alltag | Nutzung (grün/gelb/rot) | Warum nicht genutzt? | Quick-Win-Idee.\nZeilen: Einkaufspreis, WKZ, Marketingbudget, Frachtkosten, Zahlungsziele, Aktionen/Aktionskonditionen, Exklusivitäten/Listung, Abverkaufsunterstützung/POS, Abnahmemenge/Liefergarantie, Retourenregelung, Vertragslaufzeit/Kündigungsfristen, Forecast/Bestellbündelung.\nNutzung in der Gruppenarbeit: pro Hebel ein Beispiel eintragen, grün/gelb/rot markieren, danach 2 Hebel mit größtem kurzfristigem Potenzial wählen.",
+        "referenzNur": true
+      },
+      {
+        "id": "k_1788943262332_14",
+        "typ": "fach",
+        "titel": "NBB-Perspektivwechsel – Leitfragen",
+        "text": "4 · NBB-Potenzial einbringen",
+        "gruppe": "Nicht nur fragen „Was bekomme ich?“, sondern klären: „Warum lohnt sich die Zusammenarbeit mit uns?“\nWas ist unser Nutzen für den Hersteller?\nWelche Zielgruppen oder Reichweiten können wir bieten?\nWelche Absatzchancen eröffnen wir?\nWas macht die Zusammenarbeit mit uns einfach oder attraktiv?\nWelche Erfolge, Daten oder Potenziale können wir anführen?\nWelche Gegenleistung können wir im Gegenzug erwarten?"
+      },
+      {
+        "id": "k_1788943262332_15",
+        "typ": "fach",
+        "titel": "Worauf Hersteller wirklich schauen",
+        "text": "4 · NBB-Potenzial einbringen",
+        "gruppe": "Hersteller entscheiden nicht nur nach Preis. Sie schauen auch auf: Planbarkeit, Reichweite, Verlässlichkeit, Wachstumspotenziale, Vermarktungschancen, Sortimentsentwicklung, operative Einfachheit, langfristige Partnerschaft.\nFeedbackkriterien für NBB-Argumente: konkret? Nutzen für den Hersteller klar erkennbar? glaubwürdig? im Gespräch einsetzbar? macht die Zusammenarbeit attraktiver?"
+      },
+      {
+        "id": "k_1788943262332_16",
+        "typ": "fach",
+        "titel": "Canvas: Unser Verhandlungswert",
+        "text": "4 · NBB-Potenzial einbringen",
+        "gruppe": "6 Felder – jeweils aus Sicht des Herstellers, nicht des Einkaufs beantworten:\n1 Nutzen für den Hersteller – Was bekommt er durch uns, was er woanders nicht bekommt?\n2 Zielgruppen & Reichweite – Welche Reichweite/Sichtbarkeit/Marktpräsenz können wir bieten?\n3 Absatzchancen – Wo ermöglichen wir Wachstum oder Zusatzgeschäft?\n4 Einfachheit & Attraktivität – Welche Verlässlichkeit/Professionalität bringen wir ein?\n5 Erfolge, Daten, Potenziale – Welche Potenziale von NBB werden noch zu wenig genutzt?\n6 Erwartete Gegenleistung – Welche Gegenleistung können wir im Gegenzug erwarten?",
+        "referenzNur": true
+      },
+      {
+        "id": "k_1788943262332_17",
+        "typ": "fach",
+        "titel": "Verhandlungs-Checkliste",
+        "text": "5 · Gesprächsvorbereitung",
+        "gruppe": "1 · Zielbild: Anlass/Thema, Mein Ziel, Mein Minimum (Untergrenze), Mein Wunsch (bestes realistisches Ergebnis).\n2 · Vorbereitung: Mögliche Verhandlungshebel, Erwartbare Einwände, Meine Antworten/Gegenfragen, Meine Optionen/Alternativen (BATNA).\n3 · Gesprächsführung: Mein erster Gesprächseinstieg, Mein gewünschter nächster Schritt.\n\nBATNA: die beste Alternative, falls keine Einigung erzielt wird.",
+        "referenzNur": true
+      },
+      {
+        "id": "k_1788943262332_18",
+        "typ": "fach",
+        "titel": "5 Kernelemente guter Vorbereitung",
+        "text": "5 · Gesprächsvorbereitung",
+        "gruppe": "Zielbild – Was willst du mindestens, was wäre gut, was wäre ideal?\nHebel – Welche Themen außer dem Preis kannst du einbringen?\nEinwände – Was wird die Gegenseite wahrscheinlich sagen?\nOptionen/Alternativen – Was ist dein Plan B? (BATNA als zentrale Quelle von Verhandlungsstärke)\nGesprächsstrategie – Was zuerst ansprechen, welche Fragen, wie eröffnen?"
+      },
+      {
+        "id": "k_1788943262332_19",
+        "typ": "fach",
+        "titel": "Fragetechniken – 5 Typen",
+        "text": "6 · Fragetechniken & Gesprächssteuerung",
+        "gruppe": "Offene Fragen – bringen zum Reden, machen Hintergründe sichtbar. „Wie ist diese Einschätzung entstanden?“\nKonkretisierende Fragen – machen vage Aussagen greifbar. „Was genau heißt in dem Fall nicht möglich?“\nHypothetische Fragen – öffnen den Denkraum. „Angenommen, wir erhöhen das Volumen – was wäre dann möglich?“\nBedingungsfragen – zielen auf Voraussetzungen. „Unter welchen Bedingungen wäre das möglich?“\nSpiegelnde/öffnende Gegenfrage – gibt den Ball zurück statt zu verteidigen. „Kein Budget – woran hängt das konkret?“\n\nGrundregel: Gute Fragen öffnen, schlechte engen ein oder lösen Abwehr aus. Vorsicht bei Warum-Fragen – wirken schnell wie Rechtfertigungsdruck."
+      },
+      {
+        "id": "k_1788943262332_20",
+        "typ": "fach",
+        "titel": "Rollenkarten Tandemübung (Fragetechniken)",
+        "text": "6 · Fragetechniken & Gesprächssteuerung",
+        "gruppe": "5 Aussagen mit verdeckter Lieferanten-Info – nur der Lieferantenrolle zeigen:\n\n„Da können wir preislich nichts mehr machen.“ Dahinter: Einkaufspreis ist nah an der Untergrenze, kleiner Nachlass nur bei mehr Volumen/Laufzeit.\n\n„WKZ ist dafür nicht vorgesehen.“ Dahinter: reguläres Budget ausgeschöpft, Projektbudget bei klarem Business Case möglich.\n\n„Das Thema ist intern schon entschieden.“ Dahinter: vorläufige, noch nicht finale Entscheidung – bei neuer Ausgangslage neu aufrollbar.\n\n„Das ist unser bestes Angebot.“ Dahinter: Kernpreis final, Spielraum bei Fracht/Zahlungsziel/Service.\n\n„Andere Händler akzeptieren das auch.“ Dahinter: stimmt nur teilweise – bei wichtigen/wachstumsstarken Partnern gelten Ausnahmen.\n\nGrundregel für die Lieferantenrolle: Wer nur pauschal nachfragt oder direkt gegenargumentiert, bekommt ein klares Nein. Wer konkretisiert, Bedingungen erfragt oder eine Gegenleistung anbietet, bekommt einen kleinen, realistischen Schritt Bewegung.",
+        "referenzNur": true
+      },
+      {
+        "id": "k_1788943262332_21",
+        "typ": "fach",
+        "titel": "Reaktionslogik bei Einwänden",
+        "text": "7 · Lieferantenaussagen kontern",
+        "gruppe": "1. Haltung bewahren – ruhig, sachlich, nicht defensiv.\n2. Einwand aufnehmen – zeigen, dass die Aussage gehört wurde.\n3. Klären/konkretisieren – Was genau steckt dahinter?\n4. Öffnen – Bedingungen, Alternativen, Nutzen erkunden.\n5. Abschließen – nächsten Schritt oder Bewegung sichern."
+      },
+      {
+        "id": "k_1788943262332_22",
+        "typ": "fach",
+        "titel": "Vier Standardsituationen",
+        "text": "7 · Lieferantenaussagen kontern",
+        "gruppe": "„Da können wir preislich nichts mehr machen.“ → Andere Hebel öffnen: „Welche anderen Themen – WKZ, Fracht, Zahlungsziel – wären denkbar?“\n„Das ist unser bestes Angebot.“ → Klären, worauf sich das bezieht: „Was wäre nötig, damit noch etwas möglich wird?“\n„Andere Händler akzeptieren das auch.“ → Nicht rechtfertigen, eigene Situation und beiderseitigen Nutzen zurückholen.\n„WKZ ist dieses Jahr nicht drin.“ → Aufnehmen → Klären („Woran hängt das – Budget, Timing, Format?“) → Öffnen → Alternative → Abschluss sichern."
+      },
+      {
+        "id": "k_1788943262332_23",
+        "typ": "fach",
+        "titel": "Fallkarten Rollenspiel (Sequenz 7)",
+        "text": "7 · Lieferantenaussagen kontern",
+        "gruppe": "3er-Gruppen: PM / Lieferant:in / Beobachter:in. Taktung: 2 Min. Briefing, 5 Min. Rollenspiel, 3 Min. Feedback, dann Rollenwechsel.\n\nFall 1 – „Da können wir preislich nichts mehr machen.“ Aufgabe PM: nicht auf Preis fixieren, andere Hebel öffnen.\nFall 2 – „Das ist unser bestes Angebot.“ Aufgabe PM: klären, worauf sich das bezieht, Bewegung über Alternativen erzeugen.\nFall 3 – „Andere Händler akzeptieren das auch.“ Aufgabe PM: nicht rechtfertigen, eigenen Nutzen ins Zentrum holen.\nFall 4 – „WKZ ist dieses Jahr nicht drin.“ Aufgabe PM: Einwand öffnen, Bedingungen klären, Alternativen verhandeln.\n\n(Verdeckte Lieferanten-Hintergründe entsprechen den Rollenkarten aus Sequenz 6.)",
+        "referenzNur": true
+      },
+      {
+        "id": "k_1788943262332_24",
+        "typ": "fach",
+        "titel": "Beobachtungsbogen Sequenz 7",
+        "text": "7 · Lieferantenaussagen kontern",
+        "gruppe": "Beobachtete Person | Fall/Karte | Runde\n1 Haltung – ruhig, sachlich, präsent oder defensiv?\n2 Fragen – gute offene/konkretisierende Fragen? Einwand wirklich geöffnet?\n3 Alternativen – andere Hebel/Optionen ins Spiel gebracht?\n4 Abschlussstärke – klarer nächster Schritt gesichert?\nStärkste Beobachtung für das Plenum notieren.",
+        "referenzNur": true
+      },
+      {
+        "id": "k_1788943262332_25",
+        "typ": "fach",
+        "titel": "Aufbau der Praxisfall-Simulation",
+        "text": "8 · Praxisfall: Vom Termin zur Verhandlung",
+        "gruppe": "3er-Gruppen: Person A verhandelt als PM, Person B als Lieferant:in, Person C beobachtet.\nZeitstruktur: 3 Min. Vorbereitung in der Gruppe, 8 Min. Simulation, 4 Min. Gruppenfeedback.\nVier Bausteine vorab erinnern: klares Zielbild, Verhandlungshebel, gute Fragen, souveräner Umgang mit Widerständen.\nFeedback-Reihenfolge: erst Beobachtende, dann Lieferantenrolle, dann die verhandelnde Person selbst – Verhalten und Wirkung besprechen, nicht die Person bewerten."
+      },
+      {
+        "id": "k_1788943262332_26",
+        "typ": "fach",
+        "titel": "Beobachtungsbogen Sequenz 8",
+        "text": "8 · Praxisfall: Vom Termin zur Verhandlung",
+        "gruppe": "Beobachtete Person | Fall/Karte | Runde\n1 Zielklarheit – war erkennbar, was erreicht werden sollte?\n2 Hebeleinsatz – neben Preis weitere Hebel genutzt?\n3 Fragen – offene/konkretisierende/bedingungsorientierte Fragen gestellt?\n4 Umgang mit Widerstand – Einwände aufgenommen, geöffnet, weitergeführt?\n5 Abschluss – klarer nächster Schritt oder verwertbares Ergebnis?\n6 Wirkung – was hat beim Gegenüber spürbar etwas bewegt?\nStärkste Beobachtung für das Plenum notieren.",
+        "referenzNur": true
+      },
+      {
+        "id": "k_1788943262332_27",
+        "typ": "fach",
+        "titel": "Praxisfall-Varianten (3 Rollenspiele)",
+        "text": "8 · Praxisfall: Vom Termin zur Verhandlung",
+        "gruppe": "Variante 1 – Weihnachtsaktion Notebook-Serie: Preisnachlass abgelehnt. PM-Ziel: WKZ + Sichtbarkeit trotzdem sichern, im Gegenzug Mindestabnahme + 4 Wochen Exklusivität anbieten. Lieferant: Preis fix, WKZ an Gegenleistung gebunden.\n\nVariante 2 – Zubehör-Launch: Einführungsrabatt abgelehnt. PM-Ziel: Marketingbudget + Vorab-Kontingent ohne Preisnachlass, im Gegenzug prominente Platzierung + Newsletter anbieten. Lieferant: Preis fix, Budget bei nachweisbarer Reichweite möglich.\n\nVariante 3 – Bestandsware: „Das ist unser bestes Angebot.“ PM-Ziel: längeres Zahlungsziel + Frachtbeteiligung, im Gegenzug 2-Quartals-Abnahmezusage anbieten. Lieferant: Preis final, Zahlungsziel/Fracht verhandelbar bei Planungssicherheit.",
+        "referenzNur": true
+      },
+      {
+        "id": "k_1788943262332_28",
+        "typ": "fach",
+        "titel": "Transferblatt – Struktur",
+        "text": "9 · Transfer & Abschluss",
+        "gruppe": "Meine 2–3 Maßnahmen für die nächsten Lieferantengespräche (Satzstarter: „Ich werde in meinem nächsten Lieferantengespräch bewusst …“, „Ein Hebel, den ich aktiver nutzen will, ist …“, „Ich möchte künftig nicht mehr sofort …“).\nHürden mitdenken: Was könnte mich ins alte Muster bringen? Was brauche ich, um dranzubleiben?\nMein Quick Win: die eine Sache, die ich sehr zeitnah umsetzen kann. Woran merke ich in zwei Wochen, dass ich es wirklich umgesetzt habe?",
+        "referenzNur": true
+      },
+      {
+        "id": "k_1788943262332_29",
+        "typ": "fach",
+        "titel": "Storytelling: Auto-Beispiel (Bridge Sequenz 1)",
+        "text": "1 · Einstieg, Begrüßung & Zielklärung",
+        "gruppe": "Auto gekauft: online 19.000 €, vor Ort 20.000 € auf dem Schild. Vorsichtig gesagt: „Ich hab's online aber für 19.000 gesehen.“ Verkäufer sofort: „Ah, passt, dann 19.000.“ Gedanke danach: Hätte ich vielleicht auch 18.000 gesagt?\nBridge raus: Mehr Spielraum vorhanden, als ich mir zugetraut hab abzufragen – genau darum geht's heute.\nSpäter nutzbar als Übergang zum Blitzlicht: „Ich hab euch grad mein Auto-Beispiel erzählt – jetzt seid ihr dran.“\n(Nachschlag in Sequenz 9: unvorbereitet reingegangen, keine Konkurrenzangebote geprüft – Problem war nicht das Verhandeln selbst, sondern zu wenig Vorwissen.)",
+        "referenzNur": true
+      },
+      {
+        "id": "k_1788943262332_30",
+        "typ": "fach",
+        "titel": "Storytelling: Abitur-Geschichte (Bridge Sequenz 3)",
+        "text": "3 · Hebel erkennen",
+        "gruppe": "Sohn vor dem Abitur: Trainer war überzeugt „viel lernen, dann klappt's“ und hat gedrängelt. Sohn: „Ich mach genau das Nötigste, damit ich durchkomme.“ Am Ende hat er sein Abitur geschafft – nicht über den Hebel des Vaters, sondern über seinen eigenen.\nBridge raus: Genau das passiert auch im Lieferantengespräch – oft so fixiert auf einen Hebel (meist Preis), dass andere Stellschrauben übersehen werden.\nHinweis: persönliche Geschichte ohne direkten Verhandlungskontext – in der Probe prüfen, ob sie vor der Gruppe stimmig wirkt.",
+        "referenzNur": true
+      },
+      {
+        "id": "k_1788943262332_31",
+        "typ": "fach",
+        "titel": "Storytelling: Akquise-Geschichte – Nutzenargumentation (Bridge Sequenz 4)",
+        "text": "4 · NBB-Potenzial einbringen",
+        "gruppe": "Als Selbstständiger mit HR-Abteilungen telefoniert: „Was bekomm ich von euch“ funktioniert nicht bei einem abstrakten Produkt wie Training. Stattdessen auf die Schiene gegangen: „Was habt ihr zukünftig davon?“ (bessere Führungskräfte, besseres Teamklima, höhere Abschlussraten). Wert nicht als „was ich mache“ verkauft, sondern als „was danach bei euch passiert“.\nBridge raus: Gleiche Frage jetzt an die Teilnehmenden – was ist der Wert, den ihr bietet, was hat der Hersteller später davon?\nHinweis: ausführlichste Geschichte des Tages – in der Probe auf Länge achten.",
+        "referenzNur": true
+      },
+      {
+        "id": "k_1788943262332_32",
+        "typ": "fach",
+        "titel": "Storytelling: Arztbesuch-Geschichte (Bridge Sequenz 5)",
+        "text": "5 · Gesprächsvorbereitung",
+        "gruppe": "Ehefrau rät: „Schreib dir vorher auf, was du beim Arzt ansprechen willst.“ Ungeplant hingegangen, nur das eine Thema (Knie) besprochen. Zuhause gefragt: „Hast du auch das mit dem Blutdruck angesprochen?“ – vergessen. Am Ende nur die Hälfte geklärt.\nBridge raus: Genauso geht's uns in Lieferantengesprächen – ein Thema besprochen, ein anderes (z. B. Zahlungsziele, WKZ) vergessen. Deshalb jetzt die Checkliste.",
+        "referenzNur": true
+      },
+      {
+        "id": "k_1788943262332_33",
+        "typ": "fach",
+        "titel": "Storytelling: Akquise-Geschichte – Nachfassen (Bridge Sequenz 6)",
+        "text": "6 · Fragetechniken & Gesprächssteuerung",
+        "gruppe": "Telefonat mit HR: „Was steht dieses Jahr an Weiterbildung an?“ – Antwort: „Haben wir uns noch nicht mit beschäftigt.“ Erst Ablehnung, keine Information. Nachgesetzt: „Woran haben Sie in den letzten Jahren gearbeitet? Wo könnten Sie sich vorstellen weiterzumachen?“ – plötzlich kam ein echtes Gespräch in Gang.\nBridge raus: Eine geschlossene erste Antwort heißt nicht, dass nichts zu holen ist – oft war nur die erste Frage zu allgemein.\nRegieanweisung: in der Probe auf EINE Frage-Weiterentwicklung beschränken, nicht mehrere Varianten durchdeklinieren.",
+        "referenzNur": true
+      },
+      {
+        "id": "k_1788943262332_34",
+        "typ": "fach",
+        "titel": "Storytelling: Kaltakquise-Geschichte (Bridge Sequenz 7)",
+        "text": "7 · Lieferantenaussagen kontern",
+        "gruppe": "Kaltakquise bei HR-Abteilungen: sofortiges „Keine Zeit, brauchen wir nicht.“ Reaktion: „Keine Zeit? Perfekt, dann pass ich mich an – ich brauch nur neunzig Sekunden. Wenn's Sie nicht überzeugt, leg ich selbst auf.“ Meistens kurzes Durchatmen, dann: „Na gut, neunzig Sekunden.“\nBridge raus: Ein erstes „Geht nicht“ ist selten das letzte Wort bei Lieferanten – die Frage ist, ob man dranbleibt.\nHinweis: als typische Situation erzählen („öfter lief das so …“), nicht als wortwörtliches Zitat.",
+        "referenzNur": true
+      },
+      {
+        "id": "k_1788943262332_35",
+        "typ": "fach",
+        "titel": "Storytelling: Kaltakquise – Zusammenschnitt (Bridge Sequenz 8)",
+        "text": "8 · Praxisfall: Vom Termin zur Verhandlung",
+        "gruppe": "Vollständiger Ablauf eines Kaltakquise-Anrufs, Zusammenschnitt der Geschichten aus Sequenz 4, 6 und 7: Einstieg trotz „Keine Zeit“ → Nutzenargumentation statt Eigenwerbung → Nachfassen nach zu allgemeiner Antwort → am Ende oft kein sofortiger Auftrag, aber ein zweites Gespräch, ein Termin, eine offene Tür.\nBridge raus: Genau das übt die Simulation jetzt – nicht eine einzelne clevere Reaktion, sondern das ganze Zusammenspiel aus Ziel, Wert, Fragen, Dranbleiben bei Widerstand.\nBewusste Wiederholung als roter Faden, keine neue Geschichte.",
+        "referenzNur": true
+      },
+      {
+        "id": "k_1788943262332_36",
+        "typ": "fach",
+        "titel": "Storytelling: Auto-Nachschlag & Marktlage (Bridge Sequenz 9)",
+        "text": "9 · Transfer & Abschluss",
+        "gruppe": "Rückgriff auf das Auto-Beispiel aus Sequenz 1: unvorbereitet hingefahren, keine Konkurrenzangebote geprüft – das Problem war nicht das Verhandeln selbst, sondern zu wenig Vorwissen vorab.\nZweiter Faden (Zusatzgedanke): Die RAM-/Grafikkarten-Lage aus dem Einstieg war kein Zahlenspiel am Rande – Einladung, den Abnahmemengen-Hebel aktiv zu nutzen, sobald der nächste Lieferengpass auftritt.\nKlammer-Dramaturgie: bewusster Rückgriff auf Sequenz 1, schließt den Bogen über den Tag.",
+        "referenzNur": true
+      },
+      {
+        "id": "k_1788943262332_37",
+        "typ": "reflexion",
+        "titel": "Selbstcheck – Satzanfänge",
+        "text": "2 · Standortbestimmung",
+        "gruppe": "Typisch für mich in solchen Gesprächen ist ...\nSicher bin ich vor allem, wenn ...\nSchwieriger wird es für mich, wenn ...\nIch hake oft nicht weiter nach, wenn ...\nPotenzial lasse ich liegen bei ...\nEin typisches Muster von mir ist ...\nBeim nächsten ähnlichen Gespräch möchte ich stärker darauf achten, dass ..."
+      },
+      {
+        "id": "k_1788943262332_38",
+        "typ": "reflexion",
+        "titel": "Typische Stolperstellen (Gesamtüberblick)",
+        "text": "Zu schnell auf Preis fixieren, andere Hebel übersehen.\nZiele zu ungenau formulieren, Minimum und Wunsch nicht trennen.\nEinwände nicht konkretisieren, sondern als Tatsache hinnehmen.\nZu viele Warum-Fragen, die Rechtfertigungsdruck erzeugen.\nSofort argumentieren statt erst zu fragen und zu öffnen.\nKein echter Plan B / keine echte Alternative vorbereitet.\nGespräch ohne klaren nächsten Schritt beenden.\nSimulation wird zu komplex, verliert Fokus.\nFeedback bleibt allgemein statt beobachtbar und wirkorientiert."
+      },
+      {
+        "id": "k_1788943262332_39",
+        "typ": "reflexion",
+        "titel": "Transferstruktur",
+        "text": "Was will ich künftig bewusster tun?\nWas will ich konkret anders machen?\nWoran merke ich, dass ich es umgesetzt habe?\n\n2–3 konkrete Maßnahmen reichen – wenige, beobachtbare Schritte wirken stärker als viele diffuse Vorsätze."
+      }
+    ]
+  },
+  "lernstandProSeminar": {
+    "s_1788943262332": {}
+  }
+}
